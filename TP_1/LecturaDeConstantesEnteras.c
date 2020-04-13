@@ -4,125 +4,182 @@
 
 enum {Init, ReadedZero, ReadedOctal, ReadedX, ReadedHexa, ReadedDec, NoConst};
 
-short AFRLecturaConstEnt(char, short);
+short AFRLecturaConstEnt(char, short, FILE *, FILE *);
 
 int main()
 {
-    short eLectura = Init;
-    char word[10] = "0156,";
-    unsigned i = 0;
+    FILE *fileOfConstantsInput = fopen("Entrada.txt", "r");
+    FILE *fileOfConstantsOutput = fopen("Salida.txt", "w+");
 
-    while(word[i] != '\0')
+    if(fileOfConstantsInput != NULL)
     {
-        printf("%d. Letter: %c\n", i, word[i]);
-        eLectura = AFRLecturaConstEnt(word[i], eLectura);
-        i++;
+        short eLectura = Init;
+        char letter;
+
+        while(fread(&letter, sizeof(letter), 1, fileOfConstantsInput))
+            eLectura = AFRLecturaConstEnt(letter, eLectura, fileOfConstantsInput, fileOfConstantsOutput);
+        switch (eLectura)
+        {
+            case ReadedDec:
+                fputs(" -> Es una Constante Decimal", fileOfConstantsOutput);
+            break;
+
+            case ReadedHexa:
+                fputs(" -> Es una Constante Hexadecimal", fileOfConstantsOutput);
+            break;
+
+             case ReadedOctal:
+                fputs(" -> Es una Constante Octal", fileOfConstantsOutput);
+            break;
+
+            case NoConst:
+                fputs(" -> No es una Constante Entera", fileOfConstantsOutput);
+            break;
+        }
     }
-
-
+    fclose(fileOfConstantsInput);
+    fclose(fileOfConstantsOutput);
     return 0;
 }
 
-short AFRLecturaConstEnt(char letter, short eLectura)
+short AFRLecturaConstEnt(char letter, short eLectura, FILE *fileInput, FILE *fileOutput)
 {
-
     switch (eLectura)
     {
         default:
         case Init:
             if(letter == '0')
+            {   
                 eLectura = ReadedZero;
-            else if(letter == '1' || letter == '2' || letter == '3' || letter == '4' || letter == '5')
+                fwrite(&letter, sizeof(letter), 1, fileOutput);
+            }
+            else if(letter >= '1' &&  letter <= '9')
+            {
                 eLectura = ReadedDec;
-            else if(letter == '6' || letter == '7' || letter == '8' || letter == '9')
-                eLectura = ReadedDec;
+                fwrite(&letter, sizeof(letter), 1, fileOutput);
+            }    
             else if(letter == ',')
                 eLectura = Init;
             else
+            {
                 eLectura = NoConst;
+                fwrite(&letter, sizeof(letter), 1, fileOutput);
+            }
+                
         break;
 
         case ReadedZero:
-            if(letter == '0' || letter == '1' || letter == '2' || letter == '3')
+            if(letter >= '0' && letter <= '7')
+            {
                 eLectura = ReadedOctal;
-            else if(letter == '4' || letter == '5' || letter == '6' || letter == '7')
-                eLectura = ReadedOctal;
+                fwrite(&letter, sizeof(letter), 1, fileOutput);
+            }      
             else if(toupper(letter) == 'X')
+                {
                 eLectura = ReadedX;
-            else if(letter == ',')
-                eLectura = Init;
-            else
-                eLectura = NoConst;
-        break;
-
-        case ReadedOctal:
-            if(letter == '0' || letter == '1' || letter == '2' || letter == '3')
-                eLectura = ReadedOctal;
-            else if(letter == '4' || letter == '5' || letter == '6' || letter == '7')
-                eLectura = ReadedOctal;
+                fwrite(&letter, sizeof(letter), 1, fileOutput);
+                } 
             else if(letter == ',')
             {
                 eLectura = Init;
-                puts("Es constante octal");
+                fputs(" -> Es una Constante Octal \n", fileOutput);
             }
-
             else
+            {
                 eLectura = NoConst;
+                fwrite(&letter, sizeof(letter), 1, fileOutput);
+            }     
         break;
 
-        case ReadedX:
-            letter = toupper(letter);
-            if(letter == '0' || letter == '1' || letter == '2' || letter == '3' || letter == '4')
-                eLectura = ReadedHexa;
-            else if(letter == '5' || letter == '6' || letter == '7' || letter == '8' || letter == '9')
-                eLectura = ReadedHexa;
-            else if(letter == 'A' || letter == 'B' || letter == 'C')
-                eLectura = ReadedHexa;
-            else if(letter == 'D' || letter == 'E' || letter == 'F')
-                eLectura = ReadedHexa;
+        case ReadedOctal:
+            if(letter >= '0' && letter <= '7')
+            {
+                eLectura = ReadedOctal;
+                fwrite(&letter, sizeof(letter), 1, fileOutput);
+            }     
+            else if(letter == ',')
+            {
+                eLectura = Init;
+                fputs(" -> Es una Constante Octal \n", fileOutput);
+            }
             else
+            {
                 eLectura = NoConst;
+                fwrite(&letter, sizeof(letter), 1, fileOutput);
+            }    
+        break;
+
+        case ReadedX: 
+            letter = toupper(letter);
+            if((letter >= '0' && letter <= '9') || (letter >= 'A' && letter <= 'F'))
+            {
+                eLectura = ReadedHexa;
+                fwrite(&letter, sizeof(letter), 1, fileOutput);
+            }
+            else if(letter == ',')
+            {
+                eLectura = Init;
+                fputs(" -> No es una Constante Entera \n", fileOutput);
+            }
+            else
+            {
+                eLectura = NoConst;
+                fwrite(&letter, sizeof(letter), 1, fileOutput);
+            }    
         break;
 
         case ReadedHexa:
             letter = toupper(letter);
-            if(letter == '0' || letter == '1' || letter == '2' || letter == '3' || letter == '4')
+            if(letter >= '0' & letter <= '9')
+            {
                 eLectura = ReadedHexa;
-            else if(letter == '5' || letter == '6' || letter == '7' || letter == '8' || letter == '9')
+                fwrite(&letter, sizeof(letter), 1, fileOutput);
+            }
+            else if(letter >= 'A' && letter <= 'F')
+            {
                 eLectura = ReadedHexa;
-            else if(letter == 'A' || letter == 'B' || letter == 'C')
-                eLectura = ReadedHexa;
-            else if(letter == 'D' || letter == 'E' || letter == 'F')
-                eLectura = ReadedHexa;
+                fwrite(&letter, sizeof(letter), 1, fileOutput);
+            }
+                
             else if(letter == ',')
             {
                 eLectura = Init;
-                puts("Es constante hexadecimal");
+                fputs(" -> Es una Constante Hexadecimal \n", fileOutput);
             }
             else
+            {
                 eLectura = NoConst;
+                fwrite(&letter, sizeof(letter), 1, fileOutput);
+            }         
         break;
 
         case ReadedDec:
-            if(letter == '0' || letter == '1' || letter == '2' || letter == '3' || letter == '4')
+            if(letter >= '0' && letter <= '9')
+            {
                 eLectura = ReadedDec;
-            else if(letter == '5' || letter == '6' || letter == '7' || letter == '8' || letter == '9')
-                eLectura = ReadedDec;
+                fwrite(&letter, sizeof(letter), 1, fileOutput);
+            } 
             else if(letter == ',')
                 {
                     eLectura = Init;
-                    puts("Es constante decimal");
+                    fputs(" -> Es una Constante Decimal \n", fileOutput);
                 }
             else
+            {
                 eLectura = NoConst;
+                fwrite(&letter, sizeof(letter), 1, fileOutput);
+            }     
         break;
 
         case NoConst:
-            puts("No es una constante entera.");
             if(letter == ',')
+            {
                 eLectura = Init;
+                fputs(" -> No es una Constante Entera \n", fileOutput);
+            }
+            else
+                fwrite(&letter, sizeof(letter), 1, fileOutput);      
         break;
     }
-
     return eLectura;
 }
