@@ -26,7 +26,7 @@ int main()  //Función principal del programa
                                                  {ReadedHexa, ReadedHexa, ReadedHexa, ReadedHexa, NoConst, Init},
                                                  {ReadedHexa, ReadedHexa, ReadedHexa, ReadedHexa, NoConst, Init},
                                                  {ReadedDec, ReadedDec, ReadedDec, NoConst, NoConst, Init},
-                                                 {NoConst, NoConst, NoConst, NoConst, NoConst, Init} };
+                                                 {NoConst, NoConst, NoConst, NoConst, NoConst, Init}};
 
     if(fileOfConstantsInput != NULL)    //Chequea si se puede abrir el archivo de entrada
     {
