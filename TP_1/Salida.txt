@@ -7,4 +7,5 @@
 0 -> Es una Constante Octal 
 0xGH -> No es una Constante Entera 
 99 -> Es una Constante Decimal 
-Agustin -> No es una Constante Entera
+Agustin -> No es una Constante Entera 
+045 -> Es una Constante Octal
