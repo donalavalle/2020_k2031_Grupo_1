@@ -4,7 +4,7 @@
 
 enum {Init, ReadedZero, ReadedOctal, ReadedX, ReadedHexa, ReadedDec, NoConst};
 
-short AFRLecturaConstEnt(char, short, FILE *, FILE *);
+short AFRLecturaConstEnt(char, short, FILE *);
 
 int main()
 {
@@ -17,7 +17,7 @@ int main()
         char letter;
 
         while(fread(&letter, sizeof(letter), 1, fileOfConstantsInput))
-            eLectura = AFRLecturaConstEnt(letter, eLectura, fileOfConstantsInput, fileOfConstantsOutput);
+            eLectura = AFRLecturaConstEnt(letter, eLectura, fileOfConstantsOutput);
         switch (eLectura)
         {
             case ReadedDec:
@@ -42,7 +42,7 @@ int main()
     return 0;
 }
 
-short AFRLecturaConstEnt(char letter, short eLectura, FILE *fileInput, FILE *fileOutput)
+short AFRLecturaConstEnt(char letter, short eLectura, FILE *fileOutput)
 {
     switch (eLectura)
     {
