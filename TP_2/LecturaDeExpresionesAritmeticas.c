@@ -31,17 +31,8 @@ int main()
 {
     Node* stack = NULL;
     initStack(&stack); 
-    insertParenthesesToStack(&stack);
-    insertParenthesesToStack(&stack);
-    insertParenthesesToStack(&stack);
-    showStack(stack);
-    while (stack != NULL)
-        printf("La cima de pila es: %c \n", popStack(&stack));
- 
-    //printf("%c", stackOut(stack));
-    //printf("Hello World!");
 
-    /* StatStack AFPExpresionesAritmeticas[4][2][5] =
+    StatStack AFPExpresionesAritmeticas[4][2][5] =
         {
             {  //Initialization
                 {   //Empty
@@ -108,7 +99,7 @@ int main()
                     fillStruct(NoExp, RInStack)
                 }  //RInStack
             }
-        };  */
+        }; 
 
     return 0;
 }
