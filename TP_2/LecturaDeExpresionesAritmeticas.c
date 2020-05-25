@@ -3,7 +3,7 @@
 
 enum{Zero, To1_9, Operators, ParenthesesOpen, ParenthesesClose};
 enum{Init, ReadedNumberOrSymbol, Parentheses, NoExp};
-enum{Empty, PutLetterRInStack, Epsilon};
+enum{Empty, RInStack, Epsilon};
 
 typedef struct node
 {
@@ -17,33 +17,46 @@ typedef struct status_topStack
     short topStack;
 } StatStack;
 
-/* void deleteNode(Node*);
-void stackIn(Node*, char);
-char stackOut(Node*);
-void initStack(Stack*);
-void insertParenthesesToStack(Stack*);
-void showStack(Node*); */
+Node* newNode(char);
+void pushStack(Node**, char);
+char peekStack(Node*);
+char popStack(Node**);
+void initStack(Node**);
+void insertParenthesesToStack(Node**);
+void showStack(Node*);
 short columnPosition(char);
 StatStack fillStruct(short, short);
 
 int main()
 {
-    StatStack AFPExpresionesAritmeticas[4][2][5] =
+    Node* stack = NULL;
+    initStack(&stack); 
+    insertParenthesesToStack(&stack);
+    insertParenthesesToStack(&stack);
+    insertParenthesesToStack(&stack);
+    showStack(stack);
+    while (stack != NULL)
+        printf("La cima de pila es: %c \n", popStack(&stack));
+ 
+    //printf("%c", stackOut(stack));
+    //printf("Hello World!");
+
+    /* StatStack AFPExpresionesAritmeticas[4][2][5] =
         {
             {  //Initialization
                 {   //Empty
                     fillStruct(NoExp, Empty),
                     fillStruct(ReadedNumberOrSymbol, Empty),
                     fillStruct(NoExp, Empty),
-                    fillStruct(Init, PutLetterRInStack),
+                    fillStruct(Init, RInStack),
                     fillStruct(NoExp, Empty)
                 },
-                {   //putLetterRInStack
-                    fillStruct(NoExp, PutLetterRInStack),
-                    fillStruct(ReadedNumberOrSymbol, PutLetterRInStack),
-                    fillStruct(NoExp, PutLetterRInStack),
-                    fillStruct(Init, PutLetterRInStack),
-                    fillStruct(NoExp, PutLetterRInStack)
+                {   //RInStack
+                    fillStruct(NoExp, RInStack),
+                    fillStruct(ReadedNumberOrSymbol, RInStack),
+                    fillStruct(NoExp, RInStack),
+                    fillStruct(Init, RInStack),
+                    fillStruct(NoExp, RInStack)
                 }  
             },
             {   //ReadedNumberOrSymbol
@@ -54,11 +67,11 @@ int main()
                     fillStruct(NoExp, Empty),
                     fillStruct(NoExp, Empty)
                 },
-                {   //putLetterRInStack
-                    fillStruct(ReadedNumberOrSymbol, PutLetterRInStack),
-                    fillStruct(ReadedNumberOrSymbol, PutLetterRInStack),
-                    fillStruct(Init, PutLetterRInStack),
-                    fillStruct(NoExp, PutLetterRInStack),
+                {   //RInStack
+                    fillStruct(ReadedNumberOrSymbol, RInStack),
+                    fillStruct(ReadedNumberOrSymbol, RInStack),
+                    fillStruct(Init, RInStack),
+                    fillStruct(NoExp, RInStack),
                     fillStruct(Parentheses, Epsilon)
                 }  
             }
@@ -71,11 +84,11 @@ int main()
                     fillStruct(NoExp, Empty),
                     fillStruct(NoExp, Empty)
                 }, 
-                {   //putLetterRInStack
-                    fillStruct(NoExp, PutLetterRInStack),
-                    fillStruct(NoExp, PutLetterRInStack),
-                    fillStruct(Init, PutLetterRInStack),
-                    fillStruct(NoExp, PutLetterRInStack),
+                {   //RInStack
+                    fillStruct(NoExp, RInStack),
+                    fillStruct(NoExp, RInStack),
+                    fillStruct(Init, RInStack),
+                    fillStruct(NoExp, RInStack),
                     fillStruct(Parentheses, Epsilon)
                 }
             },
@@ -88,75 +101,87 @@ int main()
                     fillStruct(NoExp, Empty)
                 },
                 {
-                    fillStruct(NoExp, PutLetterRInStack),
-                    fillStruct(NoExp, PutLetterRInStack),
-                    fillStruct(NoExp, PutLetterRInStack),
-                    fillStruct(NoExp, PutLetterRInStack),
-                    fillStruct(NoExp, PutLetterRInStack)
-                }  //putLetterRInStack
+                    fillStruct(NoExp, RInStack),
+                    fillStruct(NoExp, RInStack),
+                    fillStruct(NoExp, RInStack),
+                    fillStruct(NoExp, RInStack),
+                    fillStruct(NoExp, RInStack)
+                }  //RInStack
             }
-        }; 
+        };  */
 
     return 0;
 }
 
-/* void deleteNode(Node* p)
-{
-    p->next = NULL;
-    free(p);
-}
-
-void stackIn(Node* stack, char letter)
+Node* newNode(char data)
 {
     Node* newNode= (Node*) malloc(sizeof(Node));
-    newNode->data = letter;
-    newNode->next = stack;
-    stack = newNode;
-    printf("Dato agregado: %c\n", stack->data);
+    newNode->data = data;
+    newNode->next = NULL;
+
+    return newNode;
 }
 
-char stackOut(Node* stack)
+void pushStack(Node** stack, char data)
+{
+    Node* p = newNode(data);
+    p->next = *stack;
+    *stack = p;
+
+    printf("\'%c\' agregado a pila.\n", data);
+}
+
+char peekStack(Node* p)
+{
+    if(p != NULL)
+        return p->data;
+}
+
+char popStack(Node** stack)
 {   
-    if(stack != NULL)
+    if(*stack != NULL)
     {
         char letter;
-        
-        Node* p = stack;
+        Node* p = *stack;
         letter = p->data;
-        stack = p->next;
-        deleteNode(p);
+
+        *stack = (*stack)->next;
+        free(p);
 
         return letter;
     }
 
 }
 
-void initStack(Stack* stack)
+void initStack(Node** stack)
 {
-    stackIn(stack, '$');
+    pushStack(stack, '$');
 }
 
-void insertParenthesesToStack(Stack*stack)
+void insertParenthesesToStack(Node** stack)
 {
-    stackIn(stack, 'R');
+    pushStack(stack, 'R');
 } 
 
 void showStack(Node* stack)
 {
     Node* p = (Node*) malloc(sizeof(Node));
     p = stack;
-    puts("Stack: ");
+    printf("Stack: ");
     if(stack != NULL)
     {
         while(p != NULL)
         {
-            printf(" -> %c ", p->data);
+            printf("%c", p->data);
             p = p->next;
+            if(p != NULL)
+                printf(" -> ");
         }
+        puts("");
     }
     else
         puts("La pila esta vacia");
-}*/
+}
 
 short columnPosition(char letter)
 {
