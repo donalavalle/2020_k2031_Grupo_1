@@ -110,6 +110,8 @@ int main()
     printf("Ingrese una expresi%cn aritm%ctica: \n", 162, 130);
     fflush(stdin);
 
+    short posChar;
+
     auxLectura = fgetc(stdin);
     while(auxLectura != '\n')
     {
@@ -117,7 +119,7 @@ int main()
         {   
             //printf("\nChar leido: %c\n", auxLectura);
 
-            short posChar = charPosition(auxLectura);
+            posChar = charPosition(auxLectura);
             short auxPop = setValueByTop(&stack);
 
             //printf("Pop de Pila: %d\n", auxPop);
@@ -148,7 +150,7 @@ int main()
             auxLectura = fgetc(stdin);
     }
 
-    if(eActual.actualStatus == NoExp || peekStack(stack) == RInStack)
+    if(eActual.actualStatus == NoExp || posChar == Operators || peekStack(stack) == RInStack)
         printf("No es sint%ccticamente correcta.\n", 160);
     else
         printf("Es sint%ccticamente correcta.\n", 160);
