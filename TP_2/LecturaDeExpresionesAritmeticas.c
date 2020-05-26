@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 enum{Zero, To1_9, Operators, ParenthesesOpen, ParenthesesClose};
 enum{Init, ReadedNumberOrSymbol, Parentheses, NoExp};
@@ -19,20 +20,25 @@ typedef struct status_topStack
 
 Node* newNode(char);
 void pushStack(Node**, char);
-char peekStack(Node*);
+short peekStack(Node*);
 char popStack(Node**);
+short setValueByTop(Node**);
 void initStack(Node**);
-void insertParenthesesToStack(Node**);
+void insertByValue(Node**, short);
 void showStack(Node*);
-short columnPosition(char);
+short charPosition(char);
 StatStack fillStruct(short, short);
 
 int main()
 {
+    char auxLectura;
+
     Node* stack = NULL;
     initStack(&stack); 
 
-    StatStack AFPExpresionesAritmeticas[4][2][5] =
+    StatStack eActual = {Init, Empty};  //Seteo Estado Inicial
+
+    StatStack AFPExpresionesAritmeticas[4][2][5] =  // [Estado Actual] [Cima de Pila] [Caracter Leído]
         {
             {  //Initialization
                 {   //Empty
@@ -101,6 +107,60 @@ int main()
             }
         }; 
 
+    printf("Ingrese una expresi%cn aritm%ctica: \n", 162, 130);
+    fflush(stdin);
+
+    auxLectura = fgetc(stdin);
+    while(auxLectura != '\n')
+    {
+        if(auxLectura != ' ')
+        {   
+            //printf("\nChar leido: %c\n", auxLectura);
+
+            short posChar = charPosition(auxLectura);
+            short auxPop = setValueByTop(&stack);
+
+            //printf("Pop de Pila: %d\n", auxPop);
+            //printf("Estado: %d\tPila: %d\tChar: %d\n", eActual.actualStatus, eActual.topStack, posChar);
+            eActual = AFPExpresionesAritmeticas[eActual.actualStatus][eActual.topStack][posChar];
+            //printf("Estado: %d\tPila: %d\n", eActual.actualStatus, eActual.topStack);
+
+            if(auxPop == Empty && eActual.topStack == RInStack)
+            {
+                insertByValue(&stack, auxPop);
+                insertByValue(&stack, eActual.topStack);
+            }
+            else if (auxPop == RInStack && posChar == ParenthesesOpen)
+            {
+                insertByValue(&stack, auxPop);
+                insertByValue(&stack, eActual.topStack);
+            }
+            else if(eActual.topStack != Epsilon)
+                insertByValue(&stack, auxPop);
+            else if(eActual.topStack == Epsilon)
+                eActual.topStack = peekStack(stack);
+            //puts("");
+            //showStack(stack);
+            
+            auxLectura = fgetc(stdin);
+        }
+        else
+            auxLectura = fgetc(stdin);
+    }
+
+    if(eActual.actualStatus == NoExp || peekStack(stack) == RInStack)
+        printf("No es sint%ccticamente correcta.\n", 160);
+    else
+        printf("Es sint%ccticamente correcta.\n", 160);
+
+    char option;
+
+    printf("%cDesea volver a realizar el programa? (S/N): ", 168);
+    scanf("%c", &option);
+
+    if(toupper(option) == 'S')
+        main();
+
     return 0;
 }
 
@@ -118,14 +178,17 @@ void pushStack(Node** stack, char data)
     Node* p = newNode(data);
     p->next = *stack;
     *stack = p;
-
-    printf("\'%c\' agregado a pila.\n", data);
 }
 
-char peekStack(Node* p)
+short peekStack(Node* p)
 {
     if(p != NULL)
-        return p->data;
+    {
+        if(p->data == 'R')
+            return RInStack;
+        else
+            return Empty;
+    }
 }
 
 char popStack(Node** stack)
@@ -141,18 +204,30 @@ char popStack(Node** stack)
 
         return letter;
     }
+}
 
+short setValueByTop(Node** stack)
+{
+    char auxPop = popStack(stack);
+
+    if(auxPop == 'R')
+        return RInStack;
+    else
+        return Empty;
+}
+
+void insertByValue(Node** stack, short t)
+{
+    if(t == Empty)
+        pushStack(stack, '$');
+    else
+        pushStack(stack, 'R');
 }
 
 void initStack(Node** stack)
 {
     pushStack(stack, '$');
 }
-
-void insertParenthesesToStack(Node** stack)
-{
-    pushStack(stack, 'R');
-} 
 
 void showStack(Node* stack)
 {
@@ -174,22 +249,22 @@ void showStack(Node* stack)
         puts("La pila esta vacia");
 }
 
-short columnPosition(char letter)
+short charPosition(char letter)
 {
-    short posColumn;
+    short posChar;
 
     if(letter == '0')
-        posColumn = Zero;
-    else if(letter >= 1 && letter <= 9)
-        posColumn = To1_9;
+        posChar = Zero;
+    else if(letter >= '1' && letter <= '9')
+        posChar = To1_9;
     else if(letter == '+' || letter == '-' || letter == '*' || letter == '/')
-        posColumn = Operators;
+        posChar = Operators;
     else if(letter == '(')
-        posColumn = ParenthesesOpen;
+        posChar = ParenthesesOpen;
     else if(letter == ')')
-        posColumn = ParenthesesClose;
+        posChar = ParenthesesClose;
 
-    return posColumn;
+    return posChar;
 }
 
 StatStack fillStruct(short status, short top)
