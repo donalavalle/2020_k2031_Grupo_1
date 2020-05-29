@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-enum{Zero, To1_9, Operators, ParenthesesOpen, ParenthesesClose};
-enum{Init, ReadedNumberOrSymbol, Parentheses, NoExp};
-enum{Empty, RInStack, Epsilon};
+enum{Zero, To1_9, Operators, ParenthesesOpen, ParenthesesClose}; // Números asociados a los caracteres leídos
+enum{Init, ReadedNumberOrSymbol, Parentheses, NoExp};            // Nombres de Estados
+enum{Empty, RInStack, Epsilon};                                  // Nombres asignados a valores de la pila
+//    '$'      'R'    Epsilon
 
 typedef struct node
 {
@@ -11,46 +12,46 @@ typedef struct node
     struct node* next;
 } Node;
 
-typedef struct status_topStack
+typedef struct status_topStack 
 {
-    short actualStatus;
-    short topStack;
+    short actualStatus; // Guarda el stado actual
+    short topStack;     // Guarda lo que tiene que ir en la pila
 } StatStack;
 
-Node* newNode(char);
-void pushStack(Node**, char);
-char peekStack(Node*);
-char popStack(Node**);
-void initStack(Node**);
-void insertParenthesesToStack(Node**);
-void showStack(Node*);
-short columnPosition(char);
-StatStack fillStruct(short, short);
+Node* newNode(char);                    // Crea un nodo
+void pushStack(Node**, char);           // Agregar a pila
+char peekStack(Node*);                  // Muestra cima de pila sin sacarla (No usamos la función)
+char popStack(Node**);                  // Sacar cima de pila
+void initStack(Node**);                 // Inicia la pila con el '$'
+void insertParenthesesToStack(Node**);  // Agrega a pila el caracter 'R'
+void showStack(Node*);                  // Muestra el contenido de pila (No lo usamos)
+short columnPosition(char);             // Dependiendo el caracter que lee, decide asignar un número específico
+StatStack fillStruct(short, short);     // Rellena el struct dependiendo el estado
 
 int main()
 {
     Node* stack = NULL;
     initStack(&stack); 
 
-    StatStack AFPExpresionesAritmeticas[4][2][5] =
+    StatStack AFPExpresionesAritmeticas[4][2][5] =  // [Estado Actual] [Cima de Pila] [Caracter Leido]
         {
-            {  //Initialization
-                {   //Empty
-                    fillStruct(NoExp, Empty),
-                    fillStruct(ReadedNumberOrSymbol, Empty),
-                    fillStruct(NoExp, Empty),
-                    fillStruct(Init, RInStack),
-                    fillStruct(NoExp, Empty)
+            {  //Initialization         // Q0
+                {   //Empty     // '$'
+                    fillStruct(NoExp, Empty),                   //   -  , '$' -> -
+                    fillStruct(ReadedNumberOrSymbol, Empty),    //  Q1  , '$'
+                    fillStruct(NoExp, Empty),                   //   -  , '$' -> -
+                    fillStruct(Init, RInStack),                 //  Q0  , 'R'
+                    fillStruct(NoExp, Empty)                    //   -  , '$' -> -
                 },
-                {   //RInStack
-                    fillStruct(NoExp, RInStack),
-                    fillStruct(ReadedNumberOrSymbol, RInStack),
+                {   //RInStack  // 'R'
+                    fillStruct(NoExp, RInStack),                // -  ,  'R' -> -
+                    fillStruct(ReadedNumberOrSymbol, RInStack), // 
                     fillStruct(NoExp, RInStack),
                     fillStruct(Init, RInStack),
                     fillStruct(NoExp, RInStack)
                 }  
             },
-            {   //ReadedNumberOrSymbol
+            {   //ReadedNumberOrSymbol  
                 {   //Empty
                     fillStruct(ReadedNumberOrSymbol, Empty),
                     fillStruct(ReadedNumberOrSymbol, Empty),
@@ -91,17 +92,34 @@ int main()
                     fillStruct(NoExp, Empty),
                     fillStruct(NoExp, Empty)
                 },
-                {
+                {   //RInStack
                     fillStruct(NoExp, RInStack),
                     fillStruct(NoExp, RInStack),
                     fillStruct(NoExp, RInStack),
                     fillStruct(NoExp, RInStack),
                     fillStruct(NoExp, RInStack)
-                }  //RInStack
+                }  
             }
-        }; 
+        };
 
-    return 0;
+    puts("Ingrese una expresion aritmetica:");
+    char auxCaracter = fgetc(stdin); // Lee y elimina caracteres de la expresion
+
+    while(auxCaracter != '\n')       // Mientras no haya terminado
+    {
+        if(auxCaracter != ' ')       // Saltear espacios
+        {
+            /*
+
+            CODIGO
+
+            */
+        }
+        
+        auxCaracter = fgetc(stdin);  // Pasa al siguiente caracter
+    }
+
+    return 0;                        // Termina el programa
 }
 
 Node* newNode(char data)
