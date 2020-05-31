@@ -2,9 +2,8 @@
 #include <stdlib.h>
 
 enum{Zero, To1_9, Operators, ParenthesesOpen, ParenthesesClose}; // Números asociados a los caracteres leídos
-enum{Init, ReadedNumberOrSymbol, Parentheses, NoExp};            // Nombres de Estados
-enum{Empty, RInStack, Epsilon};                                  // Nombres asignados a valores de la pila
-//    '$'      'R'    Epsilon
+enum{Q0, Q1, Q2, EstadoError};                                   // Nombres de Estados
+enum{SignoPeso, RInStack};                              // Nombres asignados a valores de la pila
 
 typedef struct node
 {
@@ -12,7 +11,7 @@ typedef struct node
     struct node* next;
 } Node;
 
-typedef struct status_topStack 
+typedef struct status_topStack
 {
     short actualStatus; // Guarda el stado actual
     short topStack;     // Guarda lo que tiene que ir en la pila
@@ -23,8 +22,8 @@ void pushStack(Node**, char);           // Agregar a pila
 char peekStack(Node*);                  // Muestra cima de pila sin sacarla (No usamos la función)
 char popStack(Node**);                  // Sacar cima de pila
 void initStack(Node**);                 // Inicia la pila con el '$'
-void insertParenthesesToStack(Node**);  // Agrega a pila el caracter 'R'
 void showStack(Node*);                  // Muestra el contenido de pila (No lo usamos)
+short topePila(Node*);                   // Devuelve un número según lo que haya en la cima de pila
 short columnPosition(char);             // Dependiendo el caracter que lee, decide asignar un número específico
 StatStack fillStruct(short, short);     // Rellena el struct dependiendo el estado
 
@@ -33,93 +32,128 @@ int main()
     Node* stack = NULL;
     initStack(&stack); 
 
+    StatStack eLectura = {Q0, SignoPeso};
+
     StatStack AFPExpresionesAritmeticas[4][2][5] =  // [Estado Actual] [Cima de Pila] [Caracter Leido]
         {
-            {  //Initialization         // Q0
-                {   //Empty     // '$'
-                    fillStruct(NoExp, Empty),                   //   -  , '$' -> -
-                    fillStruct(ReadedNumberOrSymbol, Empty),    //  Q1  , '$'
-                    fillStruct(NoExp, Empty),                   //   -  , '$' -> -
-                    fillStruct(Init, RInStack),                 //  Q0  , 'R'
-                    fillStruct(NoExp, Empty)                    //   -  , '$' -> -
+            {  // Q0
+                {   // '$'
+                    fillStruct(EstadoError, SignoPeso),
+                    fillStruct(Q1, SignoPeso), 
+                    fillStruct(EstadoError, SignoPeso),
+                    fillStruct(Q0, RInStack),
+                    fillStruct(EstadoError, SignoPeso)
                 },
-                {   //RInStack  // 'R'
-                    fillStruct(NoExp, RInStack),                // -  ,  'R' -> -
-                    fillStruct(ReadedNumberOrSymbol, RInStack), // 
-                    fillStruct(NoExp, RInStack),
-                    fillStruct(Init, RInStack),
-                    fillStruct(NoExp, RInStack)
+                {   // 'R'
+                    fillStruct(EstadoError, RInStack),
+                    fillStruct(Q1, RInStack), 
+                    fillStruct(EstadoError, RInStack),
+                    fillStruct(Q0, RInStack),
+                    fillStruct(EstadoError, RInStack)
                 }  
             },
-            {   //ReadedNumberOrSymbol  
-                {   //Empty
-                    fillStruct(ReadedNumberOrSymbol, Empty),
-                    fillStruct(ReadedNumberOrSymbol, Empty),
-                    fillStruct(Init, Empty),
-                    fillStruct(NoExp, Empty),
-                    fillStruct(NoExp, Empty)
+            {   //Q1 
+                {   // '$'
+                    fillStruct(Q1, SignoPeso),
+                    fillStruct(Q1, SignoPeso),
+                    fillStruct(Q0, SignoPeso),
+                    fillStruct(EstadoError, SignoPeso),
+                    fillStruct(EstadoError, SignoPeso)
                 },
-                {   //RInStack
-                    fillStruct(ReadedNumberOrSymbol, RInStack),
-                    fillStruct(ReadedNumberOrSymbol, RInStack),
-                    fillStruct(Init, RInStack),
-                    fillStruct(NoExp, RInStack),
-                    fillStruct(Parentheses, Epsilon)
+                {   // 'R'
+                    fillStruct(Q1, RInStack),
+                    fillStruct(Q1, RInStack),
+                    fillStruct(Q0, RInStack),
+                    fillStruct(EstadoError, RInStack),
+                    fillStruct(Q2, topePila(stack))
                 }  
             }
             ,
-            {   //Parentheses
-                {   //Empty
-                    fillStruct(NoExp, Empty),
-                    fillStruct(NoExp, Empty),
-                    fillStruct(Init, Empty),
-                    fillStruct(NoExp, Empty),
-                    fillStruct(NoExp, Empty)
+            {   //Q2
+                {   // '$'
+                    fillStruct(EstadoError, SignoPeso),
+                    fillStruct(EstadoError, SignoPeso),
+                    fillStruct(Q0, SignoPeso),
+                    fillStruct(EstadoError, SignoPeso),
+                    fillStruct(EstadoError, SignoPeso)
                 }, 
-                {   //RInStack
-                    fillStruct(NoExp, RInStack),
-                    fillStruct(NoExp, RInStack),
-                    fillStruct(Init, RInStack),
-                    fillStruct(NoExp, RInStack),
-                    fillStruct(Parentheses, Epsilon)
+                {   // 'R'
+                    fillStruct(EstadoError, RInStack),
+                    fillStruct(EstadoError, RInStack),
+                    fillStruct(Q0, RInStack),
+                    fillStruct(EstadoError, RInStack),
+                    fillStruct(Q2, topePila(stack))
                 }
             },
-            {   //No Expression
-                {   //Empty
-                    fillStruct(NoExp, Empty),
-                    fillStruct(NoExp, Empty),
-                    fillStruct(NoExp, Empty),
-                    fillStruct(NoExp, Empty),
-                    fillStruct(NoExp, Empty)
+            {   //EstadoError
+                {   // '$'
+                    fillStruct(EstadoError, SignoPeso),
+                    fillStruct(EstadoError, SignoPeso),
+                    fillStruct(EstadoError, SignoPeso),
+                    fillStruct(EstadoError, SignoPeso),
+                    fillStruct(EstadoError, SignoPeso)
                 },
-                {   //RInStack
-                    fillStruct(NoExp, RInStack),
-                    fillStruct(NoExp, RInStack),
-                    fillStruct(NoExp, RInStack),
-                    fillStruct(NoExp, RInStack),
-                    fillStruct(NoExp, RInStack)
+                {   // 'R'
+                    fillStruct(EstadoError, RInStack),
+                    fillStruct(EstadoError, RInStack),
+                    fillStruct(EstadoError, RInStack),
+                    fillStruct(EstadoError, RInStack),
+                    fillStruct(EstadoError, RInStack)
                 }  
             }
         };
 
     puts("Ingrese una expresion aritmetica:");
+    fflush(stdin);
     char auxCaracter = fgetc(stdin); // Lee y elimina caracteres de la expresion
 
     while(auxCaracter != '\n')       // Mientras no haya terminado
     {
         if(auxCaracter != ' ')       // Saltear espacios
-        {
-            /*
+        {            
+            short estadoActual = eLectura.actualStatus;
+            short cimaPila = eLectura.topStack;
+            short caracterLeido = columnPosition(auxCaracter);
 
-            CODIGO
-
-            */
+            char elemCima = popStack(&stack);
+            
+            if(estadoActual == Q0) // (Q0, $) || (Q0,R)
+            {
+                if(caracterLeido == ParenthesesOpen)
+                {
+                    pushStack(&stack, elemCima);
+                    pushStack(&stack, 'R');
+                }
+                else
+                    pushStack(&stack, elemCima); 
+            }
+            else if((estadoActual == Q1 || estadoActual == Q2) && cimaPila == RInStack) // (Q1,R) || (Q2,R)   
+            {
+                    if(caracterLeido != ParenthesesClose)
+                        pushStack(&stack, elemCima); 
+            }
+            else
+                pushStack(&stack, elemCima);
+            
+            eLectura = AFPExpresionesAritmeticas[estadoActual][cimaPila][caracterLeido]; 
         }
         
         auxCaracter = fgetc(stdin);  // Pasa al siguiente caracter
     }
 
-    return 0;                        // Termina el programa
+    if((eLectura.actualStatus == Q1 || eLectura.actualStatus == Q2) && topePila(stack) == SignoPeso)
+        puts("Es sintacticamente correcto.");
+    else
+        puts("No es sintacticamente correcto.");
+
+    char option;
+
+    printf("Desea volver a compilar el programa? (S/N): ");
+    
+    if(option == 's' || option == 'S')
+        main();
+
+    return 0;   // Termina el programa
 }
 
 Node* newNode(char data)
@@ -137,7 +171,6 @@ void pushStack(Node** stack, char data)
     p->next = *stack;
     *stack = p;
 
-    printf("\'%c\' agregado a pila.\n", data);
 }
 
 char peekStack(Node* p)
@@ -166,12 +199,7 @@ void initStack(Node** stack)
 {
     pushStack(stack, '$');
 }
-
-void insertParenthesesToStack(Node** stack)
-{
-    pushStack(stack, 'R');
-} 
-
+ 
 void showStack(Node* stack)
 {
     Node* p = (Node*) malloc(sizeof(Node));
@@ -198,7 +226,7 @@ short columnPosition(char letter)
 
     if(letter == '0')
         posColumn = Zero;
-    else if(letter >= 1 && letter <= 9)
+    else if(letter >= '1' && letter <= '9')
         posColumn = To1_9;
     else if(letter == '+' || letter == '-' || letter == '*' || letter == '/')
         posColumn = Operators;
@@ -218,3 +246,13 @@ StatStack fillStruct(short status, short top)
 
     return stat_top;
 } 
+
+short topePila (Node* stack)
+{
+    char aux = peekStack(stack);
+
+    if(aux == 'R')
+        return RInStack;
+    else
+        return SignoPeso;
+}
