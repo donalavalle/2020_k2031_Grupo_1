@@ -3,36 +3,34 @@
 
 enum{Zero, To1_9, Operators, ParenthesesOpen, ParenthesesClose}; // Números asociados a los caracteres leídos
 enum{Q0, Q1, Q2, EstadoError};                                   // Nombres de Estados
-enum{SignoPeso, RInStack};                              // Nombres asignados a valores de la pila
+enum{SignoPeso, REnPila, Epsilon};                              // Nombres asignados a valores de la pila
 
-typedef struct node
+typedef struct node     // Struct de nodo
 {
-    char data;
-    struct node* next;
+    char data;          // Guarda un caracter
+    struct node* next;  // Puntero a nodo
 } Node;
 
-typedef struct status_topStack
+typedef struct status_topStack  // Struct de estado y cima
 {
-    short actualStatus; // Guarda el stado actual
-    short topStack;     // Guarda lo que tiene que ir en la pila
+    short actualStatus;         // Guarda el estado actual
+    short topStack;             // Guarda lo que tiene que ir en la pila
 } StatStack;
 
-Node* newNode(char);                    // Crea un nodo
-void pushStack(Node**, char);           // Agregar a pila
-char peekStack(Node*);                  // Muestra cima de pila sin sacarla (No usamos la función)
-char popStack(Node**);                  // Sacar cima de pila
-void initStack(Node**);                 // Inicia la pila con el '$'
-void showStack(Node*);                  // Muestra el contenido de pila (No lo usamos)
-short topePila(Node*);                   // Devuelve un número según lo que haya en la cima de pila
-short columnPosition(char);             // Dependiendo el caracter que lee, decide asignar un número específico
-StatStack fillStruct(short, short);     // Rellena el struct dependiendo el estado
+Node* newNode(char);                // Crea un nodo
+void pushStack(Node**, char);       // Agregar nodo a pila
+char peekStack(Node*);              // Muestra cima de pila sin eliminarla
+char popStack(Node**);              // Sacar cima de pila
+short topePila(Node*);              // Devuelve un número según lo que haya en la cima de pila
+short columnPosition(char);         // Dependiendo el caracter que lee, decide asignar un número específico
+StatStack fillStruct(short, short); // Rellena el struct
 
 int main()
 {
-    Node* stack = NULL;
-    initStack(&stack); 
+    Node* stack = NULL; // Crea una pila
+    pushStack(&stack, '$');  // Seteo '$' como piso de pila
 
-    StatStack eLectura = {Q0, SignoPeso};
+    StatStack eLectura = {Q0, SignoPeso};   // Estado de Inicio del AFP
 
     StatStack AFPExpresionesAritmeticas[4][2][5] =  // [Estado Actual] [Cima de Pila] [Caracter Leido]
         {
@@ -41,15 +39,15 @@ int main()
                     fillStruct(EstadoError, SignoPeso),
                     fillStruct(Q1, SignoPeso), 
                     fillStruct(EstadoError, SignoPeso),
-                    fillStruct(Q0, RInStack),
+                    fillStruct(Q0, REnPila),
                     fillStruct(EstadoError, SignoPeso)
                 },
                 {   // 'R'
-                    fillStruct(EstadoError, RInStack),
-                    fillStruct(Q1, RInStack), 
-                    fillStruct(EstadoError, RInStack),
-                    fillStruct(Q0, RInStack),
-                    fillStruct(EstadoError, RInStack)
+                    fillStruct(EstadoError, REnPila),
+                    fillStruct(Q1, REnPila), 
+                    fillStruct(EstadoError, REnPila),
+                    fillStruct(Q0, REnPila),
+                    fillStruct(EstadoError, REnPila)
                 }  
             },
             {   //Q1 
@@ -61,11 +59,12 @@ int main()
                     fillStruct(EstadoError, SignoPeso)
                 },
                 {   // 'R'
-                    fillStruct(Q1, RInStack),
-                    fillStruct(Q1, RInStack),
-                    fillStruct(Q0, RInStack),
-                    fillStruct(EstadoError, RInStack),
-                    fillStruct(Q2, topePila(stack))
+                    fillStruct(Q1, REnPila),
+                    fillStruct(Q1, REnPila),
+                    fillStruct(Q0, REnPila),
+                    fillStruct(EstadoError, REnPila),
+                    //fillStruct(Q2, topePila(stack))
+                    fillStruct(Q2, Epsilon)
                 }  
             }
             ,
@@ -78,11 +77,12 @@ int main()
                     fillStruct(EstadoError, SignoPeso)
                 }, 
                 {   // 'R'
-                    fillStruct(EstadoError, RInStack),
-                    fillStruct(EstadoError, RInStack),
-                    fillStruct(Q0, RInStack),
-                    fillStruct(EstadoError, RInStack),
-                    fillStruct(Q2, topePila(stack))
+                    fillStruct(EstadoError, REnPila),
+                    fillStruct(EstadoError, REnPila),
+                    fillStruct(Q0, REnPila),
+                    fillStruct(EstadoError, REnPila),
+                    //fillStruct(Q2, topePila(stack))
+                    fillStruct(Q2, Epsilon)
                 }
             },
             {   //EstadoError
@@ -94,54 +94,60 @@ int main()
                     fillStruct(EstadoError, SignoPeso)
                 },
                 {   // 'R'
-                    fillStruct(EstadoError, RInStack),
-                    fillStruct(EstadoError, RInStack),
-                    fillStruct(EstadoError, RInStack),
-                    fillStruct(EstadoError, RInStack),
-                    fillStruct(EstadoError, RInStack)
+                    fillStruct(EstadoError, REnPila),
+                    fillStruct(EstadoError, REnPila),
+                    fillStruct(EstadoError, REnPila),
+                    fillStruct(EstadoError, REnPila),
+                    fillStruct(EstadoError, REnPila)
                 }  
             }
         };
 
     puts("Ingrese una expresion aritmetica:");
-    fflush(stdin);
+    fflush(stdin);                   //Limpio el buffer
+
     char auxCaracter = fgetc(stdin); // Lee y elimina caracteres de la expresion
 
     while(auxCaracter != '\n')       // Mientras no haya terminado
     {
         if(auxCaracter != ' ')       // Saltear espacios
-        {            
+        {   
+            // Guardo lo leído en variables
             short estadoActual = eLectura.actualStatus;
             short cimaPila = eLectura.topStack;
             short caracterLeido = columnPosition(auxCaracter);
 
-            char elemCima = popStack(&stack);
+            if(cimaPila == Epsilon) //Si leo Epsilon dentro de la matriz, leo la cima de la pila y lo guardo
+                cimaPila = topePila(stack);
+
+            char elemCima = popStack(&stack);   //Guardo el valor del tope de pila eliminando el nodo
             
             if(estadoActual == Q0) // (Q0, $) || (Q0,R)
             {
-                if(caracterLeido == ParenthesesOpen)
+                if(caracterLeido == ParenthesesOpen)    // Si lee un '('
                 {
-                    pushStack(&stack, elemCima);
+                    pushStack(&stack, elemCima);    
                     pushStack(&stack, 'R');
                 }
                 else
                     pushStack(&stack, elemCima); 
             }
-            else if((estadoActual == Q1 || estadoActual == Q2) && cimaPila == RInStack) // (Q1,R) || (Q2,R)   
+            else if((estadoActual == Q1 || estadoActual == Q2) && cimaPila == REnPila) // (Q1,R) || (Q2,R)   
             {
-                    if(caracterLeido != ParenthesesClose)
+                    if(caracterLeido != ParenthesesClose)   // Si no lee un ')'
                         pushStack(&stack, elemCima); 
             }
             else
                 pushStack(&stack, elemCima);
             
-            eLectura = AFPExpresionesAritmeticas[estadoActual][cimaPila][caracterLeido]; 
+            eLectura = AFPExpresionesAritmeticas[estadoActual][cimaPila][caracterLeido]; // Actualizo el estado
         }
         
         auxCaracter = fgetc(stdin);  // Pasa al siguiente caracter
     }
 
-    if((eLectura.actualStatus == Q1 || eLectura.actualStatus == Q2) && topePila(stack) == SignoPeso)
+    // Discrimino los estados finales
+    if((eLectura.actualStatus == Q1 || eLectura.actualStatus == Q2) && topePila(stack) == SignoPeso) // (Q1, $) || (Q2, $)
         puts("Es sintacticamente correcto.");
     else
         puts("No es sintacticamente correcto.");
@@ -149,9 +155,10 @@ int main()
     char option;
 
     printf("Desea volver a compilar el programa? (S/N): ");
-    
-    if(option == 's' || option == 'S')
-        main();
+    scanf("%c", &option);
+
+    if(option == 's' || option == 'S')  // Si elige que sí
+        main(); // Vuelvo a llamar al main si elige el cliente volver a compilar
 
     return 0;   // Termina el programa
 }
@@ -195,31 +202,6 @@ char popStack(Node** stack)
 
 }
 
-void initStack(Node** stack)
-{
-    pushStack(stack, '$');
-}
- 
-void showStack(Node* stack)
-{
-    Node* p = (Node*) malloc(sizeof(Node));
-    p = stack;
-    printf("Stack: ");
-    if(stack != NULL)
-    {
-        while(p != NULL)
-        {
-            printf("%c", p->data);
-            p = p->next;
-            if(p != NULL)
-                printf(" -> ");
-        }
-        puts("");
-    }
-    else
-        puts("La pila esta vacia");
-}
-
 short columnPosition(char letter)
 {
     short posColumn;
@@ -234,6 +216,8 @@ short columnPosition(char letter)
         posColumn = ParenthesesOpen;
     else if(letter == ')')
         posColumn = ParenthesesClose;
+    else
+        return -1;
 
     return posColumn;
 }
@@ -252,7 +236,7 @@ short topePila (Node* stack)
     char aux = peekStack(stack);
 
     if(aux == 'R')
-        return RInStack;
+        return REnPila;
     else
         return SignoPeso;
 }
