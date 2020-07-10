@@ -1,0 +1,73 @@
+#include <stdio.h>
+
+int main()
+{
+    char b = 'B';
+    int d = 0xFF;
+    int e = 017;
+    int f = 08;
+    int a = 10;
+
+    // Este es un comentario de una linea
+
+    /*
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        Este es un comentario de bloque
+
+    */
+
+    char* ptr = "Hola Mundo!";
+    a = a + 10;
+    a += 10;
+    float g = 10.25;
+
+}
