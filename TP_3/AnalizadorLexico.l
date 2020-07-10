@@ -3,6 +3,7 @@
 %{
     #include <stdio.h>
     #include <stdlib.h>
+    #include "Funciones.c"
 %}
 
 DECIMAL [0-9]
@@ -20,7 +21,7 @@ OPER_O_PUNT2 "!="|"^"|"|"|"&&"|"||"|"?"|"="|"+="|"-="|"*="|"/="|"%="|"<<="|">>="
 CONST_DECIMAL [1-9]{DECIMAL}*
 CONST_OCTAL 0{OCTAL}*
 CONST_HEXA 0[xX]{HEXA}+
-CONST_REAL {DECIMAL}*"."?{DECIMAL}*([eE]{DECIMAL}+)?
+CONST_REAL {DECIMAL}*"."?{DECIMAL}*([eE](\+|\-)?{DECIMAL}+)?
 CARACTER \'.\'
 LITERAL_CADENA \".+\"
 PALABRA_RESERVADA {TIPO_DATO}|{ESTRUCTURA_CONTROL}|{OTROS}
@@ -31,6 +32,11 @@ OPER_O_PUNT {OPER_O_PUNT1}|{OPER_O_PUNT2}
 COMENTARIO_LINEA "//".*
 COMENTARIO_BLOQUE "/*"(.|\n)*"*/"
 INCLUDE #include(" ")+(\".+\"|<.+>)
+
+CONSTANTES {CONST_DECIMAL}|{CONST_OCTAL}|{CONST_HEXA}|{CONST_REAL}|{CARACTER}
+TOKEN {PALABRA_RESERVADA}|{IDENTIFICADOR}|{OPER_OR_PUNT}|{CONSTANTES}|{LITERAL_CADENA}
+
+
 
 %%
 {INCLUDE}           {printf("Encontre la directiva de precompilador: %s\n", yytext);}
