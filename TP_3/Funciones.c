@@ -1,91 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 typedef struct node
 {
     char* dato;
     int acum;
     struct node* sig;
 } Nodo;
-
-/* int quantityOfLineJumps(char*);
-Node* newNode(char*);
-short existNode(Node*, char*);
-Node* searchNode(Node**, char*);
-void insertToList(Node**, char*);
-void insertToListLine(Node**, char*, int);
-void insertSorted(Node**, char*);
-void showList(Node*);
-void showQuantity(Node*);
-int sumConstDec(Node*); */
-
-/* int main(){
-
-    Node* listNonSorted = NULL;
-    Node* listSorted = NULL;
-    Node* listOfNumbers = NULL;
-    Node* listOfStrings = NULL;
-    Node* listOfUnknown = NULL;
-
-    insertToList(&listNonSorted, "info");
-    insertToList(&listNonSorted, "info");
-    insertToList(&listNonSorted, "a");
-    insertToList(&listNonSorted, "b");
-    insertToList(&listNonSorted, "b");
-    insertToList(&listNonSorted, "b");
-    insertToList(&listNonSorted, "b");
-
-    insertSorted(&listSorted, "info");
-    insertSorted(&listSorted, "info");
-    insertSorted(&listSorted, "a");
-    insertSorted(&listSorted, "b");
-    insertSorted(&listSorted, "b");
-    insertSorted(&listSorted, "b");
-    insertSorted(&listSorted, "b");
-
-    insertToList(&listOfNumbers, "910");
-    insertToList(&listOfNumbers, "15");
-    insertToList(&listOfNumbers, "8");
-    insertToList(&listOfNumbers, "7");
-
-    insertToList(&listOfStrings, "\"Hola mundo!\"");
-    insertToList(&listOfStrings, "\"Agustin\"");
-    insertToList(&listOfStrings, "\"Programacion en C\"");
-
-    insertToListLine(&listOfUnknown, "$", 12);
-    insertToListLine(&listOfUnknown, "e", 45);
-    insertToListLine(&listOfUnknown, "a", 50);
-    
-    showList(listNonSorted);
-    showList(listSorted);
-    showQuantity(listSorted);
-    showList(listOfStrings);
-    showQuantity(listOfStrings);
-    showList(listOfUnknown);
-    showQuantity(listOfUnknown);
-
-    printf("\nLa sumatoria de los numeros decimales es: %d\n", sumConstDec(listOfNumbers));
-
-    free(listNonSorted);
-    free(listSorted);
-    free(listOfNumbers);
-    free(listOfStrings);
-    free(listOfUnknown);
- 
-
-    char* number = "1.66E10";
-    char* temp;
-    char *c = "Holaa   mundo";
-    int parteEntera = strtoll(number, &temp, 10);
-    int mantisa = strtoll((temp + 1), NULL, 10);
-
-    printf("La parte entera de %s es: %d\n", number, parteEntera);
-    printf("La mantisa de %s es: 0.%d\n", number, mantisa);
-
-    return 0;
-
-} */
 
 int cantidadSaltosDeLinea(char* data)
 {
@@ -123,24 +44,6 @@ short existeNodo(Nodo* list, char* dato)
     else
         return 0;
 }
-
-/* void insertToList(Node** list, char* dato)
-{
-    Node* p = newNode(dato);
-    p->acum = strlen(dato) - 2;
-    Node* temp = *list;
-
-    if(*list == NULL)
-        *list = p;
-    else
-    {
-        while(temp->sig != NULL)
-            temp = temp->sig;
-
-        p->sig = temp->sig;
-        temp->sig = p;
-    }
-} */
 
 /* void insertToListLine(Node** list, char* dato, int line)
 {
@@ -291,28 +194,6 @@ void parteEnteraYMantisa(Nodo* lista, FILE* archivo)
         p = p->sig;
     }
 }
-
-
-
-
-
-
-/* 
-int sumConstDec(Node* list)
-{
-    int sum = 0;
-
-    Node* p = list;
-
-    while(p != NULL)
-    {
-        sum += strtoll(p->dato, NULL, 10);
-        p = p->sig;
-    }
-
-    return sum;
-} */
-
 
 Nodo* listaDeIdentificadores = NULL;
 Nodo* listaDeLiterales = NULL;
