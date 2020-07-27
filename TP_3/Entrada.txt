@@ -1,73 +1,35 @@
 #include <stdio.h>
 
+#define PI  
+#define  
+#define duplicar(a) (a * 2)
+
 int main()
-{
+{   
+    char b = '{';
     char b = 'B';
     int d = 0xFF;
     int e = 017;
     int f = 08;
     int a = 10;
-
+    char b = 'h';
+    char b = 'x';
+    char b = '$';
     // Este es un comentario de una linea
 
     /*
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         Este es un comentario de bloque
-
+        otro comentario
     */
 
+    // hola como estas 
+
+    
     char* ptr = "Hola Mundo!";
     a = a + 10;
     a += 10;
     float g = 10.25;
 
+    /*Otro comentario*/
 }
+

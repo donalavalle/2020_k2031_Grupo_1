@@ -50,19 +50,19 @@ short existeNodo(Nodo* list, char* dato)
     Node* p = newNode(dato);
     p->acum = line;
     Node* temp = *list;
-
     if(*list == NULL)
         *list = p;
     else
     {
         while(temp->sig != NULL)
             temp = temp->sig;
-
         p->sig = temp->sig;
         temp->sig = p;
     }
 }
  */
+
+
 Nodo* buscarNodo(Nodo** list, char* dato)
 {
     Nodo* p = *list;
@@ -100,7 +100,6 @@ void insertarOrdenado(Nodo** list, char* dato)
         p = buscarNodo(list, dato);
         p->acum += 1;
     }
-
 }
 
 void insertarEnLista(Nodo** lista, char* dato)
@@ -118,8 +117,7 @@ void insertarEnLista(Nodo** lista, char* dato)
         
         aux->sig = temp->sig;
         temp->sig = aux;
-    }
-    
+    }  
 }
 
 void mostrarLista(Nodo* list, FILE* archivo)
@@ -150,18 +148,24 @@ void mostrarAcum(Nodo* list, FILE* archivo)
     }
 }
 
-void mostrarEnDecimal(Nodo* lista, short base, FILE* archivo)
+void mostrar(char* elem, char* acum, Nodo* list, FILE* archivo)
 {
-    Nodo* p = lista;
-
-    fprintf(archivo, "Sus valores en decimal son: ");
+    Nodo* p = list;
 
     while(p != NULL)
     {   
-        if(p->sig != NULL)
-            fprintf(archivo, "%d -> ", strtoll(p->dato, NULL, base));
-        else
-            fprintf(archivo, "%d\n", strtoll(p->dato, NULL, base));
+        fprintf(archivo, " - %s: %s\t\t%s: %d\n", elem, p->dato, acum, p->acum);
+        p = p -> sig;
+    }
+}
+
+void mostrarEnDecimal(char* texto, Nodo* lista, short base, FILE* archivo)
+{
+    Nodo* p = lista;
+
+    while(p != NULL)
+    {   
+        fprintf(archivo, " - %s: %s\t\tValor en decimal: %d\n", texto, p->dato, strtoll(p->dato, NULL, base));
         p = p -> sig;
     }
 }
@@ -186,10 +190,35 @@ void parteEnteraYMantisa(Nodo* lista, FILE* archivo)
 
     while(p != NULL)
     {
-        float temp = atof(p->dato);
+        double temp = atof(p->dato);
         int parteEntera = (int) temp;
-        fprintf(archivo, "La parte entera es: %d\n", parteEntera);
-        fprintf(archivo, "La mantisa es es: %f\n\n", temp - parteEntera);
+        fprintf(archivo, "Constante real: %s  ", p->dato);
+        fprintf(archivo, "Parte entera: %d  ", parteEntera);
+        fprintf(archivo, "Mantisa: %f\n\n", temp - parteEntera);
+
+        p = p->sig;
+    }
+}
+
+void mostrarCaracteres(Nodo* lista, FILE* archivo)
+{
+    Nodo* p = lista;
+    int i = 1;
+    while(p != NULL)
+    {
+        fprintf(archivo, "%d) %s\n", i, p->dato);
+        i++;
+        p = p->sig;
+    }
+}
+
+void mostrarComentario(Nodo* lista, FILE* archivo)
+{
+    Nodo* p = lista;
+
+    while(p != NULL)
+    {
+        fprintf(archivo, "%s\n", p->dato);
 
         p = p->sig;
     }
@@ -202,34 +231,48 @@ Nodo* listaDeOctales = NULL;
 Nodo* listaDeHexadecimales = NULL;
 Nodo* listaDeDecimales = NULL;
 Nodo* listaDeReales = NULL;
+Nodo* listaDeCaracteres = NULL;
+Nodo* listaDeOperYPunt = NULL;
+Nodo* listaDeComentariosDeLinea = NULL;
+Nodo* listaDeComentariosDeBloque = NULL;
 
 unsigned cantSaltosLinea = 1;
 
 void generarReporte(FILE* archivo)
 {
     fprintf(archivo, "----- Reporte -----\n\n");
-    fprintf(archivo, "Lista de identificadores: ");
-    mostrarLista(listaDeIdentificadores, archivo);
-    fprintf(archivo, "Cantidad de veces aparecidas: ");
-    mostrarAcum(listaDeIdentificadores, archivo);
-    fprintf(archivo, "\nLista de literales cadena: ");
-    mostrarLista(listaDeLiterales, archivo);
-    fprintf(archivo, "Largo de literales cadena: ");
-    mostrarAcum(listaDeLiterales, archivo);
+    fprintf(archivo, "Lista de identificadores:\n");
+    mostrar("Identificador", "Cantidad de veces que aparece", listaDeIdentificadores, archivo);
+    
+    fprintf(archivo, "\nLista de literales cadena:\n");
+    mostrar("Literal cadena", "Largo", listaDeLiterales, archivo);
     fprintf(archivo, "\nLista de palabras reservadas: ");
     mostrarLista(listaDePalabrasReservadas, archivo);
-    fprintf(archivo, "\nLista de constantes octales: ");
-    mostrarLista(listaDeOctales, archivo);
-    mostrarEnDecimal(listaDeOctales, 8, archivo);
-    fprintf(archivo, "\nLista de constantes hexadecimales: ");
-    mostrarLista(listaDeHexadecimales, archivo);
-    mostrarEnDecimal(listaDeHexadecimales, 16, archivo);
+    
+    fprintf(archivo, "\nLista de constantes octales:\n");
+    mostrarEnDecimal("Constante octal", listaDeOctales, 8, archivo);
+    
+    fprintf(archivo, "\nLista de constantes hexadecimales:\n");
+    mostrarEnDecimal("Constante hexadecimal", listaDeHexadecimales, 16, archivo);
+
     fprintf(archivo, "\nLista de constantes decimales: ");
     mostrarLista(listaDeDecimales, archivo);
     sumaDeDecimales(listaDeDecimales, archivo);
-    fprintf(archivo, "\nLista de constantes reales: ");
-    mostrarLista(listaDeReales, archivo);
+    
+    fprintf(archivo, "\nLista de constantes reales:\n");
     parteEnteraYMantisa(listaDeReales, archivo);
+
+    fprintf(archivo, "\nLista de constantes caracter:\n");
+    mostrarCaracteres(listaDeCaracteres, archivo);
+
+    fprintf(archivo, "\nLista de operadores y puntuadores:\n");
+    mostrar("Operador/Puntuador", "Cantidad de veces que aparece", listaDeOperYPunt, archivo);
+
+    fprintf(archivo, "\nLista de comentarios de linea:\n");
+    mostrarComentario(listaDeComentariosDeLinea, archivo);
+
+    fprintf(archivo, "\nLista de comentarios de bloque:\n");
+    mostrarComentario(listaDeComentariosDeBloque, archivo);
 
     free(listaDeIdentificadores);
     free(listaDeLiterales);
@@ -238,4 +281,8 @@ void generarReporte(FILE* archivo)
     free(listaDeHexadecimales);
     free(listaDeDecimales);
     free(listaDeReales);
+    free(listaDeCaracteres);
+    free(listaDeOperYPunt);
+    free(listaDeComentariosDeLinea);
+    free(listaDeComentariosDeBloque);
 }
