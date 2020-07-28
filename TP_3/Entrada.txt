@@ -6,7 +6,7 @@
 
 int main()
 {   
-    char b = '{';
+    char b$$$ = '{';
     char b = 'B';
     int d = 0xFF;
     int e = 017;
@@ -29,6 +29,8 @@ int main()
     a = a + 10;
     a += 10;
     float g = 10.25;
+    float h = 10000.65;
+    float i = 123456789.1234567892;
 
     /*Otro comentario*/
 }

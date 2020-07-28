@@ -8,6 +8,73 @@ typedef struct node
     struct node* sig;
 } Nodo;
 
+Nodo* listaDeIdentificadores = NULL;
+Nodo* listaDeLiterales = NULL;
+Nodo* listaDePalabrasReservadas = NULL;
+Nodo* listaDeOctales = NULL;
+Nodo* listaDeHexadecimales = NULL;
+Nodo* listaDeDecimales = NULL;
+Nodo* listaDeReales = NULL;
+Nodo* listaDeCaracteres = NULL;
+Nodo* listaDeOperYPunt = NULL;
+Nodo* listaDeComentariosDeLinea = NULL;
+Nodo* listaDeComentariosDeBloque = NULL;
+Nodo* listaDeErrores = NULL;
+
+unsigned cantSaltosLinea = 1;
+
+char* cadenaErronea = NULL;
+unsigned errorFlag = 0;
+
+Nodo* nuevoNodo(char* dato)
+{
+    Nodo* newNode= (Nodo*) malloc(sizeof(Nodo));
+    newNode->dato = strdup(dato);
+    newNode->acum = 1;
+    newNode->sig = NULL;
+
+    return newNode;
+}
+
+void insertarLinea(Nodo** lista, char* dato, int linea)
+{
+    Nodo* p = nuevoNodo(dato);
+    p->acum = linea;
+    Nodo* temp = *lista;
+    if(*lista == NULL)
+        *lista = p;
+    else
+    {
+        while(temp->sig != NULL)
+            temp = temp->sig;
+        p->sig = temp->sig;
+        temp->sig = p;
+    }
+}
+
+void esError(char* charErroneo){
+    if(cadenaErronea == NULL)
+        cadenaErronea = strdup(charErroneo);
+    else
+    {
+        char * ptr = malloc(strlen(charErroneo) + strlen(cadenaErronea) + 1);
+        strcpy(ptr, cadenaErronea);
+        strcat(ptr, charErroneo);
+        cadenaErronea = strdup(ptr);
+    }
+    errorFlag = 1;
+}
+
+void finalDeError(){
+    if (errorFlag)
+    {
+        insertarLinea(&listaDeErrores, cadenaErronea, cantSaltosLinea);
+        cadenaErronea = NULL;
+        errorFlag = 0;
+    }
+    errorFlag = 0;
+}
+
 int cantidadSaltosDeLinea(char* data)
 {
     int cant= 0;
@@ -22,17 +89,6 @@ int cantidadSaltosDeLinea(char* data)
     return cant;
 }
 
-Nodo* nuevoNodo(char* dato)
-{
-    Nodo* newNode= (Nodo*) malloc(sizeof(Nodo));
-    newNode->dato = (char*) malloc((strlen(dato) + 1) * sizeof(char));
-    strcpy(newNode->dato, dato);
-    newNode->acum = 1;
-    newNode->sig = NULL;
-
-    return newNode;
-}
-
 short existeNodo(Nodo* list, char* dato)
 {
     Nodo* p = list;
@@ -44,24 +100,6 @@ short existeNodo(Nodo* list, char* dato)
     else
         return 0;
 }
-
-/* void insertToListLine(Node** list, char* dato, int line)
-{
-    Node* p = newNode(dato);
-    p->acum = line;
-    Node* temp = *list;
-    if(*list == NULL)
-        *list = p;
-    else
-    {
-        while(temp->sig != NULL)
-            temp = temp->sig;
-        p->sig = temp->sig;
-        temp->sig = p;
-    }
-}
- */
-
 
 Nodo* buscarNodo(Nodo** list, char* dato)
 {
@@ -123,38 +161,87 @@ void insertarEnLista(Nodo** lista, char* dato)
 void mostrarLista(Nodo* list, FILE* archivo)
 {
     Nodo* p = list;
-
+    
     while(p != NULL)
     {   
-        if(p->sig != NULL)
-            fprintf(archivo, "%s -> ", p->dato);
-        else
-            fprintf(archivo, "%s\n", p->dato);
-        p = p -> sig;
+        unsigned limite = 0;
+
+        while(limite != 16 && p != NULL)
+        {
+            if(p->sig != NULL)
+                fprintf(archivo, "%s -> ", p->dato);
+            else
+                fprintf(archivo, "%s\n", p->dato);
+            p = p -> sig;
+
+            limite++;
+        }
+        if(p != NULL)
+            fprintf(archivo, "\n");
     }
 }
 
-void mostrarAcum(Nodo* list, FILE* archivo)
+unsigned encontrarMaximo(Nodo* lista)
 {
-    Nodo* p = list;
+    Nodo* p = lista;
+    unsigned maximo = 0;
 
     while(p != NULL)
-    {   
-        if(p->sig != NULL)
-            fprintf(archivo, "%d -> ", p->acum);
-        else
-            fprintf(archivo, "%d\n", p->acum);
-        p = p -> sig;
+    {
+        unsigned largo = strlen(p->dato);
+        if(maximo < largo)
+            maximo = largo;
+        p = p->sig;
     }
+
+    return maximo;
 }
 
-void mostrar(char* elem, char* acum, Nodo* list, FILE* archivo)
+unsigned encontrarMaxParteEntera(Nodo* lista)
 {
-    Nodo* p = list;
+    Nodo* p = lista;
+    unsigned maximo = 0;
+
+    while(p != NULL)
+    {
+        double temp = atof(p->dato);
+        int parteEntera = (int) temp;
+
+        char* buffer = (char*) malloc((strlen(p->dato) + 1) * sizeof(char));
+        sprintf(buffer, "%d", parteEntera);
+
+        unsigned largo = strlen(buffer);
+        if(maximo < largo)
+            maximo = largo;
+        p = p->sig;
+    }
+
+    return maximo;
+}
+
+
+char* cantidadDeEspacios(unsigned maximo)
+{
+    char* espacio = " ";
+    int largo = strlen(espacio);
+    char* resultado = malloc(largo * maximo + 1);
+
+    for (int i = 0 ; i < maximo ; i++)
+        memcpy(resultado + i * largo, espacio, largo);
+    resultado[largo * maximo] = '\0';
+
+    return resultado;
+}
+
+void mostrar(char* elem, char* acum, Nodo* lista, FILE* archivo)
+{
+    Nodo* p = lista;
 
     while(p != NULL)
     {   
-        fprintf(archivo, " - %s: %s\t\t%s: %d\n", elem, p->dato, acum, p->acum);
+        unsigned maximo = encontrarMaximo(lista);
+        char* cantidadEspacios = cantidadDeEspacios(maximo - strlen(p->dato));
+        fprintf(archivo, " - %s: \'%s\' %s - %s: %d\n", elem, p->dato, cantidadEspacios, acum, p->acum);
         p = p -> sig;
     }
 }
@@ -165,7 +252,9 @@ void mostrarEnDecimal(char* texto, Nodo* lista, short base, FILE* archivo)
 
     while(p != NULL)
     {   
-        fprintf(archivo, " - %s: %s\t\tValor en decimal: %d\n", texto, p->dato, strtoll(p->dato, NULL, base));
+        unsigned maximo = encontrarMaximo(lista);
+        char* cantidadEspacios = cantidadDeEspacios(maximo - strlen(p->dato));
+        fprintf(archivo, " - %s: %s %s - Valor en decimal: %d\n", texto, p->dato, cantidadEspacios, strtoll(p->dato, NULL, base));
         p = p -> sig;
     }
 }
@@ -181,7 +270,45 @@ void sumaDeDecimales(Nodo* lista, FILE* archivo)
         p = p->sig;
     }
 
-    fprintf(archivo, "La sumatoria de los decimales es: %d\n", acum);
+    fprintf(archivo, "\nLa sumatoria de los decimales es: %d\n", acum);
+}
+
+void cantidadDecimales(unsigned cantidad, float valor, FILE* archivo)
+{
+    if(cantidad > 8)
+        cantidad = 8;
+
+    switch(cantidad)
+    {
+        default:
+        case 0:
+            fprintf(archivo, " - Mantisa: 0.0\n");
+            break;
+        case 1:
+            fprintf(archivo, " - Mantisa: %0.1f\n", valor);
+            break;
+        case 2:
+            fprintf(archivo, " - Mantisa: %0.2f\n", valor);
+            break;
+        case 3:
+            fprintf(archivo, " - Mantisa: %0.3f\n", valor);
+            break;
+        case 4:
+            fprintf(archivo, " - Mantisa: %0.4f\n", valor);
+            break;
+        case 5:
+            fprintf(archivo, " - Mantisa: %0.5f\n", valor);
+            break;
+        case 6:
+            fprintf(archivo, " - Mantisa: %0.6f\n", valor);
+            break;
+        case 7:
+            fprintf(archivo, " - Mantisa: %0.7f\n", valor);
+            break;
+        case 8:
+            fprintf(archivo, " - Mantisa: %0.8f\n", valor);
+            break;
+    }
 }
 
 void parteEnteraYMantisa(Nodo* lista, FILE* archivo)
@@ -190,11 +317,25 @@ void parteEnteraYMantisa(Nodo* lista, FILE* archivo)
 
     while(p != NULL)
     {
+        unsigned maximo = encontrarMaximo(lista);
+        char* cantidadEspacios = cantidadDeEspacios(maximo - strlen(p->dato));
+
         double temp = atof(p->dato);
+        
+        char* decimales;
+        strtoll(p->dato, &decimales, 10);
         int parteEntera = (int) temp;
-        fprintf(archivo, "Constante real: %s  ", p->dato);
-        fprintf(archivo, "Parte entera: %d  ", parteEntera);
-        fprintf(archivo, "Mantisa: %f\n\n", temp - parteEntera);
+
+        char* buffer = (char*) malloc((strlen(p->dato) + 1) * sizeof(char));
+        sprintf(buffer, "%d", parteEntera);
+
+        fprintf(archivo, " - Constante real: %s %s", p->dato, cantidadEspacios);
+
+        maximo = encontrarMaxParteEntera(lista);
+        cantidadEspacios = cantidadDeEspacios(maximo - strlen(buffer));
+
+        fprintf(archivo, " - Parte entera: %d %s", parteEntera, cantidadEspacios);
+        cantidadDecimales(strlen(decimales) - 1, temp - parteEntera, archivo);
 
         p = p->sig;
     }
@@ -224,20 +365,6 @@ void mostrarComentario(Nodo* lista, FILE* archivo)
     }
 }
 
-Nodo* listaDeIdentificadores = NULL;
-Nodo* listaDeLiterales = NULL;
-Nodo* listaDePalabrasReservadas = NULL;
-Nodo* listaDeOctales = NULL;
-Nodo* listaDeHexadecimales = NULL;
-Nodo* listaDeDecimales = NULL;
-Nodo* listaDeReales = NULL;
-Nodo* listaDeCaracteres = NULL;
-Nodo* listaDeOperYPunt = NULL;
-Nodo* listaDeComentariosDeLinea = NULL;
-Nodo* listaDeComentariosDeBloque = NULL;
-
-unsigned cantSaltosLinea = 1;
-
 void generarReporte(FILE* archivo)
 {
     fprintf(archivo, "----- Reporte -----\n\n");
@@ -246,7 +373,7 @@ void generarReporte(FILE* archivo)
     
     fprintf(archivo, "\nLista de literales cadena:\n");
     mostrar("Literal cadena", "Largo", listaDeLiterales, archivo);
-    fprintf(archivo, "\nLista de palabras reservadas: ");
+    fprintf(archivo, "\nLista de palabras reservadas:\n");
     mostrarLista(listaDePalabrasReservadas, archivo);
     
     fprintf(archivo, "\nLista de constantes octales:\n");
@@ -255,7 +382,7 @@ void generarReporte(FILE* archivo)
     fprintf(archivo, "\nLista de constantes hexadecimales:\n");
     mostrarEnDecimal("Constante hexadecimal", listaDeHexadecimales, 16, archivo);
 
-    fprintf(archivo, "\nLista de constantes decimales: ");
+    fprintf(archivo, "\nLista de constantes decimales:\n");
     mostrarLista(listaDeDecimales, archivo);
     sumaDeDecimales(listaDeDecimales, archivo);
     
@@ -274,6 +401,9 @@ void generarReporte(FILE* archivo)
     fprintf(archivo, "\nLista de comentarios de bloque:\n");
     mostrarComentario(listaDeComentariosDeBloque, archivo);
 
+    fprintf(archivo, "\nLista de caracteres/cadenas erroneas:\n");
+    mostrar("Caracter/Cadena", "Aparece en linea", listaDeErrores, archivo);
+
     free(listaDeIdentificadores);
     free(listaDeLiterales);
     free(listaDePalabrasReservadas);
@@ -285,4 +415,5 @@ void generarReporte(FILE* archivo)
     free(listaDeOperYPunt);
     free(listaDeComentariosDeLinea);
     free(listaDeComentariosDeBloque);
+    free(listaDeErrores);
 }

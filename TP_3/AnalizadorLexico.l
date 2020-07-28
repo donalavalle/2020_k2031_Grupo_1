@@ -36,20 +36,20 @@ DEFINE #define(" ")+[^" "|"\n"]+(" ")*.*
 DIRECTIVA {INCLUDE}|{DEFINE}
 
 %%
-{DIRECTIVA}         {fprintf(yyout, "Encontre la directiva de precompilador: %s\n", yytext);}
-{CONST_DECIMAL}     {insertarEnLista(&listaDeDecimales, yytext);}
-{CONST_OCTAL}       {insertarEnLista(&listaDeOctales, yytext);}
-{CONST_HEXA}        {insertarEnLista(&listaDeHexadecimales, yytext);}
-{CONST_REAL}        {insertarEnLista(&listaDeReales, yytext);}
-{CARACTER}          {insertarEnLista(&listaDeCaracteres, yytext);}
-{OPER_O_PUNT}       {insertarOrdenado(&listaDeOperYPunt, yytext);}
-{LITERAL_CADENA}    {insertarEnLista(&listaDeLiterales, yytext);}
-{PALABRA_RESERVADA} {insertarEnLista(&listaDePalabrasReservadas, yytext);}
-{IDENTIFICADOR}     {insertarOrdenado(&listaDeIdentificadores, yytext);}
-{COMENTARIO_LINEA}  {insertarEnLista(&listaDeComentariosDeLinea, yytext);}
-{COMENTARIO_BLOQUE} {insertarEnLista(&listaDeComentariosDeBloque, yytext); cantSaltosLinea += cantidadSaltosDeLinea(yytext);}
-{SALTO_LINEA}       {cantSaltosLinea++;}
-{COMODIN}           {/* fprintf(yyout, "Encontre el caracter no valido: %s\n", yytext); */}
+{DIRECTIVA}         {fprintf(yyout, "Encontre la directiva de precompilador: %s\n", yytext); finalDeError();}
+{CONST_DECIMAL}     {insertarEnLista(&listaDeDecimales, yytext); finalDeError();}
+{CONST_OCTAL}       {insertarEnLista(&listaDeOctales, yytext); finalDeError();}
+{CONST_HEXA}        {insertarEnLista(&listaDeHexadecimales, yytext); finalDeError();}
+{CONST_REAL}        {insertarEnLista(&listaDeReales, yytext); finalDeError();}
+{CARACTER}          {insertarEnLista(&listaDeCaracteres, yytext); finalDeError();}
+{OPER_O_PUNT}       {insertarOrdenado(&listaDeOperYPunt, yytext); finalDeError();}
+{LITERAL_CADENA}    {insertarEnLista(&listaDeLiterales, yytext); finalDeError();}
+{PALABRA_RESERVADA} {insertarEnLista(&listaDePalabrasReservadas, yytext); finalDeError();}
+{IDENTIFICADOR}     {insertarOrdenado(&listaDeIdentificadores, yytext); finalDeError();}
+{COMENTARIO_LINEA}  {insertarEnLista(&listaDeComentariosDeLinea, yytext); finalDeError();}
+{COMENTARIO_BLOQUE} {insertarEnLista(&listaDeComentariosDeBloque, yytext); cantSaltosLinea += cantidadSaltosDeLinea(yytext); finalDeError();}
+{SALTO_LINEA}       {cantSaltosLinea++; finalDeError();}
+{COMODIN}           {esError(yytext);}
 
 %%
 //CODIGO DE USUARIO
