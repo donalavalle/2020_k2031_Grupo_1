@@ -17,10 +17,9 @@ int main()
     char b = '$';
     // Este es un comentario de una linea
 
-    /*
-        Este es un comentario de bloque
-        otro comentario
-    */
+/*
+    Este es un comentario de bloque
+*/
 
     // hola como estas 
 
@@ -30,7 +29,8 @@ int main()
     a += 10;
     float g = 10.25;
     float h = 10000.65;
-    float i = 123456789.1234567892;
+    float i = 123456789.123456789;
+    float j = 123456.7891;
 
     /*Otro comentario*/
 }

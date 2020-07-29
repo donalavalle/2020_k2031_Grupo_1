@@ -30,7 +30,7 @@ COMODIN .
 IDENTIFICADOR ({LETRA}|_)({LETRA}|{DECIMAL}|_)*
 OPER_O_PUNT {OPER_O_PUNT1}|{OPER_O_PUNT2}
 COMENTARIO_LINEA "//".*
-COMENTARIO_BLOQUE "/*"[^"*/"]*"*/"
+COMENTARIO_BLOQUE "/*"([^*]|\*+[^/])*\*+\/
 INCLUDE #include(" ")+(\".+\"|<.+>)
 DEFINE #define(" ")+[^" "|"\n"]+(" ")*.*
 DIRECTIVA {INCLUDE}|{DEFINE}

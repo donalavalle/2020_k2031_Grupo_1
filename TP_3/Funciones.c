@@ -22,7 +22,6 @@ Nodo* listaDeComentariosDeBloque = NULL;
 Nodo* listaDeErrores = NULL;
 
 unsigned cantSaltosLinea = 1;
-
 char* cadenaErronea = NULL;
 unsigned errorFlag = 0;
 
@@ -218,7 +217,6 @@ unsigned encontrarMaxParteEntera(Nodo* lista)
 
     return maximo;
 }
-
 
 char* cantidadDeEspacios(unsigned maximo)
 {
