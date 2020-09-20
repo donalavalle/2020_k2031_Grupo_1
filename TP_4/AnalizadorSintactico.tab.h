@@ -40,7 +40,9 @@
       know about them.  */
    enum yytokentype {
      NUMENT = 258,
-     NUMREAL = 259
+     NUMREAL = 259,
+     TIPO_DATO = 260,
+     ID = 261
    };
 #endif
 
@@ -51,16 +53,16 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 22 "AnalizadorSintactico.y"
+#line 29 "AnalizadorSintactico.y"
 
   int   valorEntero;
-  float valorReal;
+  double valorReal;
   char* string;
 
 
 
 /* Line 1676 of yacc.c  */
-#line 64 "AnalizadorSintactico.tab.h"
+#line 66 "AnalizadorSintactico.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

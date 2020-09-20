@@ -19,6 +19,9 @@ CONST_OCTAL    0{OCTAL}*
 CONST_HEXA     0[xX]{HEXA}+
 CONST_REAL     {DECIMAL}*"."{DECIMAL}*([eE](\+|\-)?{DECIMAL}+)?
 
+TIPOS_DATO "int"|"float"|"unsigned"|"signed"|"short"|"long"|"double"|"char"|"void"
+IDENTIFICADOR ({LETRA}|_)({LETRA}|{DECIMAL}|_)*
+
 ESPACIOS       " "|"\t"
 COMODIN        .
 
@@ -29,6 +32,8 @@ COMODIN        .
 {CONST_OCTAL}     {yylval.valorEntero = strtoll(yytext, NULL, 8); return NUMENT;}
 {CONST_REAL}      {yylval.valorReal   = atof(yytext); return NUMREAL;}
 {CARACT_SIMPLES}  {return yytext[0];}
+{TIPOS_DATO}      {yylval.string = strdup(yytext); return TIPO_DATO;}
+{IDENTIFICADOR}   {yylval.string = strdup(yytext); return ID;}
 {ESPACIOS}+       {}
 {COMODIN}         {}
 

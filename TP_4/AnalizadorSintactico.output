@@ -1,0 +1,577 @@
+Gramática
+
+    0 $accept: input $end
+
+    1 input: /* vacío */
+    2      | input line
+
+    3 line: '\n'
+    4     | exp '\n'
+    5     | TIPO_DATO listaDeIdentificadores ';' '\n'
+    6     | TIPO_DATO ID prototipoFuncion ';' '\n'
+
+    7 exp: NUMENT
+    8    | NUMREAL
+    9    | exp '+' exp
+   10    | exp '-' exp
+   11    | exp '*' exp
+   12    | exp '/' exp
+   13    | exp '^' exp
+   14    | '-' exp
+   15    | '(' exp ')'
+
+   16 listaDeIdentificadores: identificador
+   17                       | identificador ',' listaDeIdentificadores
+
+   18 identificador: ID
+   19              | ID '=' exp
+
+   20 prototipoFuncion: '(' parametros ')'
+
+   21 parametros: /* vacío */
+   22           | parametro
+
+   23 parametro: param
+   24          | param ',' parametro
+
+   25 param: TIPO_DATO
+   26      | TIPO_DATO ID
+
+
+Terminales con las reglas donde aparecen
+
+$end (0) 0
+'\n' (10) 3 4 5 6
+'(' (40) 15 20
+')' (41) 15 20
+'*' (42) 11
+'+' (43) 9
+',' (44) 17 24
+'-' (45) 10 14
+'/' (47) 12
+';' (59) 5 6
+'=' (61) 19
+'^' (94) 13
+error (256)
+NUMENT (258) 7
+NUMREAL (259) 8
+TIPO_DATO (260) 5 6 25 26
+ID (261) 6 18 19 26
+
+
+No terminales con las reglas donde aparecen
+
+$accept (18)
+    en la izquierda: 0
+input (19)
+    en la izquierda: 1 2, en la derecha: 0 2
+line (20)
+    en la izquierda: 3 4 5 6, en la derecha: 2
+exp (21)
+    en la izquierda: 7 8 9 10 11 12 13 14 15, en la derecha: 4 9 10
+    11 12 13 14 15 19
+listaDeIdentificadores (22)
+    en la izquierda: 16 17, en la derecha: 5 17
+identificador (23)
+    en la izquierda: 18 19, en la derecha: 16 17
+prototipoFuncion (24)
+    en la izquierda: 20, en la derecha: 6
+parametros (25)
+    en la izquierda: 21 22, en la derecha: 20
+parametro (26)
+    en la izquierda: 23 24, en la derecha: 22 24
+param (27)
+    en la izquierda: 25 26, en la derecha: 23 24
+
+
+estado 0
+
+    0 $accept: . input $end
+
+    $default  reduce usando la regla 1 (input)
+
+    input  ir al estado 1
+
+
+estado 1
+
+    0 $accept: input . $end
+    2 input: input . line
+
+    $end       desplazar e ir al estado 2
+    NUMENT     desplazar e ir al estado 3
+    NUMREAL    desplazar e ir al estado 4
+    TIPO_DATO  desplazar e ir al estado 5
+    '-'        desplazar e ir al estado 6
+    '('        desplazar e ir al estado 7
+    '\n'       desplazar e ir al estado 8
+
+    line  ir al estado 9
+    exp   ir al estado 10
+
+
+estado 2
+
+    0 $accept: input $end .
+
+    $default  aceptar
+
+
+estado 3
+
+    7 exp: NUMENT .
+
+    $default  reduce usando la regla 7 (exp)
+
+
+estado 4
+
+    8 exp: NUMREAL .
+
+    $default  reduce usando la regla 8 (exp)
+
+
+estado 5
+
+    5 line: TIPO_DATO . listaDeIdentificadores ';' '\n'
+    6     | TIPO_DATO . ID prototipoFuncion ';' '\n'
+
+    ID  desplazar e ir al estado 11
+
+    listaDeIdentificadores  ir al estado 12
+    identificador           ir al estado 13
+
+
+estado 6
+
+   14 exp: '-' . exp
+
+    NUMENT   desplazar e ir al estado 3
+    NUMREAL  desplazar e ir al estado 4
+    '-'      desplazar e ir al estado 6
+    '('      desplazar e ir al estado 7
+
+    exp  ir al estado 14
+
+
+estado 7
+
+   15 exp: '(' . exp ')'
+
+    NUMENT   desplazar e ir al estado 3
+    NUMREAL  desplazar e ir al estado 4
+    '-'      desplazar e ir al estado 6
+    '('      desplazar e ir al estado 7
+
+    exp  ir al estado 15
+
+
+estado 8
+
+    3 line: '\n' .
+
+    $default  reduce usando la regla 3 (line)
+
+
+estado 9
+
+    2 input: input line .
+
+    $default  reduce usando la regla 2 (input)
+
+
+estado 10
+
+    4 line: exp . '\n'
+    9 exp: exp . '+' exp
+   10    | exp . '-' exp
+   11    | exp . '*' exp
+   12    | exp . '/' exp
+   13    | exp . '^' exp
+
+    '+'   desplazar e ir al estado 16
+    '-'   desplazar e ir al estado 17
+    '*'   desplazar e ir al estado 18
+    '/'   desplazar e ir al estado 19
+    '^'   desplazar e ir al estado 20
+    '\n'  desplazar e ir al estado 21
+
+
+estado 11
+
+    6 line: TIPO_DATO ID . prototipoFuncion ';' '\n'
+   18 identificador: ID .
+   19              | ID . '=' exp
+
+    '('  desplazar e ir al estado 22
+    '='  desplazar e ir al estado 23
+
+    $default  reduce usando la regla 18 (identificador)
+
+    prototipoFuncion  ir al estado 24
+
+
+estado 12
+
+    5 line: TIPO_DATO listaDeIdentificadores . ';' '\n'
+
+    ';'  desplazar e ir al estado 25
+
+
+estado 13
+
+   16 listaDeIdentificadores: identificador .
+   17                       | identificador . ',' listaDeIdentificadores
+
+    ','  desplazar e ir al estado 26
+
+    $default  reduce usando la regla 16 (listaDeIdentificadores)
+
+
+estado 14
+
+    9 exp: exp . '+' exp
+   10    | exp . '-' exp
+   11    | exp . '*' exp
+   12    | exp . '/' exp
+   13    | exp . '^' exp
+   14    | '-' exp .
+
+    '*'  desplazar e ir al estado 18
+    '/'  desplazar e ir al estado 19
+    '^'  desplazar e ir al estado 20
+
+    $default  reduce usando la regla 14 (exp)
+
+
+estado 15
+
+    9 exp: exp . '+' exp
+   10    | exp . '-' exp
+   11    | exp . '*' exp
+   12    | exp . '/' exp
+   13    | exp . '^' exp
+   15    | '(' exp . ')'
+
+    '+'  desplazar e ir al estado 16
+    '-'  desplazar e ir al estado 17
+    '*'  desplazar e ir al estado 18
+    '/'  desplazar e ir al estado 19
+    '^'  desplazar e ir al estado 20
+    ')'  desplazar e ir al estado 27
+
+
+estado 16
+
+    9 exp: exp '+' . exp
+
+    NUMENT   desplazar e ir al estado 3
+    NUMREAL  desplazar e ir al estado 4
+    '-'      desplazar e ir al estado 6
+    '('      desplazar e ir al estado 7
+
+    exp  ir al estado 28
+
+
+estado 17
+
+   10 exp: exp '-' . exp
+
+    NUMENT   desplazar e ir al estado 3
+    NUMREAL  desplazar e ir al estado 4
+    '-'      desplazar e ir al estado 6
+    '('      desplazar e ir al estado 7
+
+    exp  ir al estado 29
+
+
+estado 18
+
+   11 exp: exp '*' . exp
+
+    NUMENT   desplazar e ir al estado 3
+    NUMREAL  desplazar e ir al estado 4
+    '-'      desplazar e ir al estado 6
+    '('      desplazar e ir al estado 7
+
+    exp  ir al estado 30
+
+
+estado 19
+
+   12 exp: exp '/' . exp
+
+    NUMENT   desplazar e ir al estado 3
+    NUMREAL  desplazar e ir al estado 4
+    '-'      desplazar e ir al estado 6
+    '('      desplazar e ir al estado 7
+
+    exp  ir al estado 31
+
+
+estado 20
+
+   13 exp: exp '^' . exp
+
+    NUMENT   desplazar e ir al estado 3
+    NUMREAL  desplazar e ir al estado 4
+    '-'      desplazar e ir al estado 6
+    '('      desplazar e ir al estado 7
+
+    exp  ir al estado 32
+
+
+estado 21
+
+    4 line: exp '\n' .
+
+    $default  reduce usando la regla 4 (line)
+
+
+estado 22
+
+   20 prototipoFuncion: '(' . parametros ')'
+
+    TIPO_DATO  desplazar e ir al estado 33
+
+    $default  reduce usando la regla 21 (parametros)
+
+    parametros  ir al estado 34
+    parametro   ir al estado 35
+    param       ir al estado 36
+
+
+estado 23
+
+   19 identificador: ID '=' . exp
+
+    NUMENT   desplazar e ir al estado 3
+    NUMREAL  desplazar e ir al estado 4
+    '-'      desplazar e ir al estado 6
+    '('      desplazar e ir al estado 7
+
+    exp  ir al estado 37
+
+
+estado 24
+
+    6 line: TIPO_DATO ID prototipoFuncion . ';' '\n'
+
+    ';'  desplazar e ir al estado 38
+
+
+estado 25
+
+    5 line: TIPO_DATO listaDeIdentificadores ';' . '\n'
+
+    '\n'  desplazar e ir al estado 39
+
+
+estado 26
+
+   17 listaDeIdentificadores: identificador ',' . listaDeIdentificadores
+
+    ID  desplazar e ir al estado 40
+
+    listaDeIdentificadores  ir al estado 41
+    identificador           ir al estado 13
+
+
+estado 27
+
+   15 exp: '(' exp ')' .
+
+    $default  reduce usando la regla 15 (exp)
+
+
+estado 28
+
+    9 exp: exp . '+' exp
+    9    | exp '+' exp .
+   10    | exp . '-' exp
+   11    | exp . '*' exp
+   12    | exp . '/' exp
+   13    | exp . '^' exp
+
+    '*'  desplazar e ir al estado 18
+    '/'  desplazar e ir al estado 19
+    '^'  desplazar e ir al estado 20
+
+    $default  reduce usando la regla 9 (exp)
+
+
+estado 29
+
+    9 exp: exp . '+' exp
+   10    | exp . '-' exp
+   10    | exp '-' exp .
+   11    | exp . '*' exp
+   12    | exp . '/' exp
+   13    | exp . '^' exp
+
+    '*'  desplazar e ir al estado 18
+    '/'  desplazar e ir al estado 19
+    '^'  desplazar e ir al estado 20
+
+    $default  reduce usando la regla 10 (exp)
+
+
+estado 30
+
+    9 exp: exp . '+' exp
+   10    | exp . '-' exp
+   11    | exp . '*' exp
+   11    | exp '*' exp .
+   12    | exp . '/' exp
+   13    | exp . '^' exp
+
+    '^'  desplazar e ir al estado 20
+
+    $default  reduce usando la regla 11 (exp)
+
+
+estado 31
+
+    9 exp: exp . '+' exp
+   10    | exp . '-' exp
+   11    | exp . '*' exp
+   12    | exp . '/' exp
+   12    | exp '/' exp .
+   13    | exp . '^' exp
+
+    '^'  desplazar e ir al estado 20
+
+    $default  reduce usando la regla 12 (exp)
+
+
+estado 32
+
+    9 exp: exp . '+' exp
+   10    | exp . '-' exp
+   11    | exp . '*' exp
+   12    | exp . '/' exp
+   13    | exp . '^' exp
+   13    | exp '^' exp .
+
+    $default  reduce usando la regla 13 (exp)
+
+
+estado 33
+
+   25 param: TIPO_DATO .
+   26      | TIPO_DATO . ID
+
+    ID  desplazar e ir al estado 42
+
+    $default  reduce usando la regla 25 (param)
+
+
+estado 34
+
+   20 prototipoFuncion: '(' parametros . ')'
+
+    ')'  desplazar e ir al estado 43
+
+
+estado 35
+
+   22 parametros: parametro .
+
+    $default  reduce usando la regla 22 (parametros)
+
+
+estado 36
+
+   23 parametro: param .
+   24          | param . ',' parametro
+
+    ','  desplazar e ir al estado 44
+
+    $default  reduce usando la regla 23 (parametro)
+
+
+estado 37
+
+    9 exp: exp . '+' exp
+   10    | exp . '-' exp
+   11    | exp . '*' exp
+   12    | exp . '/' exp
+   13    | exp . '^' exp
+   19 identificador: ID '=' exp .
+
+    '+'  desplazar e ir al estado 16
+    '-'  desplazar e ir al estado 17
+    '*'  desplazar e ir al estado 18
+    '/'  desplazar e ir al estado 19
+    '^'  desplazar e ir al estado 20
+
+    $default  reduce usando la regla 19 (identificador)
+
+
+estado 38
+
+    6 line: TIPO_DATO ID prototipoFuncion ';' . '\n'
+
+    '\n'  desplazar e ir al estado 45
+
+
+estado 39
+
+    5 line: TIPO_DATO listaDeIdentificadores ';' '\n' .
+
+    $default  reduce usando la regla 5 (line)
+
+
+estado 40
+
+   18 identificador: ID .
+   19              | ID . '=' exp
+
+    '='  desplazar e ir al estado 23
+
+    $default  reduce usando la regla 18 (identificador)
+
+
+estado 41
+
+   17 listaDeIdentificadores: identificador ',' listaDeIdentificadores .
+
+    $default  reduce usando la regla 17 (listaDeIdentificadores)
+
+
+estado 42
+
+   26 param: TIPO_DATO ID .
+
+    $default  reduce usando la regla 26 (param)
+
+
+estado 43
+
+   20 prototipoFuncion: '(' parametros ')' .
+
+    $default  reduce usando la regla 20 (prototipoFuncion)
+
+
+estado 44
+
+   24 parametro: param ',' . parametro
+
+    TIPO_DATO  desplazar e ir al estado 33
+
+    parametro  ir al estado 46
+    param      ir al estado 36
+
+
+estado 45
+
+    6 line: TIPO_DATO ID prototipoFuncion ';' '\n' .
+
+    $default  reduce usando la regla 6 (line)
+
+
+estado 46
+
+   24 parametro: param ',' parametro .
+
+    $default  reduce usando la regla 24 (parametro)
