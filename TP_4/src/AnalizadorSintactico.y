@@ -88,7 +88,10 @@ int yyerror (char *mensaje)  /* Funcion de error */
 
 void main(){ 
 
-    //yydebug = 1;
+    #ifdef BISON_DEBUG
+       yydebug = 1;
+    #endif
+    
     yyparse();
 
 }
