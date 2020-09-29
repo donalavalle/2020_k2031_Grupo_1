@@ -22,7 +22,7 @@ CONST_CHAR     \'.\'
 LITERAL_CADENA \".+\"
 
 TIPOS_DATO    "void"|"char"|"short"|"int"|"long"|"float"|"double"|"signed"|"unsigned"
-CLASE_ALM     "typdef"|"static"|"auto"|"register"|"extern"
+CLASE_ALM     "typedef"|"static"|"auto"|"register"|"extern"
 CALIF_TIPO    "const"|"volatile"
 STRUCT_UNION  "struct"|"union"
 
@@ -48,6 +48,7 @@ COMODIN        .
 
 {ESPACIOS}+       {}
 {COMODIN}         {}
+
 
 {CONST_CHAR}      {yylval.valorString = strdup(yytext); return CHAR;}
 {LITERAL_CADENA}  {yylval.valorString = strdup(yytext); return STRING;}

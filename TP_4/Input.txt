@@ -1,7 +1,4 @@
-persona.nombre
-a--
-myArray[2]
-
-myFunction(2)
-
-2 - (10 + 5
+unsigned int a = 3;
+typedef int size_t;
+10 == 2;
+10 = 3;

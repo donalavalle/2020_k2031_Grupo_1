@@ -65,7 +65,8 @@ input:   /* vacio */
 ;
 
 line:   '\n'
-      | expresion '\n'
+      | expresion ';'
+      | declaracion ';'
 ;
 
 const:   NUM_ENTERO     {fprintf(yyout, "Numero Entero = %d\n", $<valorEntero>1);}
@@ -151,7 +152,7 @@ exp_multip:   exp_conversion
 ;
 
 exp_conversion:   exp_unaria
-                | '(' TIPO_DATO ')' exp_conversion exp_unaria {/*CAMBIAR POR nombre_tipo*/}
+                | '(' nombre_tipo ')' exp_conversion exp_unaria {/*CAMBIAR POR nombre_tipo*/}
 ;
 
 exp_unaria:   exp_sufijo
@@ -159,7 +160,7 @@ exp_unaria:   exp_sufijo
             | OP_DEC exp_unaria           {fprintf(yyout, "Se utiliza el \'--\'\n");}
             | op_unario exp_conversion
             | SIZEOF exp_unaria
-            | SIZEOF '(' TIPO_DATO ')'  {/*CAMBIAR POR nombre_tipo*/}
+            | SIZEOF '(' nombre_tipo ')'  {/*CAMBIAR POR nombre_tipo*/}
 ;
 
 op_unario:   '&'
@@ -187,6 +188,180 @@ exp_primaria:   const
               | STRING              {fprintf(yyout, "String = %s\n", $<valorString>1);  }
               | '(' expresion ')'   {fprintf(yyout, "Se utiliza el \'(\' y el \')\'\n");}               
 ;
+
+
+declaracion: especificadores_declaracion lista_declaradores_opc
+;
+
+lista_declaradores_opc:   /* Vacio */
+                        | lista_declaradores
+;
+
+especificadores_declaracion:   CLASE_ALM           especificadores_declaracion_opc
+                             | especificador_tipo  especificadores_declaracion_opc
+                             | CALIF_TIPO          especificadores_declaracion_opc
+;
+
+especificadores_declaracion_opc:   /* Vacio */
+                                 | especificadores_declaracion
+;
+
+lista_declaradores:   declarador
+                    | lista_declaradores ',' declarador
+;
+
+declarador:   decla
+            | decla '=' inicializador
+;
+
+inicializador:   exp_asignacion
+               | '{' lista_inicializadores coma_opc '}' 
+;
+
+coma_opc:   /* Vacio */
+          | ','
+;
+
+lista_inicializadores:   inicializador
+                       | lista_inicializadores ',' inicializador
+;
+
+especificador_tipo:   TIPO_DATO
+                    | especificador_struct_union
+                    | especificador_enum  {/*Sacamos nombre_typedef*/}
+;
+
+especificador_struct_union:   STRUCT_UNION ID_opc '{' lista_declaradores_struct '}'
+                            | STRUCT_UNION ID
+;
+
+ID_opc:   /* Vacio */
+        | ID
+;
+
+lista_declaradores_struct:   declaracion_struct
+                           | lista_declaradores_struct declaracion_struct
+;
+
+declaracion_struct: lista_calificadores declaradores_struct ';'
+;
+
+lista_calificadores:   especificador_tipo lista_calificadores_opc
+                     | CALIF_TIPO         lista_calificadores_opc
+;
+
+lista_calificadores_opc:   /* Vacio */
+                         | lista_calificadores
+;
+
+declaradores_struct:   decla_struct
+                     | declaradores_struct ',' decla_struct
+;
+
+decla_struct:   decla
+              | decla_opc ':' exp_constante
+;
+
+decla_opc:   /* Vacio */
+           | decla
+;
+
+exp_constante: exp_condicional
+;
+
+exp_constante_opc:   /* Vacio */
+                   | exp_constante
+;
+
+decla: puntero_opc declarador_directo
+;
+
+puntero_opc:   /* Vacio */
+             | puntero
+;
+
+puntero:   '*' lista_calificadores_tipos_opc
+         | '*' lista_calificadores_tipos_opc puntero
+;
+
+lista_calificadores_tipos_opc:   /* Vacio */
+                              | lista_calificadores_tipos
+;
+
+lista_calificadores_tipos:   CALIF_TIPO
+                           | lista_calificadores_tipos CALIF_TIPO
+;
+
+declarador_directo:   ID
+                    | '(' decla ')'
+                    | declarador_directo '[' exp_constante_opc ']'
+                    | declarador_directo '(' lista_tipos_param ')'
+                    | declarador_directo '(' lista_identificadores_opc ')'
+;
+
+lista_identificadores_opc:   /* Vacio */
+                           | lista_identificadores
+;
+
+lista_tipos_param:   lista_parametros
+                   | lista_parametros ',' '.' '.' '.'
+;
+
+lista_parametros:   declaracion_parametro
+                  | lista_parametros ',' declaracion_parametro
+;
+
+declaracion_parametro:   especificadores_declaracion decla
+                       | especificadores_declaracion declarador_abstracto_opc
+;
+
+declarador_abstracto_opc:   /* Vacio */
+                          | declarador_abstracto
+;
+
+lista_identificadores:   ID
+                       | lista_identificadores ',' ID
+;
+
+especificador_enum:   ENUM ID_opc '{' lista_enumeradores'}'
+                    | ENUM ID
+;
+
+lista_enumeradores:   enumerador
+                    | lista_enumeradores ',' enumerador
+;
+
+enumerador:   const_de_enumeracion
+            | const_de_enumeracion '=' exp_constante
+;
+
+const_de_enumeracion: ID
+;
+
+nombre_tipo: lista_calificadores declarador_abstracto_opc
+;
+
+declarador_abstracto:   puntero
+                      | puntero_opc declarador_abstracto_directo
+;
+
+declarador_abstracto_directo:   '(' declarador_abstracto ')'
+                              | declarador_abstracto_directo_opc '['   exp_constante_opc   ']'
+                              | declarador_abstracto_directo_opc '(' lista_tipos_param_opc ')'
+;
+
+declarador_abstracto_directo_opc:   /* Vacio */
+                                  | declarador_abstracto_directo
+;
+
+lista_tipos_param_opc:   /* Vacio */
+                       | lista_tipos_param
+;
+
+
+
+
+
 
 
 
