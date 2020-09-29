@@ -7,7 +7,7 @@
     #include "AnalizadorSintactico.tab.h"
 %}
 
-CARACT_SIMPLES "+"|"-"|"*"|"/"|"^"|"("|")"|","|";"|"\n"|"="|"<"|">"|"%"|"&"|"|"|"~"|"!"|"?"|":"|"["|"]"|"."|"{"|"}" 
+CARACT_SIMPLES "+"|"-"|"*"|"/"|"^"|"("|")"|","|";"|"\n"|"="|"<"|">"|"%"|"&"|"|"|"~"|"!"|"?"|":"|"["|"]"|"{"|"}"|"."
 
 DECIMAL        [0-9]
 OCTAL          [0-7]
@@ -17,12 +17,12 @@ LETRA          [a-zA-Z]
 CONST_DECIMAL  [1-9]{DECIMAL}*
 CONST_OCTAL    0{OCTAL}*
 CONST_HEXA     0[xX]{HEXA}+
-CONST_REAL     {DECIMAL}*"."{DECIMAL}*([eE](\+|\-)?{DECIMAL}+)?
+CONST_REAL     {DECIMAL}+"."{DECIMAL}+([eE](\+|\-)?{DECIMAL}+)?
 CONST_CHAR     \'.\'
 LITERAL_CADENA \".+\"
 
 TIPOS_DATO    "void"|"char"|"short"|"int"|"long"|"float"|"double"|"signed"|"unsigned"
-CLASE_ALMAC   "typdef"|"static"|"auto"|"register"|"extern"
+CLASE_ALM     "typdef"|"static"|"auto"|"register"|"extern"
 CALIF_TIPO    "const"|"volatile"
 STRUCT_UNION  "struct"|"union"
 
@@ -33,24 +33,24 @@ COMODIN        .
 
 %%
 
-{CONST_DECIMAL}   {yylval.valorEntero = atoi(yytext); return NUMENT;}
-{CONST_HEXA}      {yylval.valorEntero = strtoll(yytext, NULL, 16); return NUMENT;}
-{CONST_OCTAL}     {yylval.valorEntero = strtoll(yytext, NULL, 8); return NUMENT;}
-{CONST_REAL}      {yylval.valorReal   = atof(yytext); return NUMREAL;}
+{CONST_DECIMAL}   {yylval.valorEntero = atoi(yytext); return NUM_ENTERO;}
+{CONST_HEXA}      {yylval.valorEntero = strtoll(yytext, NULL, 16); return NUM_ENTERO;}
+{CONST_OCTAL}     {yylval.valorEntero = strtoll(yytext, NULL, 8); return NUM_ENTERO;}
+{CONST_REAL}      {yylval.valorReal   = atof(yytext); return NUM_REAL;}
 {CARACT_SIMPLES}  {return yytext[0];}
-{TIPOS_DATO}      {yylval.string = strdup(yytext); return TIPO_DATO;}
-{CLASE_ALMC}      {return CLASE_ALM;}
+{TIPOS_DATO}      {yylval.valorString = strdup(yytext); return TIPO_DATO;}
+{CLASE_ALM}       {return CLASE_ALM;}
 {CALIF_TIPO}      {return CALIF_TIPO;}
 {STRUCT_UNION}    {return STRUCT_UNION;}
 "sizeof"          {return SIZEOF;}
 "enum"            {return ENUM;}
-{IDENTIFICADOR}   {yylval.string = strdup(yytext); return ID;}
+{IDENTIFICADOR}   {yylval.valorString = strdup(yytext); return ID;}
 
 {ESPACIOS}+       {}
 {COMODIN}         {}
 
-{CONST_CHAR}      {yylval.string = strdup(yytext); return CONST_CHAR;}
-{LITERAL_CADENA}  {yylval.string = strdup(yytext); return STRING;}
+{CONST_CHAR}      {yylval.valorString = strdup(yytext); return CHAR;}
+{LITERAL_CADENA}  {yylval.valorString = strdup(yytext); return STRING;}
 
 "*="              {return ASIG_MULT;}
 "/="              {return ASIG_DIV;}

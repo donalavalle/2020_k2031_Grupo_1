@@ -1,0 +1,2262 @@
+Terminals unused in grammar
+
+   CLASE_ALM
+   CALIF_TIPO
+   STRUCT_UNION
+   ENUM
+
+
+Estado 38 conflictos: 3 desplazamiento(s)/reducción(ones)
+
+
+Gramática
+
+    0 $accept: input $end
+
+    1 input: /* vacío */
+    2      | input line
+
+    3 line: '\n'
+    4     | expresion '\n'
+
+    5 const: NUM_ENTERO
+    6      | NUM_REAL
+    7      | CHAR
+    8      | const_enum
+
+    9 const_enum: ID
+
+   10 expresion: exp_asignacion
+   11          | expresion ',' exp_asignacion
+
+   12 exp_asignacion: exp_condicional
+   13               | exp_unaria op_asignacion exp_asignacion
+
+   14 exp_condicional: exp_OR_log
+   15                | exp_OR_log '?' expresion ':' exp_condicional
+
+   16 op_asignacion: '='
+   17              | ASIG_MULT
+   18              | ASIG_DIV
+   19              | ASIG_MOD
+   20              | ASIG_SUMA
+   21              | ASIG_RESTA
+   22              | ASIG_DESP_IZQ
+   23              | ASIG_DESP_DER
+   24              | ASIG_AND_BIN
+   25              | ASIG_XOR_BIN
+   26              | ASIG_OR_BIN
+
+   27 exp_OR_log: exp_AND_log
+   28           | exp_OR_log OP_OR exp_AND_log
+
+   29 exp_AND_log: exp_OR_in
+   30            | exp_AND_log OP_AND exp_OR_in
+
+   31 exp_OR_in: exp_OR_ex
+   32          | exp_OR_in '|' exp_OR_ex
+
+   33 exp_OR_ex: exp_AND
+   34          | exp_OR_ex '^' exp_AND
+
+   35 exp_AND: exp_igualdad
+   36        | exp_AND '&' exp_igualdad
+
+   37 exp_igualdad: exp_relacional
+   38             | exp_igualdad OP_IGUALDAD exp_relacional
+   39             | exp_igualdad OP_DESIGUALDAD exp_relacional
+
+   40 exp_relacional: exp_desp
+   41               | exp_relacional '<' exp_desp
+   42               | exp_relacional '>' exp_desp
+   43               | exp_relacional OP_MENOR_IGUAL exp_desp
+   44               | exp_relacional OP_MAYOR_IGUAL exp_desp
+
+   45 exp_desp: exp_aditiva
+   46         | exp_desp OP_DESP_IZQ exp_aditiva
+   47         | exp_desp OP_DESP_DER exp_aditiva
+
+   48 exp_aditiva: exp_multip
+   49            | exp_aditiva '+' exp_multip
+   50            | exp_aditiva '-' exp_multip
+
+   51 exp_multip: exp_conversion
+   52           | exp_multip '*' exp_conversion
+   53           | exp_multip '/' exp_conversion
+   54           | exp_multip '%' exp_conversion
+
+   55 exp_conversion: exp_unaria
+   56               | '(' TIPO_DATO ')' exp_conversion exp_unaria
+
+   57 exp_unaria: exp_sufijo
+   58           | OP_INC exp_unaria
+   59           | OP_DEC exp_unaria
+   60           | op_unario exp_conversion
+   61           | SIZEOF exp_unaria
+   62           | SIZEOF '(' TIPO_DATO ')'
+
+   63 op_unario: '&'
+   64          | '*'
+   65          | '+'
+   66          | '-'
+   67          | '~'
+   68          | '!'
+
+   69 exp_sufijo: exp_primaria
+   70           | exp_sufijo '[' expresion ']'
+   71           | exp_sufijo '(' lista_argumentos ')'
+   72           | exp_sufijo '.' ID
+   73           | exp_sufijo OP_MIEMBRO_PUNT ID
+   74           | exp_sufijo OP_INC
+   75           | exp_sufijo OP_DEC
+
+   76 lista_argumentos: exp_asignacion
+   77                 | lista_argumentos ',' exp_asignacion
+
+   78 exp_primaria: const
+   79             | STRING
+   80             | '(' expresion ')'
+
+
+Terminales con las reglas donde aparecen
+
+$end (0) 0
+'\n' (10) 3 4
+'!' (33) 68
+'%' (37) 54
+'&' (38) 36 63
+'(' (40) 56 62 71 80
+')' (41) 56 62 71 80
+'*' (42) 52 64
+'+' (43) 49 65
+',' (44) 11 77
+'-' (45) 50 66
+'.' (46) 72
+'/' (47) 53
+':' (58) 15
+'<' (60) 41
+'=' (61) 16
+'>' (62) 42
+'?' (63) 15
+'[' (91) 70
+']' (93) 70
+'^' (94) 34
+'|' (124) 32
+'~' (126) 67
+error (256)
+NUM_ENTERO (258) 5
+NUM_REAL (259) 6
+TIPO_DATO (260) 56 62
+ID (261) 9 72 73
+ASIG_MULT (262) 17
+ASIG_DIV (263) 18
+ASIG_MOD (264) 19
+ASIG_SUMA (265) 20
+ASIG_RESTA (266) 21
+ASIG_DESP_IZQ (267) 22
+ASIG_DESP_DER (268) 23
+ASIG_AND_BIN (269) 24
+ASIG_XOR_BIN (270) 25
+ASIG_OR_BIN (271) 26
+OP_INC (272) 58 74
+OP_DEC (273) 59 75
+OP_IGUALDAD (274) 38
+OP_DESIGUALDAD (275) 39
+OP_AND (276) 30
+OP_OR (277) 28
+OP_MENOR_IGUAL (278) 43
+OP_MAYOR_IGUAL (279) 44
+OP_DESP_IZQ (280) 46
+OP_DESP_DER (281) 47
+OP_MIEMBRO_PUNT (282) 73
+CHAR (283) 7
+STRING (284) 79
+SIZEOF (285) 61 62
+CLASE_ALM (286)
+CALIF_TIPO (287)
+STRUCT_UNION (288)
+ENUM (289)
+
+
+No terminales con las reglas donde aparecen
+
+$accept (57)
+    en la izquierda: 0
+input (58)
+    en la izquierda: 1 2, en la derecha: 0 2
+line (59)
+    en la izquierda: 3 4, en la derecha: 2
+const (60)
+    en la izquierda: 5 6 7 8, en la derecha: 78
+const_enum (61)
+    en la izquierda: 9, en la derecha: 8
+expresion (62)
+    en la izquierda: 10 11, en la derecha: 4 11 15 70 80
+exp_asignacion (63)
+    en la izquierda: 12 13, en la derecha: 10 11 13 76 77
+exp_condicional (64)
+    en la izquierda: 14 15, en la derecha: 12 15
+op_asignacion (65)
+    en la izquierda: 16 17 18 19 20 21 22 23 24 25 26, en la derecha:
+    13
+exp_OR_log (66)
+    en la izquierda: 27 28, en la derecha: 14 15 28
+exp_AND_log (67)
+    en la izquierda: 29 30, en la derecha: 27 28 30
+exp_OR_in (68)
+    en la izquierda: 31 32, en la derecha: 29 30 32
+exp_OR_ex (69)
+    en la izquierda: 33 34, en la derecha: 31 32 34
+exp_AND (70)
+    en la izquierda: 35 36, en la derecha: 33 34 36
+exp_igualdad (71)
+    en la izquierda: 37 38 39, en la derecha: 35 36 38 39
+exp_relacional (72)
+    en la izquierda: 40 41 42 43 44, en la derecha: 37 38 39 41 42
+    43 44
+exp_desp (73)
+    en la izquierda: 45 46 47, en la derecha: 40 41 42 43 44 46 47
+exp_aditiva (74)
+    en la izquierda: 48 49 50, en la derecha: 45 46 47 49 50
+exp_multip (75)
+    en la izquierda: 51 52 53 54, en la derecha: 48 49 50 52 53 54
+exp_conversion (76)
+    en la izquierda: 55 56, en la derecha: 51 52 53 54 56 60
+exp_unaria (77)
+    en la izquierda: 57 58 59 60 61 62, en la derecha: 13 55 56 58
+    59 61
+op_unario (78)
+    en la izquierda: 63 64 65 66 67 68, en la derecha: 60
+exp_sufijo (79)
+    en la izquierda: 69 70 71 72 73 74 75, en la derecha: 57 70 71
+    72 73 74 75
+lista_argumentos (80)
+    en la izquierda: 76 77, en la derecha: 71 77
+exp_primaria (81)
+    en la izquierda: 78 79 80, en la derecha: 69
+
+
+estado 0
+
+    0 $accept: . input $end
+
+    $default  reduce usando la regla 1 (input)
+
+    input  ir al estado 1
+
+
+estado 1
+
+    0 $accept: input . $end
+    2 input: input . line
+
+    $end        desplazar e ir al estado 2
+    NUM_ENTERO  desplazar e ir al estado 3
+    NUM_REAL    desplazar e ir al estado 4
+    ID          desplazar e ir al estado 5
+    OP_INC      desplazar e ir al estado 6
+    OP_DEC      desplazar e ir al estado 7
+    CHAR        desplazar e ir al estado 8
+    STRING      desplazar e ir al estado 9
+    SIZEOF      desplazar e ir al estado 10
+    '\n'        desplazar e ir al estado 11
+    '&'         desplazar e ir al estado 12
+    '+'         desplazar e ir al estado 13
+    '-'         desplazar e ir al estado 14
+    '*'         desplazar e ir al estado 15
+    '('         desplazar e ir al estado 16
+    '~'         desplazar e ir al estado 17
+    '!'         desplazar e ir al estado 18
+
+    line             ir al estado 19
+    const            ir al estado 20
+    const_enum       ir al estado 21
+    expresion        ir al estado 22
+    exp_asignacion   ir al estado 23
+    exp_condicional  ir al estado 24
+    exp_OR_log       ir al estado 25
+    exp_AND_log      ir al estado 26
+    exp_OR_in        ir al estado 27
+    exp_OR_ex        ir al estado 28
+    exp_AND          ir al estado 29
+    exp_igualdad     ir al estado 30
+    exp_relacional   ir al estado 31
+    exp_desp         ir al estado 32
+    exp_aditiva      ir al estado 33
+    exp_multip       ir al estado 34
+    exp_conversion   ir al estado 35
+    exp_unaria       ir al estado 36
+    op_unario        ir al estado 37
+    exp_sufijo       ir al estado 38
+    exp_primaria     ir al estado 39
+
+
+estado 2
+
+    0 $accept: input $end .
+
+    $default  aceptar
+
+
+estado 3
+
+    5 const: NUM_ENTERO .
+
+    $default  reduce usando la regla 5 (const)
+
+
+estado 4
+
+    6 const: NUM_REAL .
+
+    $default  reduce usando la regla 6 (const)
+
+
+estado 5
+
+    9 const_enum: ID .
+
+    $default  reduce usando la regla 9 (const_enum)
+
+
+estado 6
+
+   58 exp_unaria: OP_INC . exp_unaria
+
+    NUM_ENTERO  desplazar e ir al estado 3
+    NUM_REAL    desplazar e ir al estado 4
+    ID          desplazar e ir al estado 5
+    OP_INC      desplazar e ir al estado 6
+    OP_DEC      desplazar e ir al estado 7
+    CHAR        desplazar e ir al estado 8
+    STRING      desplazar e ir al estado 9
+    SIZEOF      desplazar e ir al estado 10
+    '&'         desplazar e ir al estado 12
+    '+'         desplazar e ir al estado 13
+    '-'         desplazar e ir al estado 14
+    '*'         desplazar e ir al estado 15
+    '('         desplazar e ir al estado 40
+    '~'         desplazar e ir al estado 17
+    '!'         desplazar e ir al estado 18
+
+    const         ir al estado 20
+    const_enum    ir al estado 21
+    exp_unaria    ir al estado 41
+    op_unario     ir al estado 37
+    exp_sufijo    ir al estado 38
+    exp_primaria  ir al estado 39
+
+
+estado 7
+
+   59 exp_unaria: OP_DEC . exp_unaria
+
+    NUM_ENTERO  desplazar e ir al estado 3
+    NUM_REAL    desplazar e ir al estado 4
+    ID          desplazar e ir al estado 5
+    OP_INC      desplazar e ir al estado 6
+    OP_DEC      desplazar e ir al estado 7
+    CHAR        desplazar e ir al estado 8
+    STRING      desplazar e ir al estado 9
+    SIZEOF      desplazar e ir al estado 10
+    '&'         desplazar e ir al estado 12
+    '+'         desplazar e ir al estado 13
+    '-'         desplazar e ir al estado 14
+    '*'         desplazar e ir al estado 15
+    '('         desplazar e ir al estado 40
+    '~'         desplazar e ir al estado 17
+    '!'         desplazar e ir al estado 18
+
+    const         ir al estado 20
+    const_enum    ir al estado 21
+    exp_unaria    ir al estado 42
+    op_unario     ir al estado 37
+    exp_sufijo    ir al estado 38
+    exp_primaria  ir al estado 39
+
+
+estado 8
+
+    7 const: CHAR .
+
+    $default  reduce usando la regla 7 (const)
+
+
+estado 9
+
+   79 exp_primaria: STRING .
+
+    $default  reduce usando la regla 79 (exp_primaria)
+
+
+estado 10
+
+   61 exp_unaria: SIZEOF . exp_unaria
+   62           | SIZEOF . '(' TIPO_DATO ')'
+
+    NUM_ENTERO  desplazar e ir al estado 3
+    NUM_REAL    desplazar e ir al estado 4
+    ID          desplazar e ir al estado 5
+    OP_INC      desplazar e ir al estado 6
+    OP_DEC      desplazar e ir al estado 7
+    CHAR        desplazar e ir al estado 8
+    STRING      desplazar e ir al estado 9
+    SIZEOF      desplazar e ir al estado 10
+    '&'         desplazar e ir al estado 12
+    '+'         desplazar e ir al estado 13
+    '-'         desplazar e ir al estado 14
+    '*'         desplazar e ir al estado 15
+    '('         desplazar e ir al estado 43
+    '~'         desplazar e ir al estado 17
+    '!'         desplazar e ir al estado 18
+
+    const         ir al estado 20
+    const_enum    ir al estado 21
+    exp_unaria    ir al estado 44
+    op_unario     ir al estado 37
+    exp_sufijo    ir al estado 38
+    exp_primaria  ir al estado 39
+
+
+estado 11
+
+    3 line: '\n' .
+
+    $default  reduce usando la regla 3 (line)
+
+
+estado 12
+
+   63 op_unario: '&' .
+
+    $default  reduce usando la regla 63 (op_unario)
+
+
+estado 13
+
+   65 op_unario: '+' .
+
+    $default  reduce usando la regla 65 (op_unario)
+
+
+estado 14
+
+   66 op_unario: '-' .
+
+    $default  reduce usando la regla 66 (op_unario)
+
+
+estado 15
+
+   64 op_unario: '*' .
+
+    $default  reduce usando la regla 64 (op_unario)
+
+
+estado 16
+
+   56 exp_conversion: '(' . TIPO_DATO ')' exp_conversion exp_unaria
+   80 exp_primaria: '(' . expresion ')'
+
+    NUM_ENTERO  desplazar e ir al estado 3
+    NUM_REAL    desplazar e ir al estado 4
+    TIPO_DATO   desplazar e ir al estado 45
+    ID          desplazar e ir al estado 5
+    OP_INC      desplazar e ir al estado 6
+    OP_DEC      desplazar e ir al estado 7
+    CHAR        desplazar e ir al estado 8
+    STRING      desplazar e ir al estado 9
+    SIZEOF      desplazar e ir al estado 10
+    '&'         desplazar e ir al estado 12
+    '+'         desplazar e ir al estado 13
+    '-'         desplazar e ir al estado 14
+    '*'         desplazar e ir al estado 15
+    '('         desplazar e ir al estado 16
+    '~'         desplazar e ir al estado 17
+    '!'         desplazar e ir al estado 18
+
+    const            ir al estado 20
+    const_enum       ir al estado 21
+    expresion        ir al estado 46
+    exp_asignacion   ir al estado 23
+    exp_condicional  ir al estado 24
+    exp_OR_log       ir al estado 25
+    exp_AND_log      ir al estado 26
+    exp_OR_in        ir al estado 27
+    exp_OR_ex        ir al estado 28
+    exp_AND          ir al estado 29
+    exp_igualdad     ir al estado 30
+    exp_relacional   ir al estado 31
+    exp_desp         ir al estado 32
+    exp_aditiva      ir al estado 33
+    exp_multip       ir al estado 34
+    exp_conversion   ir al estado 35
+    exp_unaria       ir al estado 36
+    op_unario        ir al estado 37
+    exp_sufijo       ir al estado 38
+    exp_primaria     ir al estado 39
+
+
+estado 17
+
+   67 op_unario: '~' .
+
+    $default  reduce usando la regla 67 (op_unario)
+
+
+estado 18
+
+   68 op_unario: '!' .
+
+    $default  reduce usando la regla 68 (op_unario)
+
+
+estado 19
+
+    2 input: input line .
+
+    $default  reduce usando la regla 2 (input)
+
+
+estado 20
+
+   78 exp_primaria: const .
+
+    $default  reduce usando la regla 78 (exp_primaria)
+
+
+estado 21
+
+    8 const: const_enum .
+
+    $default  reduce usando la regla 8 (const)
+
+
+estado 22
+
+    4 line: expresion . '\n'
+   11 expresion: expresion . ',' exp_asignacion
+
+    '\n'  desplazar e ir al estado 47
+    ','   desplazar e ir al estado 48
+
+
+estado 23
+
+   10 expresion: exp_asignacion .
+
+    $default  reduce usando la regla 10 (expresion)
+
+
+estado 24
+
+   12 exp_asignacion: exp_condicional .
+
+    $default  reduce usando la regla 12 (exp_asignacion)
+
+
+estado 25
+
+   14 exp_condicional: exp_OR_log .
+   15                | exp_OR_log . '?' expresion ':' exp_condicional
+   28 exp_OR_log: exp_OR_log . OP_OR exp_AND_log
+
+    OP_OR  desplazar e ir al estado 49
+    '?'    desplazar e ir al estado 50
+
+    $default  reduce usando la regla 14 (exp_condicional)
+
+
+estado 26
+
+   27 exp_OR_log: exp_AND_log .
+   30 exp_AND_log: exp_AND_log . OP_AND exp_OR_in
+
+    OP_AND  desplazar e ir al estado 51
+
+    $default  reduce usando la regla 27 (exp_OR_log)
+
+
+estado 27
+
+   29 exp_AND_log: exp_OR_in .
+   32 exp_OR_in: exp_OR_in . '|' exp_OR_ex
+
+    '|'  desplazar e ir al estado 52
+
+    $default  reduce usando la regla 29 (exp_AND_log)
+
+
+estado 28
+
+   31 exp_OR_in: exp_OR_ex .
+   34 exp_OR_ex: exp_OR_ex . '^' exp_AND
+
+    '^'  desplazar e ir al estado 53
+
+    $default  reduce usando la regla 31 (exp_OR_in)
+
+
+estado 29
+
+   33 exp_OR_ex: exp_AND .
+   36 exp_AND: exp_AND . '&' exp_igualdad
+
+    '&'  desplazar e ir al estado 54
+
+    $default  reduce usando la regla 33 (exp_OR_ex)
+
+
+estado 30
+
+   35 exp_AND: exp_igualdad .
+   38 exp_igualdad: exp_igualdad . OP_IGUALDAD exp_relacional
+   39             | exp_igualdad . OP_DESIGUALDAD exp_relacional
+
+    OP_IGUALDAD     desplazar e ir al estado 55
+    OP_DESIGUALDAD  desplazar e ir al estado 56
+
+    $default  reduce usando la regla 35 (exp_AND)
+
+
+estado 31
+
+   37 exp_igualdad: exp_relacional .
+   41 exp_relacional: exp_relacional . '<' exp_desp
+   42               | exp_relacional . '>' exp_desp
+   43               | exp_relacional . OP_MENOR_IGUAL exp_desp
+   44               | exp_relacional . OP_MAYOR_IGUAL exp_desp
+
+    OP_MENOR_IGUAL  desplazar e ir al estado 57
+    OP_MAYOR_IGUAL  desplazar e ir al estado 58
+    '<'             desplazar e ir al estado 59
+    '>'             desplazar e ir al estado 60
+
+    $default  reduce usando la regla 37 (exp_igualdad)
+
+
+estado 32
+
+   40 exp_relacional: exp_desp .
+   46 exp_desp: exp_desp . OP_DESP_IZQ exp_aditiva
+   47         | exp_desp . OP_DESP_DER exp_aditiva
+
+    OP_DESP_IZQ  desplazar e ir al estado 61
+    OP_DESP_DER  desplazar e ir al estado 62
+
+    $default  reduce usando la regla 40 (exp_relacional)
+
+
+estado 33
+
+   45 exp_desp: exp_aditiva .
+   49 exp_aditiva: exp_aditiva . '+' exp_multip
+   50            | exp_aditiva . '-' exp_multip
+
+    '+'  desplazar e ir al estado 63
+    '-'  desplazar e ir al estado 64
+
+    $default  reduce usando la regla 45 (exp_desp)
+
+
+estado 34
+
+   48 exp_aditiva: exp_multip .
+   52 exp_multip: exp_multip . '*' exp_conversion
+   53           | exp_multip . '/' exp_conversion
+   54           | exp_multip . '%' exp_conversion
+
+    '*'  desplazar e ir al estado 65
+    '/'  desplazar e ir al estado 66
+    '%'  desplazar e ir al estado 67
+
+    $default  reduce usando la regla 48 (exp_aditiva)
+
+
+estado 35
+
+   51 exp_multip: exp_conversion .
+
+    $default  reduce usando la regla 51 (exp_multip)
+
+
+estado 36
+
+   13 exp_asignacion: exp_unaria . op_asignacion exp_asignacion
+   55 exp_conversion: exp_unaria .
+
+    ASIG_MULT      desplazar e ir al estado 68
+    ASIG_DIV       desplazar e ir al estado 69
+    ASIG_MOD       desplazar e ir al estado 70
+    ASIG_SUMA      desplazar e ir al estado 71
+    ASIG_RESTA     desplazar e ir al estado 72
+    ASIG_DESP_IZQ  desplazar e ir al estado 73
+    ASIG_DESP_DER  desplazar e ir al estado 74
+    ASIG_AND_BIN   desplazar e ir al estado 75
+    ASIG_XOR_BIN   desplazar e ir al estado 76
+    ASIG_OR_BIN    desplazar e ir al estado 77
+    '='            desplazar e ir al estado 78
+
+    $default  reduce usando la regla 55 (exp_conversion)
+
+    op_asignacion  ir al estado 79
+
+
+estado 37
+
+   60 exp_unaria: op_unario . exp_conversion
+
+    NUM_ENTERO  desplazar e ir al estado 3
+    NUM_REAL    desplazar e ir al estado 4
+    ID          desplazar e ir al estado 5
+    OP_INC      desplazar e ir al estado 6
+    OP_DEC      desplazar e ir al estado 7
+    CHAR        desplazar e ir al estado 8
+    STRING      desplazar e ir al estado 9
+    SIZEOF      desplazar e ir al estado 10
+    '&'         desplazar e ir al estado 12
+    '+'         desplazar e ir al estado 13
+    '-'         desplazar e ir al estado 14
+    '*'         desplazar e ir al estado 15
+    '('         desplazar e ir al estado 16
+    '~'         desplazar e ir al estado 17
+    '!'         desplazar e ir al estado 18
+
+    const           ir al estado 20
+    const_enum      ir al estado 21
+    exp_conversion  ir al estado 80
+    exp_unaria      ir al estado 81
+    op_unario       ir al estado 37
+    exp_sufijo      ir al estado 38
+    exp_primaria    ir al estado 39
+
+
+estado 38
+
+   57 exp_unaria: exp_sufijo .
+   70 exp_sufijo: exp_sufijo . '[' expresion ']'
+   71           | exp_sufijo . '(' lista_argumentos ')'
+   72           | exp_sufijo . '.' ID
+   73           | exp_sufijo . OP_MIEMBRO_PUNT ID
+   74           | exp_sufijo . OP_INC
+   75           | exp_sufijo . OP_DEC
+
+    OP_INC           desplazar e ir al estado 82
+    OP_DEC           desplazar e ir al estado 83
+    OP_MIEMBRO_PUNT  desplazar e ir al estado 84
+    '('              desplazar e ir al estado 85
+    '['              desplazar e ir al estado 86
+    '.'              desplazar e ir al estado 87
+
+    OP_INC    [reduce usando la regla 57 (exp_unaria)]
+    OP_DEC    [reduce usando la regla 57 (exp_unaria)]
+    '('       [reduce usando la regla 57 (exp_unaria)]
+    $default  reduce usando la regla 57 (exp_unaria)
+
+
+estado 39
+
+   69 exp_sufijo: exp_primaria .
+
+    $default  reduce usando la regla 69 (exp_sufijo)
+
+
+estado 40
+
+   80 exp_primaria: '(' . expresion ')'
+
+    NUM_ENTERO  desplazar e ir al estado 3
+    NUM_REAL    desplazar e ir al estado 4
+    ID          desplazar e ir al estado 5
+    OP_INC      desplazar e ir al estado 6
+    OP_DEC      desplazar e ir al estado 7
+    CHAR        desplazar e ir al estado 8
+    STRING      desplazar e ir al estado 9
+    SIZEOF      desplazar e ir al estado 10
+    '&'         desplazar e ir al estado 12
+    '+'         desplazar e ir al estado 13
+    '-'         desplazar e ir al estado 14
+    '*'         desplazar e ir al estado 15
+    '('         desplazar e ir al estado 16
+    '~'         desplazar e ir al estado 17
+    '!'         desplazar e ir al estado 18
+
+    const            ir al estado 20
+    const_enum       ir al estado 21
+    expresion        ir al estado 46
+    exp_asignacion   ir al estado 23
+    exp_condicional  ir al estado 24
+    exp_OR_log       ir al estado 25
+    exp_AND_log      ir al estado 26
+    exp_OR_in        ir al estado 27
+    exp_OR_ex        ir al estado 28
+    exp_AND          ir al estado 29
+    exp_igualdad     ir al estado 30
+    exp_relacional   ir al estado 31
+    exp_desp         ir al estado 32
+    exp_aditiva      ir al estado 33
+    exp_multip       ir al estado 34
+    exp_conversion   ir al estado 35
+    exp_unaria       ir al estado 36
+    op_unario        ir al estado 37
+    exp_sufijo       ir al estado 38
+    exp_primaria     ir al estado 39
+
+
+estado 41
+
+   58 exp_unaria: OP_INC exp_unaria .
+
+    $default  reduce usando la regla 58 (exp_unaria)
+
+
+estado 42
+
+   59 exp_unaria: OP_DEC exp_unaria .
+
+    $default  reduce usando la regla 59 (exp_unaria)
+
+
+estado 43
+
+   62 exp_unaria: SIZEOF '(' . TIPO_DATO ')'
+   80 exp_primaria: '(' . expresion ')'
+
+    NUM_ENTERO  desplazar e ir al estado 3
+    NUM_REAL    desplazar e ir al estado 4
+    TIPO_DATO   desplazar e ir al estado 88
+    ID          desplazar e ir al estado 5
+    OP_INC      desplazar e ir al estado 6
+    OP_DEC      desplazar e ir al estado 7
+    CHAR        desplazar e ir al estado 8
+    STRING      desplazar e ir al estado 9
+    SIZEOF      desplazar e ir al estado 10
+    '&'         desplazar e ir al estado 12
+    '+'         desplazar e ir al estado 13
+    '-'         desplazar e ir al estado 14
+    '*'         desplazar e ir al estado 15
+    '('         desplazar e ir al estado 16
+    '~'         desplazar e ir al estado 17
+    '!'         desplazar e ir al estado 18
+
+    const            ir al estado 20
+    const_enum       ir al estado 21
+    expresion        ir al estado 46
+    exp_asignacion   ir al estado 23
+    exp_condicional  ir al estado 24
+    exp_OR_log       ir al estado 25
+    exp_AND_log      ir al estado 26
+    exp_OR_in        ir al estado 27
+    exp_OR_ex        ir al estado 28
+    exp_AND          ir al estado 29
+    exp_igualdad     ir al estado 30
+    exp_relacional   ir al estado 31
+    exp_desp         ir al estado 32
+    exp_aditiva      ir al estado 33
+    exp_multip       ir al estado 34
+    exp_conversion   ir al estado 35
+    exp_unaria       ir al estado 36
+    op_unario        ir al estado 37
+    exp_sufijo       ir al estado 38
+    exp_primaria     ir al estado 39
+
+
+estado 44
+
+   61 exp_unaria: SIZEOF exp_unaria .
+
+    $default  reduce usando la regla 61 (exp_unaria)
+
+
+estado 45
+
+   56 exp_conversion: '(' TIPO_DATO . ')' exp_conversion exp_unaria
+
+    ')'  desplazar e ir al estado 89
+
+
+estado 46
+
+   11 expresion: expresion . ',' exp_asignacion
+   80 exp_primaria: '(' expresion . ')'
+
+    ','  desplazar e ir al estado 48
+    ')'  desplazar e ir al estado 90
+
+
+estado 47
+
+    4 line: expresion '\n' .
+
+    $default  reduce usando la regla 4 (line)
+
+
+estado 48
+
+   11 expresion: expresion ',' . exp_asignacion
+
+    NUM_ENTERO  desplazar e ir al estado 3
+    NUM_REAL    desplazar e ir al estado 4
+    ID          desplazar e ir al estado 5
+    OP_INC      desplazar e ir al estado 6
+    OP_DEC      desplazar e ir al estado 7
+    CHAR        desplazar e ir al estado 8
+    STRING      desplazar e ir al estado 9
+    SIZEOF      desplazar e ir al estado 10
+    '&'         desplazar e ir al estado 12
+    '+'         desplazar e ir al estado 13
+    '-'         desplazar e ir al estado 14
+    '*'         desplazar e ir al estado 15
+    '('         desplazar e ir al estado 16
+    '~'         desplazar e ir al estado 17
+    '!'         desplazar e ir al estado 18
+
+    const            ir al estado 20
+    const_enum       ir al estado 21
+    exp_asignacion   ir al estado 91
+    exp_condicional  ir al estado 24
+    exp_OR_log       ir al estado 25
+    exp_AND_log      ir al estado 26
+    exp_OR_in        ir al estado 27
+    exp_OR_ex        ir al estado 28
+    exp_AND          ir al estado 29
+    exp_igualdad     ir al estado 30
+    exp_relacional   ir al estado 31
+    exp_desp         ir al estado 32
+    exp_aditiva      ir al estado 33
+    exp_multip       ir al estado 34
+    exp_conversion   ir al estado 35
+    exp_unaria       ir al estado 36
+    op_unario        ir al estado 37
+    exp_sufijo       ir al estado 38
+    exp_primaria     ir al estado 39
+
+
+estado 49
+
+   28 exp_OR_log: exp_OR_log OP_OR . exp_AND_log
+
+    NUM_ENTERO  desplazar e ir al estado 3
+    NUM_REAL    desplazar e ir al estado 4
+    ID          desplazar e ir al estado 5
+    OP_INC      desplazar e ir al estado 6
+    OP_DEC      desplazar e ir al estado 7
+    CHAR        desplazar e ir al estado 8
+    STRING      desplazar e ir al estado 9
+    SIZEOF      desplazar e ir al estado 10
+    '&'         desplazar e ir al estado 12
+    '+'         desplazar e ir al estado 13
+    '-'         desplazar e ir al estado 14
+    '*'         desplazar e ir al estado 15
+    '('         desplazar e ir al estado 16
+    '~'         desplazar e ir al estado 17
+    '!'         desplazar e ir al estado 18
+
+    const           ir al estado 20
+    const_enum      ir al estado 21
+    exp_AND_log     ir al estado 92
+    exp_OR_in       ir al estado 27
+    exp_OR_ex       ir al estado 28
+    exp_AND         ir al estado 29
+    exp_igualdad    ir al estado 30
+    exp_relacional  ir al estado 31
+    exp_desp        ir al estado 32
+    exp_aditiva     ir al estado 33
+    exp_multip      ir al estado 34
+    exp_conversion  ir al estado 35
+    exp_unaria      ir al estado 81
+    op_unario       ir al estado 37
+    exp_sufijo      ir al estado 38
+    exp_primaria    ir al estado 39
+
+
+estado 50
+
+   15 exp_condicional: exp_OR_log '?' . expresion ':' exp_condicional
+
+    NUM_ENTERO  desplazar e ir al estado 3
+    NUM_REAL    desplazar e ir al estado 4
+    ID          desplazar e ir al estado 5
+    OP_INC      desplazar e ir al estado 6
+    OP_DEC      desplazar e ir al estado 7
+    CHAR        desplazar e ir al estado 8
+    STRING      desplazar e ir al estado 9
+    SIZEOF      desplazar e ir al estado 10
+    '&'         desplazar e ir al estado 12
+    '+'         desplazar e ir al estado 13
+    '-'         desplazar e ir al estado 14
+    '*'         desplazar e ir al estado 15
+    '('         desplazar e ir al estado 16
+    '~'         desplazar e ir al estado 17
+    '!'         desplazar e ir al estado 18
+
+    const            ir al estado 20
+    const_enum       ir al estado 21
+    expresion        ir al estado 93
+    exp_asignacion   ir al estado 23
+    exp_condicional  ir al estado 24
+    exp_OR_log       ir al estado 25
+    exp_AND_log      ir al estado 26
+    exp_OR_in        ir al estado 27
+    exp_OR_ex        ir al estado 28
+    exp_AND          ir al estado 29
+    exp_igualdad     ir al estado 30
+    exp_relacional   ir al estado 31
+    exp_desp         ir al estado 32
+    exp_aditiva      ir al estado 33
+    exp_multip       ir al estado 34
+    exp_conversion   ir al estado 35
+    exp_unaria       ir al estado 36
+    op_unario        ir al estado 37
+    exp_sufijo       ir al estado 38
+    exp_primaria     ir al estado 39
+
+
+estado 51
+
+   30 exp_AND_log: exp_AND_log OP_AND . exp_OR_in
+
+    NUM_ENTERO  desplazar e ir al estado 3
+    NUM_REAL    desplazar e ir al estado 4
+    ID          desplazar e ir al estado 5
+    OP_INC      desplazar e ir al estado 6
+    OP_DEC      desplazar e ir al estado 7
+    CHAR        desplazar e ir al estado 8
+    STRING      desplazar e ir al estado 9
+    SIZEOF      desplazar e ir al estado 10
+    '&'         desplazar e ir al estado 12
+    '+'         desplazar e ir al estado 13
+    '-'         desplazar e ir al estado 14
+    '*'         desplazar e ir al estado 15
+    '('         desplazar e ir al estado 16
+    '~'         desplazar e ir al estado 17
+    '!'         desplazar e ir al estado 18
+
+    const           ir al estado 20
+    const_enum      ir al estado 21
+    exp_OR_in       ir al estado 94
+    exp_OR_ex       ir al estado 28
+    exp_AND         ir al estado 29
+    exp_igualdad    ir al estado 30
+    exp_relacional  ir al estado 31
+    exp_desp        ir al estado 32
+    exp_aditiva     ir al estado 33
+    exp_multip      ir al estado 34
+    exp_conversion  ir al estado 35
+    exp_unaria      ir al estado 81
+    op_unario       ir al estado 37
+    exp_sufijo      ir al estado 38
+    exp_primaria    ir al estado 39
+
+
+estado 52
+
+   32 exp_OR_in: exp_OR_in '|' . exp_OR_ex
+
+    NUM_ENTERO  desplazar e ir al estado 3
+    NUM_REAL    desplazar e ir al estado 4
+    ID          desplazar e ir al estado 5
+    OP_INC      desplazar e ir al estado 6
+    OP_DEC      desplazar e ir al estado 7
+    CHAR        desplazar e ir al estado 8
+    STRING      desplazar e ir al estado 9
+    SIZEOF      desplazar e ir al estado 10
+    '&'         desplazar e ir al estado 12
+    '+'         desplazar e ir al estado 13
+    '-'         desplazar e ir al estado 14
+    '*'         desplazar e ir al estado 15
+    '('         desplazar e ir al estado 16
+    '~'         desplazar e ir al estado 17
+    '!'         desplazar e ir al estado 18
+
+    const           ir al estado 20
+    const_enum      ir al estado 21
+    exp_OR_ex       ir al estado 95
+    exp_AND         ir al estado 29
+    exp_igualdad    ir al estado 30
+    exp_relacional  ir al estado 31
+    exp_desp        ir al estado 32
+    exp_aditiva     ir al estado 33
+    exp_multip      ir al estado 34
+    exp_conversion  ir al estado 35
+    exp_unaria      ir al estado 81
+    op_unario       ir al estado 37
+    exp_sufijo      ir al estado 38
+    exp_primaria    ir al estado 39
+
+
+estado 53
+
+   34 exp_OR_ex: exp_OR_ex '^' . exp_AND
+
+    NUM_ENTERO  desplazar e ir al estado 3
+    NUM_REAL    desplazar e ir al estado 4
+    ID          desplazar e ir al estado 5
+    OP_INC      desplazar e ir al estado 6
+    OP_DEC      desplazar e ir al estado 7
+    CHAR        desplazar e ir al estado 8
+    STRING      desplazar e ir al estado 9
+    SIZEOF      desplazar e ir al estado 10
+    '&'         desplazar e ir al estado 12
+    '+'         desplazar e ir al estado 13
+    '-'         desplazar e ir al estado 14
+    '*'         desplazar e ir al estado 15
+    '('         desplazar e ir al estado 16
+    '~'         desplazar e ir al estado 17
+    '!'         desplazar e ir al estado 18
+
+    const           ir al estado 20
+    const_enum      ir al estado 21
+    exp_AND         ir al estado 96
+    exp_igualdad    ir al estado 30
+    exp_relacional  ir al estado 31
+    exp_desp        ir al estado 32
+    exp_aditiva     ir al estado 33
+    exp_multip      ir al estado 34
+    exp_conversion  ir al estado 35
+    exp_unaria      ir al estado 81
+    op_unario       ir al estado 37
+    exp_sufijo      ir al estado 38
+    exp_primaria    ir al estado 39
+
+
+estado 54
+
+   36 exp_AND: exp_AND '&' . exp_igualdad
+
+    NUM_ENTERO  desplazar e ir al estado 3
+    NUM_REAL    desplazar e ir al estado 4
+    ID          desplazar e ir al estado 5
+    OP_INC      desplazar e ir al estado 6
+    OP_DEC      desplazar e ir al estado 7
+    CHAR        desplazar e ir al estado 8
+    STRING      desplazar e ir al estado 9
+    SIZEOF      desplazar e ir al estado 10
+    '&'         desplazar e ir al estado 12
+    '+'         desplazar e ir al estado 13
+    '-'         desplazar e ir al estado 14
+    '*'         desplazar e ir al estado 15
+    '('         desplazar e ir al estado 16
+    '~'         desplazar e ir al estado 17
+    '!'         desplazar e ir al estado 18
+
+    const           ir al estado 20
+    const_enum      ir al estado 21
+    exp_igualdad    ir al estado 97
+    exp_relacional  ir al estado 31
+    exp_desp        ir al estado 32
+    exp_aditiva     ir al estado 33
+    exp_multip      ir al estado 34
+    exp_conversion  ir al estado 35
+    exp_unaria      ir al estado 81
+    op_unario       ir al estado 37
+    exp_sufijo      ir al estado 38
+    exp_primaria    ir al estado 39
+
+
+estado 55
+
+   38 exp_igualdad: exp_igualdad OP_IGUALDAD . exp_relacional
+
+    NUM_ENTERO  desplazar e ir al estado 3
+    NUM_REAL    desplazar e ir al estado 4
+    ID          desplazar e ir al estado 5
+    OP_INC      desplazar e ir al estado 6
+    OP_DEC      desplazar e ir al estado 7
+    CHAR        desplazar e ir al estado 8
+    STRING      desplazar e ir al estado 9
+    SIZEOF      desplazar e ir al estado 10
+    '&'         desplazar e ir al estado 12
+    '+'         desplazar e ir al estado 13
+    '-'         desplazar e ir al estado 14
+    '*'         desplazar e ir al estado 15
+    '('         desplazar e ir al estado 16
+    '~'         desplazar e ir al estado 17
+    '!'         desplazar e ir al estado 18
+
+    const           ir al estado 20
+    const_enum      ir al estado 21
+    exp_relacional  ir al estado 98
+    exp_desp        ir al estado 32
+    exp_aditiva     ir al estado 33
+    exp_multip      ir al estado 34
+    exp_conversion  ir al estado 35
+    exp_unaria      ir al estado 81
+    op_unario       ir al estado 37
+    exp_sufijo      ir al estado 38
+    exp_primaria    ir al estado 39
+
+
+estado 56
+
+   39 exp_igualdad: exp_igualdad OP_DESIGUALDAD . exp_relacional
+
+    NUM_ENTERO  desplazar e ir al estado 3
+    NUM_REAL    desplazar e ir al estado 4
+    ID          desplazar e ir al estado 5
+    OP_INC      desplazar e ir al estado 6
+    OP_DEC      desplazar e ir al estado 7
+    CHAR        desplazar e ir al estado 8
+    STRING      desplazar e ir al estado 9
+    SIZEOF      desplazar e ir al estado 10
+    '&'         desplazar e ir al estado 12
+    '+'         desplazar e ir al estado 13
+    '-'         desplazar e ir al estado 14
+    '*'         desplazar e ir al estado 15
+    '('         desplazar e ir al estado 16
+    '~'         desplazar e ir al estado 17
+    '!'         desplazar e ir al estado 18
+
+    const           ir al estado 20
+    const_enum      ir al estado 21
+    exp_relacional  ir al estado 99
+    exp_desp        ir al estado 32
+    exp_aditiva     ir al estado 33
+    exp_multip      ir al estado 34
+    exp_conversion  ir al estado 35
+    exp_unaria      ir al estado 81
+    op_unario       ir al estado 37
+    exp_sufijo      ir al estado 38
+    exp_primaria    ir al estado 39
+
+
+estado 57
+
+   43 exp_relacional: exp_relacional OP_MENOR_IGUAL . exp_desp
+
+    NUM_ENTERO  desplazar e ir al estado 3
+    NUM_REAL    desplazar e ir al estado 4
+    ID          desplazar e ir al estado 5
+    OP_INC      desplazar e ir al estado 6
+    OP_DEC      desplazar e ir al estado 7
+    CHAR        desplazar e ir al estado 8
+    STRING      desplazar e ir al estado 9
+    SIZEOF      desplazar e ir al estado 10
+    '&'         desplazar e ir al estado 12
+    '+'         desplazar e ir al estado 13
+    '-'         desplazar e ir al estado 14
+    '*'         desplazar e ir al estado 15
+    '('         desplazar e ir al estado 16
+    '~'         desplazar e ir al estado 17
+    '!'         desplazar e ir al estado 18
+
+    const           ir al estado 20
+    const_enum      ir al estado 21
+    exp_desp        ir al estado 100
+    exp_aditiva     ir al estado 33
+    exp_multip      ir al estado 34
+    exp_conversion  ir al estado 35
+    exp_unaria      ir al estado 81
+    op_unario       ir al estado 37
+    exp_sufijo      ir al estado 38
+    exp_primaria    ir al estado 39
+
+
+estado 58
+
+   44 exp_relacional: exp_relacional OP_MAYOR_IGUAL . exp_desp
+
+    NUM_ENTERO  desplazar e ir al estado 3
+    NUM_REAL    desplazar e ir al estado 4
+    ID          desplazar e ir al estado 5
+    OP_INC      desplazar e ir al estado 6
+    OP_DEC      desplazar e ir al estado 7
+    CHAR        desplazar e ir al estado 8
+    STRING      desplazar e ir al estado 9
+    SIZEOF      desplazar e ir al estado 10
+    '&'         desplazar e ir al estado 12
+    '+'         desplazar e ir al estado 13
+    '-'         desplazar e ir al estado 14
+    '*'         desplazar e ir al estado 15
+    '('         desplazar e ir al estado 16
+    '~'         desplazar e ir al estado 17
+    '!'         desplazar e ir al estado 18
+
+    const           ir al estado 20
+    const_enum      ir al estado 21
+    exp_desp        ir al estado 101
+    exp_aditiva     ir al estado 33
+    exp_multip      ir al estado 34
+    exp_conversion  ir al estado 35
+    exp_unaria      ir al estado 81
+    op_unario       ir al estado 37
+    exp_sufijo      ir al estado 38
+    exp_primaria    ir al estado 39
+
+
+estado 59
+
+   41 exp_relacional: exp_relacional '<' . exp_desp
+
+    NUM_ENTERO  desplazar e ir al estado 3
+    NUM_REAL    desplazar e ir al estado 4
+    ID          desplazar e ir al estado 5
+    OP_INC      desplazar e ir al estado 6
+    OP_DEC      desplazar e ir al estado 7
+    CHAR        desplazar e ir al estado 8
+    STRING      desplazar e ir al estado 9
+    SIZEOF      desplazar e ir al estado 10
+    '&'         desplazar e ir al estado 12
+    '+'         desplazar e ir al estado 13
+    '-'         desplazar e ir al estado 14
+    '*'         desplazar e ir al estado 15
+    '('         desplazar e ir al estado 16
+    '~'         desplazar e ir al estado 17
+    '!'         desplazar e ir al estado 18
+
+    const           ir al estado 20
+    const_enum      ir al estado 21
+    exp_desp        ir al estado 102
+    exp_aditiva     ir al estado 33
+    exp_multip      ir al estado 34
+    exp_conversion  ir al estado 35
+    exp_unaria      ir al estado 81
+    op_unario       ir al estado 37
+    exp_sufijo      ir al estado 38
+    exp_primaria    ir al estado 39
+
+
+estado 60
+
+   42 exp_relacional: exp_relacional '>' . exp_desp
+
+    NUM_ENTERO  desplazar e ir al estado 3
+    NUM_REAL    desplazar e ir al estado 4
+    ID          desplazar e ir al estado 5
+    OP_INC      desplazar e ir al estado 6
+    OP_DEC      desplazar e ir al estado 7
+    CHAR        desplazar e ir al estado 8
+    STRING      desplazar e ir al estado 9
+    SIZEOF      desplazar e ir al estado 10
+    '&'         desplazar e ir al estado 12
+    '+'         desplazar e ir al estado 13
+    '-'         desplazar e ir al estado 14
+    '*'         desplazar e ir al estado 15
+    '('         desplazar e ir al estado 16
+    '~'         desplazar e ir al estado 17
+    '!'         desplazar e ir al estado 18
+
+    const           ir al estado 20
+    const_enum      ir al estado 21
+    exp_desp        ir al estado 103
+    exp_aditiva     ir al estado 33
+    exp_multip      ir al estado 34
+    exp_conversion  ir al estado 35
+    exp_unaria      ir al estado 81
+    op_unario       ir al estado 37
+    exp_sufijo      ir al estado 38
+    exp_primaria    ir al estado 39
+
+
+estado 61
+
+   46 exp_desp: exp_desp OP_DESP_IZQ . exp_aditiva
+
+    NUM_ENTERO  desplazar e ir al estado 3
+    NUM_REAL    desplazar e ir al estado 4
+    ID          desplazar e ir al estado 5
+    OP_INC      desplazar e ir al estado 6
+    OP_DEC      desplazar e ir al estado 7
+    CHAR        desplazar e ir al estado 8
+    STRING      desplazar e ir al estado 9
+    SIZEOF      desplazar e ir al estado 10
+    '&'         desplazar e ir al estado 12
+    '+'         desplazar e ir al estado 13
+    '-'         desplazar e ir al estado 14
+    '*'         desplazar e ir al estado 15
+    '('         desplazar e ir al estado 16
+    '~'         desplazar e ir al estado 17
+    '!'         desplazar e ir al estado 18
+
+    const           ir al estado 20
+    const_enum      ir al estado 21
+    exp_aditiva     ir al estado 104
+    exp_multip      ir al estado 34
+    exp_conversion  ir al estado 35
+    exp_unaria      ir al estado 81
+    op_unario       ir al estado 37
+    exp_sufijo      ir al estado 38
+    exp_primaria    ir al estado 39
+
+
+estado 62
+
+   47 exp_desp: exp_desp OP_DESP_DER . exp_aditiva
+
+    NUM_ENTERO  desplazar e ir al estado 3
+    NUM_REAL    desplazar e ir al estado 4
+    ID          desplazar e ir al estado 5
+    OP_INC      desplazar e ir al estado 6
+    OP_DEC      desplazar e ir al estado 7
+    CHAR        desplazar e ir al estado 8
+    STRING      desplazar e ir al estado 9
+    SIZEOF      desplazar e ir al estado 10
+    '&'         desplazar e ir al estado 12
+    '+'         desplazar e ir al estado 13
+    '-'         desplazar e ir al estado 14
+    '*'         desplazar e ir al estado 15
+    '('         desplazar e ir al estado 16
+    '~'         desplazar e ir al estado 17
+    '!'         desplazar e ir al estado 18
+
+    const           ir al estado 20
+    const_enum      ir al estado 21
+    exp_aditiva     ir al estado 105
+    exp_multip      ir al estado 34
+    exp_conversion  ir al estado 35
+    exp_unaria      ir al estado 81
+    op_unario       ir al estado 37
+    exp_sufijo      ir al estado 38
+    exp_primaria    ir al estado 39
+
+
+estado 63
+
+   49 exp_aditiva: exp_aditiva '+' . exp_multip
+
+    NUM_ENTERO  desplazar e ir al estado 3
+    NUM_REAL    desplazar e ir al estado 4
+    ID          desplazar e ir al estado 5
+    OP_INC      desplazar e ir al estado 6
+    OP_DEC      desplazar e ir al estado 7
+    CHAR        desplazar e ir al estado 8
+    STRING      desplazar e ir al estado 9
+    SIZEOF      desplazar e ir al estado 10
+    '&'         desplazar e ir al estado 12
+    '+'         desplazar e ir al estado 13
+    '-'         desplazar e ir al estado 14
+    '*'         desplazar e ir al estado 15
+    '('         desplazar e ir al estado 16
+    '~'         desplazar e ir al estado 17
+    '!'         desplazar e ir al estado 18
+
+    const           ir al estado 20
+    const_enum      ir al estado 21
+    exp_multip      ir al estado 106
+    exp_conversion  ir al estado 35
+    exp_unaria      ir al estado 81
+    op_unario       ir al estado 37
+    exp_sufijo      ir al estado 38
+    exp_primaria    ir al estado 39
+
+
+estado 64
+
+   50 exp_aditiva: exp_aditiva '-' . exp_multip
+
+    NUM_ENTERO  desplazar e ir al estado 3
+    NUM_REAL    desplazar e ir al estado 4
+    ID          desplazar e ir al estado 5
+    OP_INC      desplazar e ir al estado 6
+    OP_DEC      desplazar e ir al estado 7
+    CHAR        desplazar e ir al estado 8
+    STRING      desplazar e ir al estado 9
+    SIZEOF      desplazar e ir al estado 10
+    '&'         desplazar e ir al estado 12
+    '+'         desplazar e ir al estado 13
+    '-'         desplazar e ir al estado 14
+    '*'         desplazar e ir al estado 15
+    '('         desplazar e ir al estado 16
+    '~'         desplazar e ir al estado 17
+    '!'         desplazar e ir al estado 18
+
+    const           ir al estado 20
+    const_enum      ir al estado 21
+    exp_multip      ir al estado 107
+    exp_conversion  ir al estado 35
+    exp_unaria      ir al estado 81
+    op_unario       ir al estado 37
+    exp_sufijo      ir al estado 38
+    exp_primaria    ir al estado 39
+
+
+estado 65
+
+   52 exp_multip: exp_multip '*' . exp_conversion
+
+    NUM_ENTERO  desplazar e ir al estado 3
+    NUM_REAL    desplazar e ir al estado 4
+    ID          desplazar e ir al estado 5
+    OP_INC      desplazar e ir al estado 6
+    OP_DEC      desplazar e ir al estado 7
+    CHAR        desplazar e ir al estado 8
+    STRING      desplazar e ir al estado 9
+    SIZEOF      desplazar e ir al estado 10
+    '&'         desplazar e ir al estado 12
+    '+'         desplazar e ir al estado 13
+    '-'         desplazar e ir al estado 14
+    '*'         desplazar e ir al estado 15
+    '('         desplazar e ir al estado 16
+    '~'         desplazar e ir al estado 17
+    '!'         desplazar e ir al estado 18
+
+    const           ir al estado 20
+    const_enum      ir al estado 21
+    exp_conversion  ir al estado 108
+    exp_unaria      ir al estado 81
+    op_unario       ir al estado 37
+    exp_sufijo      ir al estado 38
+    exp_primaria    ir al estado 39
+
+
+estado 66
+
+   53 exp_multip: exp_multip '/' . exp_conversion
+
+    NUM_ENTERO  desplazar e ir al estado 3
+    NUM_REAL    desplazar e ir al estado 4
+    ID          desplazar e ir al estado 5
+    OP_INC      desplazar e ir al estado 6
+    OP_DEC      desplazar e ir al estado 7
+    CHAR        desplazar e ir al estado 8
+    STRING      desplazar e ir al estado 9
+    SIZEOF      desplazar e ir al estado 10
+    '&'         desplazar e ir al estado 12
+    '+'         desplazar e ir al estado 13
+    '-'         desplazar e ir al estado 14
+    '*'         desplazar e ir al estado 15
+    '('         desplazar e ir al estado 16
+    '~'         desplazar e ir al estado 17
+    '!'         desplazar e ir al estado 18
+
+    const           ir al estado 20
+    const_enum      ir al estado 21
+    exp_conversion  ir al estado 109
+    exp_unaria      ir al estado 81
+    op_unario       ir al estado 37
+    exp_sufijo      ir al estado 38
+    exp_primaria    ir al estado 39
+
+
+estado 67
+
+   54 exp_multip: exp_multip '%' . exp_conversion
+
+    NUM_ENTERO  desplazar e ir al estado 3
+    NUM_REAL    desplazar e ir al estado 4
+    ID          desplazar e ir al estado 5
+    OP_INC      desplazar e ir al estado 6
+    OP_DEC      desplazar e ir al estado 7
+    CHAR        desplazar e ir al estado 8
+    STRING      desplazar e ir al estado 9
+    SIZEOF      desplazar e ir al estado 10
+    '&'         desplazar e ir al estado 12
+    '+'         desplazar e ir al estado 13
+    '-'         desplazar e ir al estado 14
+    '*'         desplazar e ir al estado 15
+    '('         desplazar e ir al estado 16
+    '~'         desplazar e ir al estado 17
+    '!'         desplazar e ir al estado 18
+
+    const           ir al estado 20
+    const_enum      ir al estado 21
+    exp_conversion  ir al estado 110
+    exp_unaria      ir al estado 81
+    op_unario       ir al estado 37
+    exp_sufijo      ir al estado 38
+    exp_primaria    ir al estado 39
+
+
+estado 68
+
+   17 op_asignacion: ASIG_MULT .
+
+    $default  reduce usando la regla 17 (op_asignacion)
+
+
+estado 69
+
+   18 op_asignacion: ASIG_DIV .
+
+    $default  reduce usando la regla 18 (op_asignacion)
+
+
+estado 70
+
+   19 op_asignacion: ASIG_MOD .
+
+    $default  reduce usando la regla 19 (op_asignacion)
+
+
+estado 71
+
+   20 op_asignacion: ASIG_SUMA .
+
+    $default  reduce usando la regla 20 (op_asignacion)
+
+
+estado 72
+
+   21 op_asignacion: ASIG_RESTA .
+
+    $default  reduce usando la regla 21 (op_asignacion)
+
+
+estado 73
+
+   22 op_asignacion: ASIG_DESP_IZQ .
+
+    $default  reduce usando la regla 22 (op_asignacion)
+
+
+estado 74
+
+   23 op_asignacion: ASIG_DESP_DER .
+
+    $default  reduce usando la regla 23 (op_asignacion)
+
+
+estado 75
+
+   24 op_asignacion: ASIG_AND_BIN .
+
+    $default  reduce usando la regla 24 (op_asignacion)
+
+
+estado 76
+
+   25 op_asignacion: ASIG_XOR_BIN .
+
+    $default  reduce usando la regla 25 (op_asignacion)
+
+
+estado 77
+
+   26 op_asignacion: ASIG_OR_BIN .
+
+    $default  reduce usando la regla 26 (op_asignacion)
+
+
+estado 78
+
+   16 op_asignacion: '=' .
+
+    $default  reduce usando la regla 16 (op_asignacion)
+
+
+estado 79
+
+   13 exp_asignacion: exp_unaria op_asignacion . exp_asignacion
+
+    NUM_ENTERO  desplazar e ir al estado 3
+    NUM_REAL    desplazar e ir al estado 4
+    ID          desplazar e ir al estado 5
+    OP_INC      desplazar e ir al estado 6
+    OP_DEC      desplazar e ir al estado 7
+    CHAR        desplazar e ir al estado 8
+    STRING      desplazar e ir al estado 9
+    SIZEOF      desplazar e ir al estado 10
+    '&'         desplazar e ir al estado 12
+    '+'         desplazar e ir al estado 13
+    '-'         desplazar e ir al estado 14
+    '*'         desplazar e ir al estado 15
+    '('         desplazar e ir al estado 16
+    '~'         desplazar e ir al estado 17
+    '!'         desplazar e ir al estado 18
+
+    const            ir al estado 20
+    const_enum       ir al estado 21
+    exp_asignacion   ir al estado 111
+    exp_condicional  ir al estado 24
+    exp_OR_log       ir al estado 25
+    exp_AND_log      ir al estado 26
+    exp_OR_in        ir al estado 27
+    exp_OR_ex        ir al estado 28
+    exp_AND          ir al estado 29
+    exp_igualdad     ir al estado 30
+    exp_relacional   ir al estado 31
+    exp_desp         ir al estado 32
+    exp_aditiva      ir al estado 33
+    exp_multip       ir al estado 34
+    exp_conversion   ir al estado 35
+    exp_unaria       ir al estado 36
+    op_unario        ir al estado 37
+    exp_sufijo       ir al estado 38
+    exp_primaria     ir al estado 39
+
+
+estado 80
+
+   60 exp_unaria: op_unario exp_conversion .
+
+    $default  reduce usando la regla 60 (exp_unaria)
+
+
+estado 81
+
+   55 exp_conversion: exp_unaria .
+
+    $default  reduce usando la regla 55 (exp_conversion)
+
+
+estado 82
+
+   74 exp_sufijo: exp_sufijo OP_INC .
+
+    $default  reduce usando la regla 74 (exp_sufijo)
+
+
+estado 83
+
+   75 exp_sufijo: exp_sufijo OP_DEC .
+
+    $default  reduce usando la regla 75 (exp_sufijo)
+
+
+estado 84
+
+   73 exp_sufijo: exp_sufijo OP_MIEMBRO_PUNT . ID
+
+    ID  desplazar e ir al estado 112
+
+
+estado 85
+
+   71 exp_sufijo: exp_sufijo '(' . lista_argumentos ')'
+
+    NUM_ENTERO  desplazar e ir al estado 3
+    NUM_REAL    desplazar e ir al estado 4
+    ID          desplazar e ir al estado 5
+    OP_INC      desplazar e ir al estado 6
+    OP_DEC      desplazar e ir al estado 7
+    CHAR        desplazar e ir al estado 8
+    STRING      desplazar e ir al estado 9
+    SIZEOF      desplazar e ir al estado 10
+    '&'         desplazar e ir al estado 12
+    '+'         desplazar e ir al estado 13
+    '-'         desplazar e ir al estado 14
+    '*'         desplazar e ir al estado 15
+    '('         desplazar e ir al estado 16
+    '~'         desplazar e ir al estado 17
+    '!'         desplazar e ir al estado 18
+
+    const             ir al estado 20
+    const_enum        ir al estado 21
+    exp_asignacion    ir al estado 113
+    exp_condicional   ir al estado 24
+    exp_OR_log        ir al estado 25
+    exp_AND_log       ir al estado 26
+    exp_OR_in         ir al estado 27
+    exp_OR_ex         ir al estado 28
+    exp_AND           ir al estado 29
+    exp_igualdad      ir al estado 30
+    exp_relacional    ir al estado 31
+    exp_desp          ir al estado 32
+    exp_aditiva       ir al estado 33
+    exp_multip        ir al estado 34
+    exp_conversion    ir al estado 35
+    exp_unaria        ir al estado 36
+    op_unario         ir al estado 37
+    exp_sufijo        ir al estado 38
+    lista_argumentos  ir al estado 114
+    exp_primaria      ir al estado 39
+
+
+estado 86
+
+   70 exp_sufijo: exp_sufijo '[' . expresion ']'
+
+    NUM_ENTERO  desplazar e ir al estado 3
+    NUM_REAL    desplazar e ir al estado 4
+    ID          desplazar e ir al estado 5
+    OP_INC      desplazar e ir al estado 6
+    OP_DEC      desplazar e ir al estado 7
+    CHAR        desplazar e ir al estado 8
+    STRING      desplazar e ir al estado 9
+    SIZEOF      desplazar e ir al estado 10
+    '&'         desplazar e ir al estado 12
+    '+'         desplazar e ir al estado 13
+    '-'         desplazar e ir al estado 14
+    '*'         desplazar e ir al estado 15
+    '('         desplazar e ir al estado 16
+    '~'         desplazar e ir al estado 17
+    '!'         desplazar e ir al estado 18
+
+    const            ir al estado 20
+    const_enum       ir al estado 21
+    expresion        ir al estado 115
+    exp_asignacion   ir al estado 23
+    exp_condicional  ir al estado 24
+    exp_OR_log       ir al estado 25
+    exp_AND_log      ir al estado 26
+    exp_OR_in        ir al estado 27
+    exp_OR_ex        ir al estado 28
+    exp_AND          ir al estado 29
+    exp_igualdad     ir al estado 30
+    exp_relacional   ir al estado 31
+    exp_desp         ir al estado 32
+    exp_aditiva      ir al estado 33
+    exp_multip       ir al estado 34
+    exp_conversion   ir al estado 35
+    exp_unaria       ir al estado 36
+    op_unario        ir al estado 37
+    exp_sufijo       ir al estado 38
+    exp_primaria     ir al estado 39
+
+
+estado 87
+
+   72 exp_sufijo: exp_sufijo '.' . ID
+
+    ID  desplazar e ir al estado 116
+
+
+estado 88
+
+   62 exp_unaria: SIZEOF '(' TIPO_DATO . ')'
+
+    ')'  desplazar e ir al estado 117
+
+
+estado 89
+
+   56 exp_conversion: '(' TIPO_DATO ')' . exp_conversion exp_unaria
+
+    NUM_ENTERO  desplazar e ir al estado 3
+    NUM_REAL    desplazar e ir al estado 4
+    ID          desplazar e ir al estado 5
+    OP_INC      desplazar e ir al estado 6
+    OP_DEC      desplazar e ir al estado 7
+    CHAR        desplazar e ir al estado 8
+    STRING      desplazar e ir al estado 9
+    SIZEOF      desplazar e ir al estado 10
+    '&'         desplazar e ir al estado 12
+    '+'         desplazar e ir al estado 13
+    '-'         desplazar e ir al estado 14
+    '*'         desplazar e ir al estado 15
+    '('         desplazar e ir al estado 16
+    '~'         desplazar e ir al estado 17
+    '!'         desplazar e ir al estado 18
+
+    const           ir al estado 20
+    const_enum      ir al estado 21
+    exp_conversion  ir al estado 118
+    exp_unaria      ir al estado 81
+    op_unario       ir al estado 37
+    exp_sufijo      ir al estado 38
+    exp_primaria    ir al estado 39
+
+
+estado 90
+
+   80 exp_primaria: '(' expresion ')' .
+
+    $default  reduce usando la regla 80 (exp_primaria)
+
+
+estado 91
+
+   11 expresion: expresion ',' exp_asignacion .
+
+    $default  reduce usando la regla 11 (expresion)
+
+
+estado 92
+
+   28 exp_OR_log: exp_OR_log OP_OR exp_AND_log .
+   30 exp_AND_log: exp_AND_log . OP_AND exp_OR_in
+
+    OP_AND  desplazar e ir al estado 51
+
+    $default  reduce usando la regla 28 (exp_OR_log)
+
+
+estado 93
+
+   11 expresion: expresion . ',' exp_asignacion
+   15 exp_condicional: exp_OR_log '?' expresion . ':' exp_condicional
+
+    ','  desplazar e ir al estado 48
+    ':'  desplazar e ir al estado 119
+
+
+estado 94
+
+   30 exp_AND_log: exp_AND_log OP_AND exp_OR_in .
+   32 exp_OR_in: exp_OR_in . '|' exp_OR_ex
+
+    '|'  desplazar e ir al estado 52
+
+    $default  reduce usando la regla 30 (exp_AND_log)
+
+
+estado 95
+
+   32 exp_OR_in: exp_OR_in '|' exp_OR_ex .
+   34 exp_OR_ex: exp_OR_ex . '^' exp_AND
+
+    '^'  desplazar e ir al estado 53
+
+    $default  reduce usando la regla 32 (exp_OR_in)
+
+
+estado 96
+
+   34 exp_OR_ex: exp_OR_ex '^' exp_AND .
+   36 exp_AND: exp_AND . '&' exp_igualdad
+
+    '&'  desplazar e ir al estado 54
+
+    $default  reduce usando la regla 34 (exp_OR_ex)
+
+
+estado 97
+
+   36 exp_AND: exp_AND '&' exp_igualdad .
+   38 exp_igualdad: exp_igualdad . OP_IGUALDAD exp_relacional
+   39             | exp_igualdad . OP_DESIGUALDAD exp_relacional
+
+    OP_IGUALDAD     desplazar e ir al estado 55
+    OP_DESIGUALDAD  desplazar e ir al estado 56
+
+    $default  reduce usando la regla 36 (exp_AND)
+
+
+estado 98
+
+   38 exp_igualdad: exp_igualdad OP_IGUALDAD exp_relacional .
+   41 exp_relacional: exp_relacional . '<' exp_desp
+   42               | exp_relacional . '>' exp_desp
+   43               | exp_relacional . OP_MENOR_IGUAL exp_desp
+   44               | exp_relacional . OP_MAYOR_IGUAL exp_desp
+
+    OP_MENOR_IGUAL  desplazar e ir al estado 57
+    OP_MAYOR_IGUAL  desplazar e ir al estado 58
+    '<'             desplazar e ir al estado 59
+    '>'             desplazar e ir al estado 60
+
+    $default  reduce usando la regla 38 (exp_igualdad)
+
+
+estado 99
+
+   39 exp_igualdad: exp_igualdad OP_DESIGUALDAD exp_relacional .
+   41 exp_relacional: exp_relacional . '<' exp_desp
+   42               | exp_relacional . '>' exp_desp
+   43               | exp_relacional . OP_MENOR_IGUAL exp_desp
+   44               | exp_relacional . OP_MAYOR_IGUAL exp_desp
+
+    OP_MENOR_IGUAL  desplazar e ir al estado 57
+    OP_MAYOR_IGUAL  desplazar e ir al estado 58
+    '<'             desplazar e ir al estado 59
+    '>'             desplazar e ir al estado 60
+
+    $default  reduce usando la regla 39 (exp_igualdad)
+
+
+estado 100
+
+   43 exp_relacional: exp_relacional OP_MENOR_IGUAL exp_desp .
+   46 exp_desp: exp_desp . OP_DESP_IZQ exp_aditiva
+   47         | exp_desp . OP_DESP_DER exp_aditiva
+
+    OP_DESP_IZQ  desplazar e ir al estado 61
+    OP_DESP_DER  desplazar e ir al estado 62
+
+    $default  reduce usando la regla 43 (exp_relacional)
+
+
+estado 101
+
+   44 exp_relacional: exp_relacional OP_MAYOR_IGUAL exp_desp .
+   46 exp_desp: exp_desp . OP_DESP_IZQ exp_aditiva
+   47         | exp_desp . OP_DESP_DER exp_aditiva
+
+    OP_DESP_IZQ  desplazar e ir al estado 61
+    OP_DESP_DER  desplazar e ir al estado 62
+
+    $default  reduce usando la regla 44 (exp_relacional)
+
+
+estado 102
+
+   41 exp_relacional: exp_relacional '<' exp_desp .
+   46 exp_desp: exp_desp . OP_DESP_IZQ exp_aditiva
+   47         | exp_desp . OP_DESP_DER exp_aditiva
+
+    OP_DESP_IZQ  desplazar e ir al estado 61
+    OP_DESP_DER  desplazar e ir al estado 62
+
+    $default  reduce usando la regla 41 (exp_relacional)
+
+
+estado 103
+
+   42 exp_relacional: exp_relacional '>' exp_desp .
+   46 exp_desp: exp_desp . OP_DESP_IZQ exp_aditiva
+   47         | exp_desp . OP_DESP_DER exp_aditiva
+
+    OP_DESP_IZQ  desplazar e ir al estado 61
+    OP_DESP_DER  desplazar e ir al estado 62
+
+    $default  reduce usando la regla 42 (exp_relacional)
+
+
+estado 104
+
+   46 exp_desp: exp_desp OP_DESP_IZQ exp_aditiva .
+   49 exp_aditiva: exp_aditiva . '+' exp_multip
+   50            | exp_aditiva . '-' exp_multip
+
+    '+'  desplazar e ir al estado 63
+    '-'  desplazar e ir al estado 64
+
+    $default  reduce usando la regla 46 (exp_desp)
+
+
+estado 105
+
+   47 exp_desp: exp_desp OP_DESP_DER exp_aditiva .
+   49 exp_aditiva: exp_aditiva . '+' exp_multip
+   50            | exp_aditiva . '-' exp_multip
+
+    '+'  desplazar e ir al estado 63
+    '-'  desplazar e ir al estado 64
+
+    $default  reduce usando la regla 47 (exp_desp)
+
+
+estado 106
+
+   49 exp_aditiva: exp_aditiva '+' exp_multip .
+   52 exp_multip: exp_multip . '*' exp_conversion
+   53           | exp_multip . '/' exp_conversion
+   54           | exp_multip . '%' exp_conversion
+
+    '*'  desplazar e ir al estado 65
+    '/'  desplazar e ir al estado 66
+    '%'  desplazar e ir al estado 67
+
+    $default  reduce usando la regla 49 (exp_aditiva)
+
+
+estado 107
+
+   50 exp_aditiva: exp_aditiva '-' exp_multip .
+   52 exp_multip: exp_multip . '*' exp_conversion
+   53           | exp_multip . '/' exp_conversion
+   54           | exp_multip . '%' exp_conversion
+
+    '*'  desplazar e ir al estado 65
+    '/'  desplazar e ir al estado 66
+    '%'  desplazar e ir al estado 67
+
+    $default  reduce usando la regla 50 (exp_aditiva)
+
+
+estado 108
+
+   52 exp_multip: exp_multip '*' exp_conversion .
+
+    $default  reduce usando la regla 52 (exp_multip)
+
+
+estado 109
+
+   53 exp_multip: exp_multip '/' exp_conversion .
+
+    $default  reduce usando la regla 53 (exp_multip)
+
+
+estado 110
+
+   54 exp_multip: exp_multip '%' exp_conversion .
+
+    $default  reduce usando la regla 54 (exp_multip)
+
+
+estado 111
+
+   13 exp_asignacion: exp_unaria op_asignacion exp_asignacion .
+
+    $default  reduce usando la regla 13 (exp_asignacion)
+
+
+estado 112
+
+   73 exp_sufijo: exp_sufijo OP_MIEMBRO_PUNT ID .
+
+    $default  reduce usando la regla 73 (exp_sufijo)
+
+
+estado 113
+
+   76 lista_argumentos: exp_asignacion .
+
+    $default  reduce usando la regla 76 (lista_argumentos)
+
+
+estado 114
+
+   71 exp_sufijo: exp_sufijo '(' lista_argumentos . ')'
+   77 lista_argumentos: lista_argumentos . ',' exp_asignacion
+
+    ','  desplazar e ir al estado 120
+    ')'  desplazar e ir al estado 121
+
+
+estado 115
+
+   11 expresion: expresion . ',' exp_asignacion
+   70 exp_sufijo: exp_sufijo '[' expresion . ']'
+
+    ','  desplazar e ir al estado 48
+    ']'  desplazar e ir al estado 122
+
+
+estado 116
+
+   72 exp_sufijo: exp_sufijo '.' ID .
+
+    $default  reduce usando la regla 72 (exp_sufijo)
+
+
+estado 117
+
+   62 exp_unaria: SIZEOF '(' TIPO_DATO ')' .
+
+    $default  reduce usando la regla 62 (exp_unaria)
+
+
+estado 118
+
+   56 exp_conversion: '(' TIPO_DATO ')' exp_conversion . exp_unaria
+
+    NUM_ENTERO  desplazar e ir al estado 3
+    NUM_REAL    desplazar e ir al estado 4
+    ID          desplazar e ir al estado 5
+    OP_INC      desplazar e ir al estado 6
+    OP_DEC      desplazar e ir al estado 7
+    CHAR        desplazar e ir al estado 8
+    STRING      desplazar e ir al estado 9
+    SIZEOF      desplazar e ir al estado 10
+    '&'         desplazar e ir al estado 12
+    '+'         desplazar e ir al estado 13
+    '-'         desplazar e ir al estado 14
+    '*'         desplazar e ir al estado 15
+    '('         desplazar e ir al estado 40
+    '~'         desplazar e ir al estado 17
+    '!'         desplazar e ir al estado 18
+
+    const         ir al estado 20
+    const_enum    ir al estado 21
+    exp_unaria    ir al estado 123
+    op_unario     ir al estado 37
+    exp_sufijo    ir al estado 38
+    exp_primaria  ir al estado 39
+
+
+estado 119
+
+   15 exp_condicional: exp_OR_log '?' expresion ':' . exp_condicional
+
+    NUM_ENTERO  desplazar e ir al estado 3
+    NUM_REAL    desplazar e ir al estado 4
+    ID          desplazar e ir al estado 5
+    OP_INC      desplazar e ir al estado 6
+    OP_DEC      desplazar e ir al estado 7
+    CHAR        desplazar e ir al estado 8
+    STRING      desplazar e ir al estado 9
+    SIZEOF      desplazar e ir al estado 10
+    '&'         desplazar e ir al estado 12
+    '+'         desplazar e ir al estado 13
+    '-'         desplazar e ir al estado 14
+    '*'         desplazar e ir al estado 15
+    '('         desplazar e ir al estado 16
+    '~'         desplazar e ir al estado 17
+    '!'         desplazar e ir al estado 18
+
+    const            ir al estado 20
+    const_enum       ir al estado 21
+    exp_condicional  ir al estado 124
+    exp_OR_log       ir al estado 25
+    exp_AND_log      ir al estado 26
+    exp_OR_in        ir al estado 27
+    exp_OR_ex        ir al estado 28
+    exp_AND          ir al estado 29
+    exp_igualdad     ir al estado 30
+    exp_relacional   ir al estado 31
+    exp_desp         ir al estado 32
+    exp_aditiva      ir al estado 33
+    exp_multip       ir al estado 34
+    exp_conversion   ir al estado 35
+    exp_unaria       ir al estado 81
+    op_unario        ir al estado 37
+    exp_sufijo       ir al estado 38
+    exp_primaria     ir al estado 39
+
+
+estado 120
+
+   77 lista_argumentos: lista_argumentos ',' . exp_asignacion
+
+    NUM_ENTERO  desplazar e ir al estado 3
+    NUM_REAL    desplazar e ir al estado 4
+    ID          desplazar e ir al estado 5
+    OP_INC      desplazar e ir al estado 6
+    OP_DEC      desplazar e ir al estado 7
+    CHAR        desplazar e ir al estado 8
+    STRING      desplazar e ir al estado 9
+    SIZEOF      desplazar e ir al estado 10
+    '&'         desplazar e ir al estado 12
+    '+'         desplazar e ir al estado 13
+    '-'         desplazar e ir al estado 14
+    '*'         desplazar e ir al estado 15
+    '('         desplazar e ir al estado 16
+    '~'         desplazar e ir al estado 17
+    '!'         desplazar e ir al estado 18
+
+    const            ir al estado 20
+    const_enum       ir al estado 21
+    exp_asignacion   ir al estado 125
+    exp_condicional  ir al estado 24
+    exp_OR_log       ir al estado 25
+    exp_AND_log      ir al estado 26
+    exp_OR_in        ir al estado 27
+    exp_OR_ex        ir al estado 28
+    exp_AND          ir al estado 29
+    exp_igualdad     ir al estado 30
+    exp_relacional   ir al estado 31
+    exp_desp         ir al estado 32
+    exp_aditiva      ir al estado 33
+    exp_multip       ir al estado 34
+    exp_conversion   ir al estado 35
+    exp_unaria       ir al estado 36
+    op_unario        ir al estado 37
+    exp_sufijo       ir al estado 38
+    exp_primaria     ir al estado 39
+
+
+estado 121
+
+   71 exp_sufijo: exp_sufijo '(' lista_argumentos ')' .
+
+    $default  reduce usando la regla 71 (exp_sufijo)
+
+
+estado 122
+
+   70 exp_sufijo: exp_sufijo '[' expresion ']' .
+
+    $default  reduce usando la regla 70 (exp_sufijo)
+
+
+estado 123
+
+   56 exp_conversion: '(' TIPO_DATO ')' exp_conversion exp_unaria .
+
+    $default  reduce usando la regla 56 (exp_conversion)
+
+
+estado 124
+
+   15 exp_condicional: exp_OR_log '?' expresion ':' exp_condicional .
+
+    $default  reduce usando la regla 15 (exp_condicional)
+
+
+estado 125
+
+   77 lista_argumentos: lista_argumentos ',' exp_asignacion .
+
+    $default  reduce usando la regla 77 (lista_argumentos)

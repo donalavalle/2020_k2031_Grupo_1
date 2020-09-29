@@ -1,0 +1,15 @@
+ID = persona
+Se utiliza el '.'
+ID = nombre
+ID = a
+Se utiliza el '--'
+ID = myArray
+Numero Entero = 2
+Se utiliza el '[' y el ']'
+ID = myFunction
+Numero Entero = 2
+Se utiliza el '(' y el ')'
+Numero Entero = 2
+Numero Entero = 10
+Numero Entero = 5
+Se utiliza el '+'

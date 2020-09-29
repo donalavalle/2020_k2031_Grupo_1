@@ -1,0 +1,7 @@
+persona.nombre
+a--
+myArray[2]
+
+myFunction(2)
+
+2 - (10 + 5
