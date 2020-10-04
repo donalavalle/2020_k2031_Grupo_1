@@ -7,7 +7,7 @@
     #include "AnalizadorSintactico.tab.h"
 %}
 
-CARACT_SIMPLES "+"|"-"|"*"|"/"|"^"|"("|")"|","|";"|"\n"|"="|"<"|">"|"%"|"&"|"|"|"~"|"!"|"?"|":"|"["|"]"|"{"|"}"|"."
+CARACT_SIMPLES "+"|"-"|"*"|"/"|"^"|"("|")"|","|";"|"="|"<"|">"|"%"|"&"|"|"|"~"|"!"|"?"|":"|"["|"]"|"{"|"}"|"."
 
 DECIMAL        [0-9]
 OCTAL          [0-7]
@@ -25,10 +25,11 @@ TIPOS_DATO    "void"|"char"|"short"|"int"|"long"|"float"|"double"|"signed"|"unsi
 CLASE_ALM     "typedef"|"static"|"auto"|"register"|"extern"
 CALIF_TIPO    "const"|"volatile"
 STRUCT_UNION  "struct"|"union"
+CONTINUE_BREAK "continue"|"break"
 
 IDENTIFICADOR ({LETRA}|_)({LETRA}|{DECIMAL}|_)*
 
-ESPACIOS       " "|"\t"
+ESPACIOS       " "|"\t"|"\n"
 COMODIN        .
 
 %%
@@ -38,8 +39,19 @@ COMODIN        .
 {CONST_OCTAL}     {yylval.valorEntero = strtoll(yytext, NULL, 8); return NUM_ENTERO;}
 {CONST_REAL}      {yylval.valorReal   = atof(yytext); return NUM_REAL;}
 {CARACT_SIMPLES}  {return yytext[0];}
+{CONTINUE_BREAK}  {return CONTINUE_BREAK;}
+"if"              {yylval.valorString = strdup(yytext); return IF;}
+"else"            {yylval.valorString = strdup(yytext); return ELSE;}
+"switch"          {yylval.valorString = strdup(yytext); return SWITCH;}
+"while"           {yylval.valorString = strdup(yytext); return WHILE;}
+"do"              {yylval.valorString = strdup(yytext); return DO;}
+"for"             {yylval.valorString = strdup(yytext); return FOR;}
+"case"            {yylval.valorString = strdup(yytext); return CASE;}
+"default"         {yylval.valorString = strdup(yytext); return DEFAULT;}
+"return"          {yylval.valorString = strdup(yytext); return RETURN;}
+"goto"            {yylval.valorString = strdup(yytext); return GOTO;}
 {TIPOS_DATO}      {yylval.valorString = strdup(yytext); return TIPO_DATO;}
-{CLASE_ALM}       {return CLASE_ALM;}
+{CLASE_ALM}       {yylval.valorString = strdup(yytext); return CLASE_ALM;}
 {CALIF_TIPO}      {return CALIF_TIPO;}
 {STRUCT_UNION}    {return STRUCT_UNION;}
 "sizeof"          {return SIZEOF;}

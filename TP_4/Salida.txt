@@ -1,8 +1,8 @@
-Numero Entero = 3
-Entra correctamente
-Numero Entero = 10
-Numero Entero = 2
-Se utiliza el '=='
-Numero Entero = 10
+ID = i
 Se utiliza el '='
-Numero Entero = 3
+Numero Entero = 0
+ID = valor
+ID = i
+Se utiliza el '=='
+Se utiliza el IF
+Se utiliza el FOR

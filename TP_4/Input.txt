@@ -1,4 +1,9 @@
-unsigned int a = 3;
-typedef int size_t;
-10 == 2;
-10 = 3;
+for (i = 0; ; )
+{
+    if (valor==i){
+        while(5<1){
+            break;
+        }
+    }
+}
+AHI VENGO

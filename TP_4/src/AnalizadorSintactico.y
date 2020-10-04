@@ -47,10 +47,21 @@ FILE* yyout;
 %token <valorString> STRING
 
 %token SIZEOF
-%token CLASE_ALM
+%token <valorString> CLASE_ALM
 %token CALIF_TIPO
 %token STRUCT_UNION
 %token ENUM
+%token <valorString> CONTINUE_BREAK
+%token <valorString> IF
+%token <valorString> ELSE
+%token <valorString> SWITCH
+%token <valorString> FOR
+%token <valorString> DO
+%token <valorString> WHILE
+%token <valorString> CASE
+%token <valorString> DEFAULT
+%token <valorString> RETURN 
+%token <valorString> GOTO
 
 %union {
   int   valorEntero;
@@ -64,9 +75,10 @@ input:   /* vacio */
        | input line
 ;
 
-line:   '\n'
+line:  /* Vacio */
       | expresion ';'
       | declaracion ';'
+      | sentencia
 ;
 
 const:   NUM_ENTERO     {fprintf(yyout, "Numero Entero = %d\n", $<valorEntero>1);}
@@ -190,14 +202,10 @@ exp_primaria:   const
 ;
 
 
-declaracion: especificadores_declaracion lista_declaradores_opc
+declaracion: especificadores_declaracion lista_declaradores
 ;
 
-lista_declaradores_opc:   /* Vacio */
-                        | lista_declaradores
-;
-
-especificadores_declaracion:   CLASE_ALM           especificadores_declaracion_opc
+especificadores_declaracion:   CLASE_ALM           especificadores_declaracion_opc  {fprintf(yyout, "String = %s\n", $<valorString>1);}
                              | especificador_tipo  especificadores_declaracion_opc
                              | CALIF_TIPO          especificadores_declaracion_opc
 ;
@@ -231,7 +239,7 @@ especificador_tipo:   TIPO_DATO
                     | especificador_enum  {/*Sacamos nombre_typedef*/}
 ;
 
-especificador_struct_union:   STRUCT_UNION ID_opc '{' lista_declaradores_struct '}'
+especificador_struct_union:   STRUCT_UNION ID_opc '{' lista_declaradores_struct '}' {/*Hay problemas con el typedef ya que no tiene un identificador final*/}
                             | STRUCT_UNION ID
 ;
 
@@ -292,7 +300,7 @@ lista_calificadores_tipos:   CALIF_TIPO
                            | lista_calificadores_tipos CALIF_TIPO
 ;
 
-declarador_directo:   ID
+declarador_directo:   ID                                                   {fprintf(yyout, "ID = %s\n", $<valorString>1);}
                     | '(' decla ')'
                     | declarador_directo '[' exp_constante_opc ']'
                     | declarador_directo '(' lista_tipos_param ')'
@@ -361,10 +369,60 @@ lista_tipos_param_opc:   /* Vacio */
 
 
 
+sentencia:   sentencia_exp
+           | sentencia_compuesta
+           | sentencia_seleccion
+           | sentencia_iteracion
+           | sentencia_etiquetada
+           | sentencia_salto
+;
+
+sentencia_exp: expresion_opc ';'
+;
+
+expresion_opc:   /* Vacio */
+               | expresion
+;
+
+sentencia_compuesta: '{' lista_declaraciones_opc lista_sentencias_opc '}'
+;
+
+lista_declaraciones_opc:   /* Vacio */
+                         | lista_declaraciones
+;
+
+lista_sentencias_opc:   /* Vacio */
+                      | lista_sentencias
+;
+
+lista_declaraciones:   declaracion
+                     | lista_declaraciones declaracion
+;
+
+lista_sentencias:   sentencia
+                  | lista_sentencias sentencia
+;
 
 
+sentencia_seleccion:  IF '(' expresion ')' sentencia                 {fprintf(yyout, "Se utiliza el IF\n");}
+                    | IF '(' expresion ')' sentencia ELSE sentencia  {fprintf(yyout, "Se utiliza el IF y el ELSE\n");}
+                    | SWITCH '(' expresion ')' sentencia             {fprintf(yyout, "Se utiliza el SWITCH\n");}     
+;
 
+sentencia_iteracion:  WHILE '(' expresion ')' sentencia                                         {fprintf(yyout, "Se utiliza el WHILE\n");}
+                    | DO sentencia WHILE '(' expresion ')' ';'                                  {fprintf(yyout, "Se utiliza el DO WHILE\n");}
+                    | FOR '(' expresion_opc ';' expresion_opc ';' expresion_opc ')' sentencia   {fprintf(yyout, "Se utiliza el FOR\n");}
+;
 
+sentencia_etiquetada: CASE exp_constante ':' sentencia  {fprintf(yyout, "Se utiliza un CASE\n");}
+                     | DEFAULT ':' sentencia            {fprintf(yyout, "Se utiliza el DEFAULT\n");}
+                     | ID ':' sentencia  
+;  
+ 
+sentencia_salto: CONTINUE_BREAK ';'         {fprintf(yyout, "Se utiliza el CONTINUE o BREAK\n");}
+                | RETURN expresion_opc ';'  {fprintf(yyout, "Se utiliza el RETURN\n");}
+                | GOTO ID ';'               {fprintf(yyout, "Se utiliza el GOTO\n");}
+;       
 
 %%
 
