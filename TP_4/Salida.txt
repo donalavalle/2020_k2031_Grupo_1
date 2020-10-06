@@ -1,3 +1,15 @@
-ID = sumar
-ID = a
+ID = c
+Numero Entero = 1
 ID = b
+Se utiliza el '+'
+ID = a
+Numero Entero = 5
+Se utiliza el '<'
+ID = printf
+String = "Hola"
+Se utiliza el '(' y el ')'
+Se utiliza el IF
+ID = c
+ID = a
+Se utiliza el '*'
+Se utiliza el RETURN

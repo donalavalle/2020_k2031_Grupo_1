@@ -80,6 +80,7 @@ line:  /* Vacio */
       | expresion ';'
       | declaracion ';'
       | sentencia
+      | definicion
 ;
 
 const:   NUM_ENTERO     {fprintf(yyout, "Numero Entero = %d\n", $<valorEntero>1);}
@@ -419,7 +420,20 @@ sentencia_etiquetada: CASE exp_constante ':' sentencia  {fprintf(yyout, "Se util
 sentencia_salto: CONTINUE_BREAK ';'         {fprintf(yyout, "Se utiliza el CONTINUE o BREAK\n");}
                 | RETURN expresion_opc ';'  {fprintf(yyout, "Se utiliza el RETURN\n");}
                 | GOTO ID ';'               {fprintf(yyout, "Se utiliza el GOTO\n");}
-;       
+;  
+
+definicion: TIPO_DATO ID '(' lista_declaradores_def ')' sentencia_compuesta
+;
+
+
+lista_declaradores_def:   decla_def
+                        | lista_declaradores_def ',' decla_def
+
+;
+
+decla_def: TIPO_DATO ID
+;
+
 
 %%
 
