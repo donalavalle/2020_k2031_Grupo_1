@@ -1,4 +1,3 @@
-ID = asd
-Numero Entero = 5
-Numero Entero = 1
-Se utiliza el '+'
+ID = sumar
+ID = a
+ID = b

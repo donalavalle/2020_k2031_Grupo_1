@@ -555,13 +555,11 @@ char *yytext;
         errorFlag = 1;
     } 
 
-    int finalDeError(){
+    void finalDeError(){
         if (errorFlag)
         {
             printError(cadenaErronea, cantLineas);
             cadenaErronea = NULL;
-            errorFlag = 0;
-            return 2;
         }
         errorFlag = 0;
     }
@@ -578,7 +576,7 @@ char *yytext;
 
         return cant;
     }
-#line 582 "lex.yy.c"
+#line 580 "lex.yy.c"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -729,10 +727,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
 
-#line 84 "../src/AnalizadorSintactico.l"
+#line 82 "../src/AnalizadorSintactico.l"
 
 
-#line 736 "lex.yy.c"
+#line 734 "lex.yy.c"
 
 	if ( yy_init )
 		{
@@ -817,275 +815,275 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 86 "../src/AnalizadorSintactico.l"
+#line 84 "../src/AnalizadorSintactico.l"
 {yylval.valorEntero = atoi(yytext); finalDeError(); return NUM_ENTERO;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 87 "../src/AnalizadorSintactico.l"
+#line 85 "../src/AnalizadorSintactico.l"
 {yylval.valorEntero = strtoll(yytext, NULL, 16); finalDeError(); return NUM_ENTERO;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 88 "../src/AnalizadorSintactico.l"
+#line 86 "../src/AnalizadorSintactico.l"
 {yylval.valorEntero = strtoll(yytext, NULL, 8); finalDeError(); return NUM_ENTERO;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 89 "../src/AnalizadorSintactico.l"
+#line 87 "../src/AnalizadorSintactico.l"
 {yylval.valorReal   = atof(yytext); finalDeError(); return NUM_REAL;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 90 "../src/AnalizadorSintactico.l"
+#line 88 "../src/AnalizadorSintactico.l"
 {finalDeError(); return yytext[0];}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 91 "../src/AnalizadorSintactico.l"
+#line 89 "../src/AnalizadorSintactico.l"
 {finalDeError(); return CONTINUE_BREAK;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 92 "../src/AnalizadorSintactico.l"
+#line 90 "../src/AnalizadorSintactico.l"
 {finalDeError();}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 93 "../src/AnalizadorSintactico.l"
+#line 91 "../src/AnalizadorSintactico.l"
 {finalDeError();}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 94 "../src/AnalizadorSintactico.l"
+#line 92 "../src/AnalizadorSintactico.l"
 {yylval.valorString = strdup(yytext); finalDeError(); return IF;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 95 "../src/AnalizadorSintactico.l"
+#line 93 "../src/AnalizadorSintactico.l"
 {yylval.valorString = strdup(yytext); finalDeError(); return ELSE;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 96 "../src/AnalizadorSintactico.l"
+#line 94 "../src/AnalizadorSintactico.l"
 {yylval.valorString = strdup(yytext); finalDeError(); return SWITCH;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 97 "../src/AnalizadorSintactico.l"
+#line 95 "../src/AnalizadorSintactico.l"
 {yylval.valorString = strdup(yytext); finalDeError(); return WHILE;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 98 "../src/AnalizadorSintactico.l"
+#line 96 "../src/AnalizadorSintactico.l"
 {yylval.valorString = strdup(yytext); finalDeError(); return DO;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 99 "../src/AnalizadorSintactico.l"
+#line 97 "../src/AnalizadorSintactico.l"
 {yylval.valorString = strdup(yytext); finalDeError(); return FOR;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 100 "../src/AnalizadorSintactico.l"
+#line 98 "../src/AnalizadorSintactico.l"
 {yylval.valorString = strdup(yytext); finalDeError(); return CASE;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 101 "../src/AnalizadorSintactico.l"
+#line 99 "../src/AnalizadorSintactico.l"
 {yylval.valorString = strdup(yytext); finalDeError(); return DEFAULT;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 102 "../src/AnalizadorSintactico.l"
+#line 100 "../src/AnalizadorSintactico.l"
 {yylval.valorString = strdup(yytext); finalDeError(); return RETURN;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 103 "../src/AnalizadorSintactico.l"
+#line 101 "../src/AnalizadorSintactico.l"
 {yylval.valorString = strdup(yytext); finalDeError(); return GOTO;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 104 "../src/AnalizadorSintactico.l"
+#line 102 "../src/AnalizadorSintactico.l"
 {yylval.valorString = strdup(yytext); finalDeError(); return TIPO_DATO;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 105 "../src/AnalizadorSintactico.l"
+#line 103 "../src/AnalizadorSintactico.l"
 {yylval.valorString = strdup(yytext); finalDeError(); return CLASE_ALM;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 106 "../src/AnalizadorSintactico.l"
+#line 104 "../src/AnalizadorSintactico.l"
 {finalDeError(); return CALIF_TIPO;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 107 "../src/AnalizadorSintactico.l"
+#line 105 "../src/AnalizadorSintactico.l"
 {finalDeError(); return STRUCT_UNION;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 108 "../src/AnalizadorSintactico.l"
+#line 106 "../src/AnalizadorSintactico.l"
 {finalDeError(); return SIZEOF;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 109 "../src/AnalizadorSintactico.l"
+#line 107 "../src/AnalizadorSintactico.l"
 {finalDeError(); return ENUM;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 110 "../src/AnalizadorSintactico.l"
+#line 108 "../src/AnalizadorSintactico.l"
 {yylval.valorString = strdup(yytext); finalDeError(); return ID;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 111 "../src/AnalizadorSintactico.l"
+#line 109 "../src/AnalizadorSintactico.l"
 {finalDeError();}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 112 "../src/AnalizadorSintactico.l"
+#line 110 "../src/AnalizadorSintactico.l"
 {cantLineas += cantidadSaltosDeLinea(yytext); finalDeError();}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 113 "../src/AnalizadorSintactico.l"
+#line 111 "../src/AnalizadorSintactico.l"
 {cantLineas++;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 114 "../src/AnalizadorSintactico.l"
+#line 112 "../src/AnalizadorSintactico.l"
 {finalDeError();}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 115 "../src/AnalizadorSintactico.l"
+#line 113 "../src/AnalizadorSintactico.l"
 {esError(yytext);}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 118 "../src/AnalizadorSintactico.l"
+#line 116 "../src/AnalizadorSintactico.l"
 {yylval.valorString = strdup(yytext); finalDeError(); return CHAR;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 119 "../src/AnalizadorSintactico.l"
+#line 117 "../src/AnalizadorSintactico.l"
 {yylval.valorString = strdup(yytext); finalDeError(); return STRING;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 121 "../src/AnalizadorSintactico.l"
+#line 119 "../src/AnalizadorSintactico.l"
 {finalDeError(); return ASIG_MULT;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 122 "../src/AnalizadorSintactico.l"
+#line 120 "../src/AnalizadorSintactico.l"
 {finalDeError(); return ASIG_DIV;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 123 "../src/AnalizadorSintactico.l"
+#line 121 "../src/AnalizadorSintactico.l"
 {finalDeError(); return ASIG_MOD;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 124 "../src/AnalizadorSintactico.l"
+#line 122 "../src/AnalizadorSintactico.l"
 {finalDeError(); return ASIG_SUMA;}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 125 "../src/AnalizadorSintactico.l"
+#line 123 "../src/AnalizadorSintactico.l"
 {finalDeError(); return ASIG_RESTA;}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 126 "../src/AnalizadorSintactico.l"
+#line 124 "../src/AnalizadorSintactico.l"
 {finalDeError(); return ASIG_DESP_IZQ;}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 127 "../src/AnalizadorSintactico.l"
+#line 125 "../src/AnalizadorSintactico.l"
 {finalDeError(); return ASIG_DESP_DER;}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 128 "../src/AnalizadorSintactico.l"
+#line 126 "../src/AnalizadorSintactico.l"
 {finalDeError(); return ASIG_AND_BIN;}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 129 "../src/AnalizadorSintactico.l"
+#line 127 "../src/AnalizadorSintactico.l"
 {finalDeError(); return ASIG_XOR_BIN;}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 130 "../src/AnalizadorSintactico.l"
+#line 128 "../src/AnalizadorSintactico.l"
 {finalDeError(); return ASIG_OR_BIN;}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 131 "../src/AnalizadorSintactico.l"
+#line 129 "../src/AnalizadorSintactico.l"
 {finalDeError(); return OP_INC;}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 132 "../src/AnalizadorSintactico.l"
+#line 130 "../src/AnalizadorSintactico.l"
 {finalDeError(); return OP_DEC;}
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 133 "../src/AnalizadorSintactico.l"
+#line 131 "../src/AnalizadorSintactico.l"
 {finalDeError(); return OP_IGUALDAD;}
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 134 "../src/AnalizadorSintactico.l"
+#line 132 "../src/AnalizadorSintactico.l"
 {finalDeError(); return OP_DESIGUALDAD;}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 135 "../src/AnalizadorSintactico.l"
+#line 133 "../src/AnalizadorSintactico.l"
 {finalDeError(); return OP_AND;}
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 136 "../src/AnalizadorSintactico.l"
+#line 134 "../src/AnalizadorSintactico.l"
 {finalDeError(); return OP_OR;}
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 137 "../src/AnalizadorSintactico.l"
+#line 135 "../src/AnalizadorSintactico.l"
 {finalDeError(); return OP_MENOR_IGUAL;}
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 138 "../src/AnalizadorSintactico.l"
+#line 136 "../src/AnalizadorSintactico.l"
 {finalDeError(); return OP_MAYOR_IGUAL;}
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 139 "../src/AnalizadorSintactico.l"
+#line 137 "../src/AnalizadorSintactico.l"
 {finalDeError(); return OP_DESP_IZQ;}
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 140 "../src/AnalizadorSintactico.l"
+#line 138 "../src/AnalizadorSintactico.l"
 {finalDeError(); return OP_DESP_DER;}
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 141 "../src/AnalizadorSintactico.l"
+#line 139 "../src/AnalizadorSintactico.l"
 {finalDeError(); return OP_MIEMBRO_PUNT;}
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 142 "../src/AnalizadorSintactico.l"
+#line 140 "../src/AnalizadorSintactico.l"
 ECHO;
 	YY_BREAK
-#line 1089 "lex.yy.c"
+#line 1087 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1971,4 +1969,4 @@ int main()
 	return 0;
 	}
 #endif
-#line 142 "../src/AnalizadorSintactico.l"
+#line 140 "../src/AnalizadorSintactico.l"

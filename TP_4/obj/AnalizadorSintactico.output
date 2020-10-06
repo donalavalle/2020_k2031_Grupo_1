@@ -208,87 +208,86 @@ Gramática
   137                          | lista_identificadores
 
   138 lista_tipos_param: lista_parametros
-  139                  | lista_parametros ',' '.' '.' '.'
 
-  140 lista_parametros: declaracion_parametro
-  141                 | lista_parametros ',' declaracion_parametro
+  139 lista_parametros: declaracion_parametro
+  140                 | lista_parametros ',' declaracion_parametro
 
-  142 declaracion_parametro: especificadores_declaracion decla
-  143                      | especificadores_declaracion declarador_abstracto_opc
+  141 declaracion_parametro: especificadores_declaracion decla
+  142                      | especificadores_declaracion declarador_abstracto_opc
 
-  144 declarador_abstracto_opc: /* vacío */
-  145                         | declarador_abstracto
+  143 declarador_abstracto_opc: /* vacío */
+  144                         | declarador_abstracto
 
-  146 lista_identificadores: ID
-  147                      | lista_identificadores ',' ID
+  145 lista_identificadores: ID
+  146                      | lista_identificadores ',' ID
 
-  148 especificador_enum: ENUM ID_opc '{' lista_enumeradores '}'
-  149                   | ENUM ID
+  147 especificador_enum: ENUM ID_opc '{' lista_enumeradores '}'
+  148                   | ENUM ID
 
-  150 lista_enumeradores: enumerador
-  151                   | lista_enumeradores ',' enumerador
+  149 lista_enumeradores: enumerador
+  150                   | lista_enumeradores ',' enumerador
 
-  152 enumerador: const_de_enumeracion
-  153           | const_de_enumeracion '=' exp_constante
+  151 enumerador: const_de_enumeracion
+  152           | const_de_enumeracion '=' exp_constante
 
-  154 const_de_enumeracion: ID
+  153 const_de_enumeracion: ID
 
-  155 nombre_tipo: lista_calificadores declarador_abstracto_opc
+  154 nombre_tipo: lista_calificadores declarador_abstracto_opc
 
-  156 declarador_abstracto: puntero
-  157                     | puntero_opc declarador_abstracto_directo
+  155 declarador_abstracto: puntero
+  156                     | puntero_opc declarador_abstracto_directo
 
-  158 declarador_abstracto_directo: '(' declarador_abstracto ')'
-  159                             | declarador_abstracto_directo_opc '[' exp_constante_opc ']'
-  160                             | declarador_abstracto_directo_opc '(' lista_tipos_param_opc ')'
+  157 declarador_abstracto_directo: '(' declarador_abstracto ')'
+  158                             | declarador_abstracto_directo_opc '[' exp_constante_opc ']'
+  159                             | declarador_abstracto_directo_opc '(' lista_tipos_param_opc ')'
 
-  161 declarador_abstracto_directo_opc: /* vacío */
-  162                                 | declarador_abstracto_directo
+  160 declarador_abstracto_directo_opc: /* vacío */
+  161                                 | declarador_abstracto_directo
 
-  163 lista_tipos_param_opc: /* vacío */
-  164                      | lista_tipos_param
+  162 lista_tipos_param_opc: /* vacío */
+  163                      | lista_tipos_param
 
-  165 sentencia: sentencia_exp
-  166          | sentencia_compuesta
-  167          | sentencia_seleccion
-  168          | sentencia_iteracion
-  169          | sentencia_etiquetada
-  170          | sentencia_salto
+  164 sentencia: sentencia_exp
+  165          | sentencia_compuesta
+  166          | sentencia_seleccion
+  167          | sentencia_iteracion
+  168          | sentencia_etiquetada
+  169          | sentencia_salto
 
-  171 sentencia_exp: expresion_opc ';'
+  170 sentencia_exp: expresion_opc ';'
 
-  172 expresion_opc: /* vacío */
-  173              | expresion
+  171 expresion_opc: /* vacío */
+  172              | expresion
 
-  174 sentencia_compuesta: '{' lista_declaraciones_opc lista_sentencias_opc '}'
+  173 sentencia_compuesta: '{' lista_declaraciones_opc lista_sentencias_opc '}'
 
-  175 lista_declaraciones_opc: /* vacío */
-  176                        | lista_declaraciones
+  174 lista_declaraciones_opc: /* vacío */
+  175                        | lista_declaraciones
 
-  177 lista_sentencias_opc: /* vacío */
-  178                     | lista_sentencias
+  176 lista_sentencias_opc: /* vacío */
+  177                     | lista_sentencias
 
-  179 lista_declaraciones: declaracion
-  180                    | lista_declaraciones declaracion
+  178 lista_declaraciones: declaracion
+  179                    | lista_declaraciones declaracion
 
-  181 lista_sentencias: sentencia
-  182                 | lista_sentencias sentencia
+  180 lista_sentencias: sentencia
+  181                 | lista_sentencias sentencia
 
-  183 sentencia_seleccion: IF '(' expresion ')' sentencia
-  184                    | IF '(' expresion ')' sentencia ELSE sentencia
-  185                    | SWITCH '(' expresion ')' sentencia
+  182 sentencia_seleccion: IF '(' expresion ')' sentencia
+  183                    | IF '(' expresion ')' sentencia ELSE sentencia
+  184                    | SWITCH '(' expresion ')' sentencia
 
-  186 sentencia_iteracion: WHILE '(' expresion ')' sentencia
-  187                    | DO sentencia WHILE '(' expresion ')' ';'
-  188                    | FOR '(' expresion_opc ';' expresion_opc ';' expresion_opc ')' sentencia
+  185 sentencia_iteracion: WHILE '(' expresion ')' sentencia
+  186                    | DO sentencia WHILE '(' expresion ')' ';'
+  187                    | FOR '(' expresion_opc ';' expresion_opc ';' expresion_opc ')' sentencia
 
-  189 sentencia_etiquetada: CASE exp_constante ':' sentencia
-  190                     | DEFAULT ':' sentencia
-  191                     | ID ':' sentencia
+  188 sentencia_etiquetada: CASE exp_constante ':' sentencia
+  189                     | DEFAULT ':' sentencia
+  190                     | ID ':' sentencia
 
-  192 sentencia_salto: CONTINUE_BREAK ';'
-  193                | RETURN expresion_opc ';'
-  194                | GOTO ID ';'
+  191 sentencia_salto: CONTINUE_BREAK ';'
+  192                | RETURN expresion_opc ';'
+  193                | GOTO ID ';'
 
 
 Terminales con las reglas donde aparecen
@@ -297,32 +296,32 @@ $end (0) 0
 '!' (33) 70
 '%' (37) 56
 '&' (38) 38 65
-'(' (40) 58 64 73 82 132 134 135 158 160 183 184 185 186 187 188
-')' (41) 58 64 73 82 132 134 135 158 160 183 184 185 186 187 188
+'(' (40) 58 64 73 82 132 134 135 157 159 182 183 184 185 186 187
+')' (41) 58 64 73 82 132 134 135 157 159 182 183 184 185 186 187
 '*' (42) 54 66 125 126
 '+' (43) 51 67
-',' (44) 13 79 90 96 98 114 139 141 147 151
+',' (44) 13 79 90 96 98 114 140 146 150
 '-' (45) 52 68
-'.' (46) 74 139
+'.' (46) 74
 '/' (47) 55
-':' (58) 17 116 189 190 191
-';' (59) 4 5 108 171 187 188 192 193 194
+':' (58) 17 116 188 189 190
+';' (59) 4 5 108 170 186 187 191 192 193
 '<' (60) 43
-'=' (61) 18 92 153
+'=' (61) 18 92 152
 '>' (62) 44
 '?' (63) 17
-'[' (91) 72 133 159
-']' (93) 72 133 159
+'[' (91) 72 133 158
+']' (93) 72 133 158
 '^' (94) 36
-'{' (123) 94 102 148 174
+'{' (123) 94 102 147 173
 '|' (124) 34
-'}' (125) 94 102 148 174
+'}' (125) 94 102 147 173
 '~' (126) 69
 error (256)
 NUM_ENTERO (258) 7
 NUM_REAL (259) 8
 TIPO_DATO (260) 99
-ID (261) 11 74 75 103 105 131 146 147 149 154 191 194
+ID (261) 11 74 75 103 105 131 145 146 148 153 190 193
 ASIG_MULT (262) 19
 ASIG_DIV (263) 20
 ASIG_MOD (264) 21
@@ -350,18 +349,18 @@ SIZEOF (285) 63 64
 CLASE_ALM (286) 84
 CALIF_TIPO (287) 86 110 129 130
 STRUCT_UNION (288) 102 103
-ENUM (289) 148 149
-CONTINUE_BREAK (290) 192
-IF (291) 183 184
-ELSE (292) 184
-SWITCH (293) 185
-FOR (294) 188
-DO (295) 187
-WHILE (296) 186 187
-CASE (297) 189
-DEFAULT (298) 190
-RETURN (299) 193
-GOTO (300) 194
+ENUM (289) 147 148
+CONTINUE_BREAK (290) 191
+IF (291) 182 183
+ELSE (292) 183
+SWITCH (293) 184
+FOR (294) 187
+DO (295) 186
+WHILE (296) 185 186
+CASE (297) 188
+DEFAULT (298) 189
+RETURN (299) 192
+GOTO (300) 193
 
 
 No terminales con las reglas donde aparecen
@@ -377,8 +376,8 @@ const (73)
 const_enum (74)
     en la izquierda: 11, en la derecha: 10
 expresion (75)
-    en la izquierda: 12 13, en la derecha: 4 13 17 72 82 173 183 184
-    185 186 187
+    en la izquierda: 12 13, en la derecha: 4 13 17 72 82 172 182 183
+    184 185 186
 exp_asignacion (76)
     en la izquierda: 14 15, en la derecha: 12 13 15 78 79 93
 exp_condicional (77)
@@ -422,9 +421,9 @@ lista_argumentos (93)
 exp_primaria (94)
     en la izquierda: 80 81 82, en la derecha: 71
 declaracion (95)
-    en la izquierda: 83, en la derecha: 5 179 180
+    en la izquierda: 83, en la derecha: 5 178 179
 especificadores_declaracion (96)
-    en la izquierda: 84 85 86, en la derecha: 83 88 142 143
+    en la izquierda: 84 85 86, en la derecha: 83 88 141 142
 especificadores_declaracion_opc (97)
     en la izquierda: 87 88, en la derecha: 84 85 86
 lista_declaradores (98)
@@ -442,13 +441,13 @@ especificador_tipo (103)
 especificador_struct_union (104)
     en la izquierda: 102 103, en la derecha: 100
 ID_opc (105)
-    en la izquierda: 104 105, en la derecha: 102 148
+    en la izquierda: 104 105, en la derecha: 102 147
 lista_declaradores_struct (106)
     en la izquierda: 106 107, en la derecha: 102 107
 declaracion_struct (107)
     en la izquierda: 108, en la derecha: 106 107
 lista_calificadores (108)
-    en la izquierda: 109 110, en la derecha: 108 112 155
+    en la izquierda: 109 110, en la derecha: 108 112 154
 lista_calificadores_opc (109)
     en la izquierda: 111 112, en la derecha: 109 110
 declaradores_struct (110)
@@ -458,15 +457,15 @@ decla_struct (111)
 decla_opc (112)
     en la izquierda: 117 118, en la derecha: 116
 exp_constante (113)
-    en la izquierda: 119, en la derecha: 116 121 153 189
+    en la izquierda: 119, en la derecha: 116 121 152 188
 exp_constante_opc (114)
-    en la izquierda: 120 121, en la derecha: 133 159
+    en la izquierda: 120 121, en la derecha: 133 158
 decla (115)
-    en la izquierda: 122, en la derecha: 91 92 115 118 132 142
+    en la izquierda: 122, en la derecha: 91 92 115 118 132 141
 puntero_opc (116)
-    en la izquierda: 123 124, en la derecha: 122 157
+    en la izquierda: 123 124, en la derecha: 122 156
 puntero (117)
-    en la izquierda: 125 126, en la derecha: 124 126 156
+    en la izquierda: 125 126, en la derecha: 124 126 155
 lista_calificadores_tipos_opc (118)
     en la izquierda: 127 128, en la derecha: 125 126
 lista_calificadores_tipos (119)
@@ -477,58 +476,58 @@ declarador_directo (120)
 lista_identificadores_opc (121)
     en la izquierda: 136 137, en la derecha: 135
 lista_tipos_param (122)
-    en la izquierda: 138 139, en la derecha: 134 164
+    en la izquierda: 138, en la derecha: 134 163
 lista_parametros (123)
-    en la izquierda: 140 141, en la derecha: 138 139 141
+    en la izquierda: 139 140, en la derecha: 138 140
 declaracion_parametro (124)
-    en la izquierda: 142 143, en la derecha: 140 141
+    en la izquierda: 141 142, en la derecha: 139 140
 declarador_abstracto_opc (125)
-    en la izquierda: 144 145, en la derecha: 143 155
+    en la izquierda: 143 144, en la derecha: 142 154
 lista_identificadores (126)
-    en la izquierda: 146 147, en la derecha: 137 147
+    en la izquierda: 145 146, en la derecha: 137 146
 especificador_enum (127)
-    en la izquierda: 148 149, en la derecha: 101
+    en la izquierda: 147 148, en la derecha: 101
 lista_enumeradores (128)
-    en la izquierda: 150 151, en la derecha: 148 151
+    en la izquierda: 149 150, en la derecha: 147 150
 enumerador (129)
-    en la izquierda: 152 153, en la derecha: 150 151
+    en la izquierda: 151 152, en la derecha: 149 150
 const_de_enumeracion (130)
-    en la izquierda: 154, en la derecha: 152 153
+    en la izquierda: 153, en la derecha: 151 152
 nombre_tipo (131)
-    en la izquierda: 155, en la derecha: 58 64
+    en la izquierda: 154, en la derecha: 58 64
 declarador_abstracto (132)
-    en la izquierda: 156 157, en la derecha: 145 158
+    en la izquierda: 155 156, en la derecha: 144 157
 declarador_abstracto_directo (133)
-    en la izquierda: 158 159 160, en la derecha: 157 162
+    en la izquierda: 157 158 159, en la derecha: 156 161
 declarador_abstracto_directo_opc (134)
-    en la izquierda: 161 162, en la derecha: 159 160
+    en la izquierda: 160 161, en la derecha: 158 159
 lista_tipos_param_opc (135)
-    en la izquierda: 163 164, en la derecha: 160
+    en la izquierda: 162 163, en la derecha: 159
 sentencia (136)
-    en la izquierda: 165 166 167 168 169 170, en la derecha: 6 181
-    182 183 184 185 186 187 188 189 190 191
+    en la izquierda: 164 165 166 167 168 169, en la derecha: 6 180
+    181 182 183 184 185 186 187 188 189 190
 sentencia_exp (137)
-    en la izquierda: 171, en la derecha: 165
+    en la izquierda: 170, en la derecha: 164
 expresion_opc (138)
-    en la izquierda: 172 173, en la derecha: 171 188 193
+    en la izquierda: 171 172, en la derecha: 170 187 192
 sentencia_compuesta (139)
-    en la izquierda: 174, en la derecha: 166
+    en la izquierda: 173, en la derecha: 165
 lista_declaraciones_opc (140)
-    en la izquierda: 175 176, en la derecha: 174
+    en la izquierda: 174 175, en la derecha: 173
 lista_sentencias_opc (141)
-    en la izquierda: 177 178, en la derecha: 174
+    en la izquierda: 176 177, en la derecha: 173
 lista_declaraciones (142)
-    en la izquierda: 179 180, en la derecha: 176 180
+    en la izquierda: 178 179, en la derecha: 175 179
 lista_sentencias (143)
-    en la izquierda: 181 182, en la derecha: 178 182
+    en la izquierda: 180 181, en la derecha: 177 181
 sentencia_seleccion (144)
-    en la izquierda: 183 184 185, en la derecha: 167
+    en la izquierda: 182 183 184, en la derecha: 166
 sentencia_iteracion (145)
-    en la izquierda: 186 187 188, en la derecha: 168
+    en la izquierda: 185 186 187, en la derecha: 167
 sentencia_etiquetada (146)
-    en la izquierda: 189 190 191, en la derecha: 169
+    en la izquierda: 188 189 190, en la derecha: 168
 sentencia_salto (147)
-    en la izquierda: 192 193 194, en la derecha: 170
+    en la izquierda: 191 192 193, en la derecha: 169
 
 
 estado 0
@@ -603,7 +602,7 @@ estado 1
     RETURN          [reduce usando la regla 3 (line)]
     GOTO            [reduce usando la regla 3 (line)]
     ';'             reduce usando la regla 3 (line)
-    ';'             [reduce usando la regla 172 (expresion_opc)]
+    ';'             [reduce usando la regla 171 (expresion_opc)]
     '&'             [reduce usando la regla 3 (line)]
     '+'             [reduce usando la regla 3 (line)]
     '-'             [reduce usando la regla 3 (line)]
@@ -681,7 +680,7 @@ estado 5
 estado 6
 
    11 const_enum: ID .
-  191 sentencia_etiquetada: ID . ':' sentencia
+  190 sentencia_etiquetada: ID . ':' sentencia
 
     ':'  desplazar e ir al estado 68
 
@@ -839,8 +838,8 @@ estado 14
 
 estado 15
 
-  148 especificador_enum: ENUM . ID_opc '{' lista_enumeradores '}'
-  149                   | ENUM . ID
+  147 especificador_enum: ENUM . ID_opc '{' lista_enumeradores '}'
+  148                   | ENUM . ID
 
     ID  desplazar e ir al estado 80
 
@@ -851,36 +850,36 @@ estado 15
 
 estado 16
 
-  192 sentencia_salto: CONTINUE_BREAK . ';'
+  191 sentencia_salto: CONTINUE_BREAK . ';'
 
     ';'  desplazar e ir al estado 82
 
 
 estado 17
 
-  183 sentencia_seleccion: IF . '(' expresion ')' sentencia
-  184                    | IF . '(' expresion ')' sentencia ELSE sentencia
+  182 sentencia_seleccion: IF . '(' expresion ')' sentencia
+  183                    | IF . '(' expresion ')' sentencia ELSE sentencia
 
     '('  desplazar e ir al estado 83
 
 
 estado 18
 
-  185 sentencia_seleccion: SWITCH . '(' expresion ')' sentencia
+  184 sentencia_seleccion: SWITCH . '(' expresion ')' sentencia
 
     '('  desplazar e ir al estado 84
 
 
 estado 19
 
-  188 sentencia_iteracion: FOR . '(' expresion_opc ';' expresion_opc ';' expresion_opc ')' sentencia
+  187 sentencia_iteracion: FOR . '(' expresion_opc ';' expresion_opc ';' expresion_opc ')' sentencia
 
     '('  desplazar e ir al estado 85
 
 
 estado 20
 
-  187 sentencia_iteracion: DO . sentencia WHILE '(' expresion ')' ';'
+  186 sentencia_iteracion: DO . sentencia WHILE '(' expresion ')' ';'
 
     NUM_ENTERO      desplazar e ir al estado 3
     NUM_REAL        desplazar e ir al estado 4
@@ -909,7 +908,7 @@ estado 20
     '!'             desplazar e ir al estado 32
     '{'             desplazar e ir al estado 33
 
-    $default  reduce usando la regla 172 (expresion_opc)
+    $default  reduce usando la regla 171 (expresion_opc)
 
     const                 ir al estado 35
     const_enum            ir al estado 36
@@ -943,14 +942,14 @@ estado 20
 
 estado 21
 
-  186 sentencia_iteracion: WHILE . '(' expresion ')' sentencia
+  185 sentencia_iteracion: WHILE . '(' expresion ')' sentencia
 
     '('  desplazar e ir al estado 88
 
 
 estado 22
 
-  189 sentencia_etiquetada: CASE . exp_constante ':' sentencia
+  188 sentencia_etiquetada: CASE . exp_constante ':' sentencia
 
     NUM_ENTERO  desplazar e ir al estado 3
     NUM_REAL    desplazar e ir al estado 4
@@ -991,14 +990,14 @@ estado 22
 
 estado 23
 
-  190 sentencia_etiquetada: DEFAULT . ':' sentencia
+  189 sentencia_etiquetada: DEFAULT . ':' sentencia
 
     ':'  desplazar e ir al estado 92
 
 
 estado 24
 
-  193 sentencia_salto: RETURN . expresion_opc ';'
+  192 sentencia_salto: RETURN . expresion_opc ';'
 
     NUM_ENTERO  desplazar e ir al estado 3
     NUM_REAL    desplazar e ir al estado 4
@@ -1016,7 +1015,7 @@ estado 24
     '~'         desplazar e ir al estado 31
     '!'         desplazar e ir al estado 32
 
-    $default  reduce usando la regla 172 (expresion_opc)
+    $default  reduce usando la regla 171 (expresion_opc)
 
     const            ir al estado 35
     const_enum       ir al estado 36
@@ -1043,7 +1042,7 @@ estado 24
 
 estado 25
 
-  194 sentencia_salto: GOTO . ID ';'
+  193 sentencia_salto: GOTO . ID ';'
 
     ID  desplazar e ir al estado 94
 
@@ -1144,7 +1143,7 @@ estado 32
 
 estado 33
 
-  174 sentencia_compuesta: '{' . lista_declaraciones_opc lista_sentencias_opc '}'
+  173 sentencia_compuesta: '{' . lista_declaraciones_opc lista_sentencias_opc '}'
 
     TIPO_DATO     desplazar e ir al estado 5
     CLASE_ALM     desplazar e ir al estado 12
@@ -1152,7 +1151,7 @@ estado 33
     STRUCT_UNION  desplazar e ir al estado 14
     ENUM          desplazar e ir al estado 15
 
-    $default  reduce usando la regla 175 (lista_declaraciones_opc)
+    $default  reduce usando la regla 174 (lista_declaraciones_opc)
 
     declaracion                  ir al estado 100
     especificadores_declaracion  ir al estado 56
@@ -1188,12 +1187,12 @@ estado 37
 
     4 line: expresion . ';'
    13 expresion: expresion . ',' exp_asignacion
-  173 expresion_opc: expresion .
+  172 expresion_opc: expresion .
 
     ';'  desplazar e ir al estado 103
     ','  desplazar e ir al estado 104
 
-    ';'  [reduce usando la regla 173 (expresion_opc)]
+    ';'  [reduce usando la regla 172 (expresion_opc)]
 
 
 estado 38
@@ -1484,56 +1483,56 @@ estado 60
 
 estado 61
 
-  165 sentencia: sentencia_exp .
+  164 sentencia: sentencia_exp .
 
-    $default  reduce usando la regla 165 (sentencia)
+    $default  reduce usando la regla 164 (sentencia)
 
 
 estado 62
 
-  171 sentencia_exp: expresion_opc . ';'
+  170 sentencia_exp: expresion_opc . ';'
 
     ';'  desplazar e ir al estado 151
 
 
 estado 63
 
-  166 sentencia: sentencia_compuesta .
+  165 sentencia: sentencia_compuesta .
 
-    $default  reduce usando la regla 166 (sentencia)
+    $default  reduce usando la regla 165 (sentencia)
 
 
 estado 64
 
-  167 sentencia: sentencia_seleccion .
+  166 sentencia: sentencia_seleccion .
 
-    $default  reduce usando la regla 167 (sentencia)
+    $default  reduce usando la regla 166 (sentencia)
 
 
 estado 65
 
-  168 sentencia: sentencia_iteracion .
+  167 sentencia: sentencia_iteracion .
 
-    $default  reduce usando la regla 168 (sentencia)
+    $default  reduce usando la regla 167 (sentencia)
 
 
 estado 66
 
-  169 sentencia: sentencia_etiquetada .
+  168 sentencia: sentencia_etiquetada .
 
-    $default  reduce usando la regla 169 (sentencia)
+    $default  reduce usando la regla 168 (sentencia)
 
 
 estado 67
 
-  170 sentencia: sentencia_salto .
+  169 sentencia: sentencia_salto .
 
-    $default  reduce usando la regla 170 (sentencia)
+    $default  reduce usando la regla 169 (sentencia)
 
 
 estado 68
 
-  191 sentencia_etiquetada: ID ':' . sentencia
+  190 sentencia_etiquetada: ID ':' . sentencia
 
     NUM_ENTERO      desplazar e ir al estado 3
     NUM_REAL        desplazar e ir al estado 4
@@ -1562,7 +1561,7 @@ estado 68
     '!'             desplazar e ir al estado 32
     '{'             desplazar e ir al estado 33
 
-    $default  reduce usando la regla 172 (expresion_opc)
+    $default  reduce usando la regla 171 (expresion_opc)
 
     const                 ir al estado 35
     const_enum            ir al estado 36
@@ -1756,30 +1755,30 @@ estado 79
 estado 80
 
   105 ID_opc: ID .
-  149 especificador_enum: ENUM ID .
+  148 especificador_enum: ENUM ID .
 
     '{'       reduce usando la regla 105 (ID_opc)
-    $default  reduce usando la regla 149 (especificador_enum)
+    $default  reduce usando la regla 148 (especificador_enum)
 
 
 estado 81
 
-  148 especificador_enum: ENUM ID_opc . '{' lista_enumeradores '}'
+  147 especificador_enum: ENUM ID_opc . '{' lista_enumeradores '}'
 
     '{'  desplazar e ir al estado 155
 
 
 estado 82
 
-  192 sentencia_salto: CONTINUE_BREAK ';' .
+  191 sentencia_salto: CONTINUE_BREAK ';' .
 
-    $default  reduce usando la regla 192 (sentencia_salto)
+    $default  reduce usando la regla 191 (sentencia_salto)
 
 
 estado 83
 
-  183 sentencia_seleccion: IF '(' . expresion ')' sentencia
-  184                    | IF '(' . expresion ')' sentencia ELSE sentencia
+  182 sentencia_seleccion: IF '(' . expresion ')' sentencia
+  183                    | IF '(' . expresion ')' sentencia ELSE sentencia
 
     NUM_ENTERO  desplazar e ir al estado 3
     NUM_REAL    desplazar e ir al estado 4
@@ -1821,7 +1820,7 @@ estado 83
 
 estado 84
 
-  185 sentencia_seleccion: SWITCH '(' . expresion ')' sentencia
+  184 sentencia_seleccion: SWITCH '(' . expresion ')' sentencia
 
     NUM_ENTERO  desplazar e ir al estado 3
     NUM_REAL    desplazar e ir al estado 4
@@ -1863,7 +1862,7 @@ estado 84
 
 estado 85
 
-  188 sentencia_iteracion: FOR '(' . expresion_opc ';' expresion_opc ';' expresion_opc ')' sentencia
+  187 sentencia_iteracion: FOR '(' . expresion_opc ';' expresion_opc ';' expresion_opc ')' sentencia
 
     NUM_ENTERO  desplazar e ir al estado 3
     NUM_REAL    desplazar e ir al estado 4
@@ -1881,7 +1880,7 @@ estado 85
     '~'         desplazar e ir al estado 31
     '!'         desplazar e ir al estado 32
 
-    $default  reduce usando la regla 172 (expresion_opc)
+    $default  reduce usando la regla 171 (expresion_opc)
 
     const            ir al estado 35
     const_enum       ir al estado 36
@@ -1909,23 +1908,23 @@ estado 85
 estado 86
 
    13 expresion: expresion . ',' exp_asignacion
-  173 expresion_opc: expresion .
+  172 expresion_opc: expresion .
 
     ','  desplazar e ir al estado 104
 
-    $default  reduce usando la regla 173 (expresion_opc)
+    $default  reduce usando la regla 172 (expresion_opc)
 
 
 estado 87
 
-  187 sentencia_iteracion: DO sentencia . WHILE '(' expresion ')' ';'
+  186 sentencia_iteracion: DO sentencia . WHILE '(' expresion ')' ';'
 
     WHILE  desplazar e ir al estado 159
 
 
 estado 88
 
-  186 sentencia_iteracion: WHILE '(' . expresion ')' sentencia
+  185 sentencia_iteracion: WHILE '(' . expresion ')' sentencia
 
     NUM_ENTERO  desplazar e ir al estado 3
     NUM_REAL    desplazar e ir al estado 4
@@ -1981,14 +1980,14 @@ estado 90
 
 estado 91
 
-  189 sentencia_etiquetada: CASE exp_constante . ':' sentencia
+  188 sentencia_etiquetada: CASE exp_constante . ':' sentencia
 
     ':'  desplazar e ir al estado 161
 
 
 estado 92
 
-  190 sentencia_etiquetada: DEFAULT ':' . sentencia
+  189 sentencia_etiquetada: DEFAULT ':' . sentencia
 
     NUM_ENTERO      desplazar e ir al estado 3
     NUM_REAL        desplazar e ir al estado 4
@@ -2017,7 +2016,7 @@ estado 92
     '!'             desplazar e ir al estado 32
     '{'             desplazar e ir al estado 33
 
-    $default  reduce usando la regla 172 (expresion_opc)
+    $default  reduce usando la regla 171 (expresion_opc)
 
     const                 ir al estado 35
     const_enum            ir al estado 36
@@ -2051,14 +2050,14 @@ estado 92
 
 estado 93
 
-  193 sentencia_salto: RETURN expresion_opc . ';'
+  192 sentencia_salto: RETURN expresion_opc . ';'
 
     ';'  desplazar e ir al estado 163
 
 
 estado 94
 
-  194 sentencia_salto: GOTO ID . ';'
+  193 sentencia_salto: GOTO ID . ';'
 
     ';'  desplazar e ir al estado 164
 
@@ -2110,11 +2109,11 @@ estado 97
 
 estado 98
 
-  155 nombre_tipo: lista_calificadores . declarador_abstracto_opc
+  154 nombre_tipo: lista_calificadores . declarador_abstracto_opc
 
     '*'  desplazar e ir al estado 144
 
-    ')'       reduce usando la regla 144 (declarador_abstracto_opc)
+    ')'       reduce usando la regla 143 (declarador_abstracto_opc)
     $default  reduce usando la regla 123 (puntero_opc)
 
     puntero_opc               ir al estado 169
@@ -2132,14 +2131,14 @@ estado 99
 
 estado 100
 
-  179 lista_declaraciones: declaracion .
+  178 lista_declaraciones: declaracion .
 
-    $default  reduce usando la regla 179 (lista_declaraciones)
+    $default  reduce usando la regla 178 (lista_declaraciones)
 
 
 estado 101
 
-  174 sentencia_compuesta: '{' lista_declaraciones_opc . lista_sentencias_opc '}'
+  173 sentencia_compuesta: '{' lista_declaraciones_opc . lista_sentencias_opc '}'
 
     NUM_ENTERO      desplazar e ir al estado 3
     NUM_REAL        desplazar e ir al estado 4
@@ -2168,8 +2167,8 @@ estado 101
     '!'             desplazar e ir al estado 32
     '{'             desplazar e ir al estado 33
 
-    '}'       reduce usando la regla 177 (lista_sentencias_opc)
-    $default  reduce usando la regla 172 (expresion_opc)
+    '}'       reduce usando la regla 176 (lista_sentencias_opc)
+    $default  reduce usando la regla 171 (expresion_opc)
 
     const                 ir al estado 35
     const_enum            ir al estado 36
@@ -2205,8 +2204,8 @@ estado 101
 
 estado 102
 
-  176 lista_declaraciones_opc: lista_declaraciones .
-  180 lista_declaraciones: lista_declaraciones . declaracion
+  175 lista_declaraciones_opc: lista_declaraciones .
+  179 lista_declaraciones: lista_declaraciones . declaracion
 
     TIPO_DATO     desplazar e ir al estado 5
     CLASE_ALM     desplazar e ir al estado 12
@@ -2214,7 +2213,7 @@ estado 102
     STRUCT_UNION  desplazar e ir al estado 14
     ENUM          desplazar e ir al estado 15
 
-    $default  reduce usando la regla 176 (lista_declaraciones_opc)
+    $default  reduce usando la regla 175 (lista_declaraciones_opc)
 
     declaracion                  ir al estado 177
     especificadores_declaracion  ir al estado 56
@@ -3206,16 +3205,16 @@ estado 150
 
 estado 151
 
-  171 sentencia_exp: expresion_opc ';' .
+  170 sentencia_exp: expresion_opc ';' .
 
-    $default  reduce usando la regla 171 (sentencia_exp)
+    $default  reduce usando la regla 170 (sentencia_exp)
 
 
 estado 152
 
-  191 sentencia_etiquetada: ID ':' sentencia .
+  190 sentencia_etiquetada: ID ':' sentencia .
 
-    $default  reduce usando la regla 191 (sentencia_etiquetada)
+    $default  reduce usando la regla 190 (sentencia_etiquetada)
 
 
 estado 153
@@ -3244,7 +3243,7 @@ estado 154
 
 estado 155
 
-  148 especificador_enum: ENUM ID_opc '{' . lista_enumeradores '}'
+  147 especificador_enum: ENUM ID_opc '{' . lista_enumeradores '}'
 
     ID  desplazar e ir al estado 216
 
@@ -3256,8 +3255,8 @@ estado 155
 estado 156
 
    13 expresion: expresion . ',' exp_asignacion
-  183 sentencia_seleccion: IF '(' expresion . ')' sentencia
-  184                    | IF '(' expresion . ')' sentencia ELSE sentencia
+  182 sentencia_seleccion: IF '(' expresion . ')' sentencia
+  183                    | IF '(' expresion . ')' sentencia ELSE sentencia
 
     ','  desplazar e ir al estado 104
     ')'  desplazar e ir al estado 220
@@ -3266,7 +3265,7 @@ estado 156
 estado 157
 
    13 expresion: expresion . ',' exp_asignacion
-  185 sentencia_seleccion: SWITCH '(' expresion . ')' sentencia
+  184 sentencia_seleccion: SWITCH '(' expresion . ')' sentencia
 
     ','  desplazar e ir al estado 104
     ')'  desplazar e ir al estado 221
@@ -3274,14 +3273,14 @@ estado 157
 
 estado 158
 
-  188 sentencia_iteracion: FOR '(' expresion_opc . ';' expresion_opc ';' expresion_opc ')' sentencia
+  187 sentencia_iteracion: FOR '(' expresion_opc . ';' expresion_opc ';' expresion_opc ')' sentencia
 
     ';'  desplazar e ir al estado 222
 
 
 estado 159
 
-  187 sentencia_iteracion: DO sentencia WHILE . '(' expresion ')' ';'
+  186 sentencia_iteracion: DO sentencia WHILE . '(' expresion ')' ';'
 
     '('  desplazar e ir al estado 223
 
@@ -3289,7 +3288,7 @@ estado 159
 estado 160
 
    13 expresion: expresion . ',' exp_asignacion
-  186 sentencia_iteracion: WHILE '(' expresion . ')' sentencia
+  185 sentencia_iteracion: WHILE '(' expresion . ')' sentencia
 
     ','  desplazar e ir al estado 104
     ')'  desplazar e ir al estado 224
@@ -3297,7 +3296,7 @@ estado 160
 
 estado 161
 
-  189 sentencia_etiquetada: CASE exp_constante ':' . sentencia
+  188 sentencia_etiquetada: CASE exp_constante ':' . sentencia
 
     NUM_ENTERO      desplazar e ir al estado 3
     NUM_REAL        desplazar e ir al estado 4
@@ -3326,7 +3325,7 @@ estado 161
     '!'             desplazar e ir al estado 32
     '{'             desplazar e ir al estado 33
 
-    $default  reduce usando la regla 172 (expresion_opc)
+    $default  reduce usando la regla 171 (expresion_opc)
 
     const                 ir al estado 35
     const_enum            ir al estado 36
@@ -3360,23 +3359,23 @@ estado 161
 
 estado 162
 
-  190 sentencia_etiquetada: DEFAULT ':' sentencia .
+  189 sentencia_etiquetada: DEFAULT ':' sentencia .
 
-    $default  reduce usando la regla 190 (sentencia_etiquetada)
+    $default  reduce usando la regla 189 (sentencia_etiquetada)
 
 
 estado 163
 
-  193 sentencia_salto: RETURN expresion_opc ';' .
+  192 sentencia_salto: RETURN expresion_opc ';' .
 
-    $default  reduce usando la regla 193 (sentencia_salto)
+    $default  reduce usando la regla 192 (sentencia_salto)
 
 
 estado 164
 
-  194 sentencia_salto: GOTO ID ';' .
+  193 sentencia_salto: GOTO ID ';' .
 
-    $default  reduce usando la regla 194 (sentencia_salto)
+    $default  reduce usando la regla 193 (sentencia_salto)
 
 
 estado 165
@@ -3409,12 +3408,12 @@ estado 168
 
 estado 169
 
-  157 declarador_abstracto: puntero_opc . declarador_abstracto_directo
+  156 declarador_abstracto: puntero_opc . declarador_abstracto_directo
 
     '('  desplazar e ir al estado 226
 
-    '('       [reduce usando la regla 161 (declarador_abstracto_directo_opc)]
-    $default  reduce usando la regla 161 (declarador_abstracto_directo_opc)
+    '('       [reduce usando la regla 160 (declarador_abstracto_directo_opc)]
+    $default  reduce usando la regla 160 (declarador_abstracto_directo_opc)
 
     declarador_abstracto_directo      ir al estado 227
     declarador_abstracto_directo_opc  ir al estado 228
@@ -3423,25 +3422,25 @@ estado 169
 estado 170
 
   124 puntero_opc: puntero .
-  156 declarador_abstracto: puntero .
+  155 declarador_abstracto: puntero .
 
-    ','       reduce usando la regla 156 (declarador_abstracto)
-    ')'       reduce usando la regla 156 (declarador_abstracto)
+    ','       reduce usando la regla 155 (declarador_abstracto)
+    ')'       reduce usando la regla 155 (declarador_abstracto)
     $default  reduce usando la regla 124 (puntero_opc)
 
 
 estado 171
 
-  155 nombre_tipo: lista_calificadores declarador_abstracto_opc .
+  154 nombre_tipo: lista_calificadores declarador_abstracto_opc .
 
-    $default  reduce usando la regla 155 (nombre_tipo)
+    $default  reduce usando la regla 154 (nombre_tipo)
 
 
 estado 172
 
-  145 declarador_abstracto_opc: declarador_abstracto .
+  144 declarador_abstracto_opc: declarador_abstracto .
 
-    $default  reduce usando la regla 145 (declarador_abstracto_opc)
+    $default  reduce usando la regla 144 (declarador_abstracto_opc)
 
 
 estado 173
@@ -3475,22 +3474,22 @@ estado 173
 
 estado 174
 
-  181 lista_sentencias: sentencia .
+  180 lista_sentencias: sentencia .
 
-    $default  reduce usando la regla 181 (lista_sentencias)
+    $default  reduce usando la regla 180 (lista_sentencias)
 
 
 estado 175
 
-  174 sentencia_compuesta: '{' lista_declaraciones_opc lista_sentencias_opc . '}'
+  173 sentencia_compuesta: '{' lista_declaraciones_opc lista_sentencias_opc . '}'
 
     '}'  desplazar e ir al estado 230
 
 
 estado 176
 
-  178 lista_sentencias_opc: lista_sentencias .
-  182 lista_sentencias: lista_sentencias . sentencia
+  177 lista_sentencias_opc: lista_sentencias .
+  181 lista_sentencias: lista_sentencias . sentencia
 
     NUM_ENTERO      desplazar e ir al estado 3
     NUM_REAL        desplazar e ir al estado 4
@@ -3519,8 +3518,8 @@ estado 176
     '!'             desplazar e ir al estado 32
     '{'             desplazar e ir al estado 33
 
-    '}'       reduce usando la regla 178 (lista_sentencias_opc)
-    $default  reduce usando la regla 172 (expresion_opc)
+    '}'       reduce usando la regla 177 (lista_sentencias_opc)
+    $default  reduce usando la regla 171 (expresion_opc)
 
     const                 ir al estado 35
     const_enum            ir al estado 36
@@ -3554,9 +3553,9 @@ estado 176
 
 estado 177
 
-  180 lista_declaraciones: lista_declaraciones declaracion .
+  179 lista_declaraciones: lista_declaraciones declaracion .
 
-    $default  reduce usando la regla 180 (lista_declaraciones)
+    $default  reduce usando la regla 179 (lista_declaraciones)
 
 
 estado 178
@@ -4004,15 +4003,15 @@ estado 215
 
 estado 216
 
-  154 const_de_enumeracion: ID .
+  153 const_de_enumeracion: ID .
 
-    $default  reduce usando la regla 154 (const_de_enumeracion)
+    $default  reduce usando la regla 153 (const_de_enumeracion)
 
 
 estado 217
 
-  148 especificador_enum: ENUM ID_opc '{' lista_enumeradores . '}'
-  151 lista_enumeradores: lista_enumeradores . ',' enumerador
+  147 especificador_enum: ENUM ID_opc '{' lista_enumeradores . '}'
+  150 lista_enumeradores: lista_enumeradores . ',' enumerador
 
     ','  desplazar e ir al estado 251
     '}'  desplazar e ir al estado 252
@@ -4020,25 +4019,25 @@ estado 217
 
 estado 218
 
-  150 lista_enumeradores: enumerador .
+  149 lista_enumeradores: enumerador .
 
-    $default  reduce usando la regla 150 (lista_enumeradores)
+    $default  reduce usando la regla 149 (lista_enumeradores)
 
 
 estado 219
 
-  152 enumerador: const_de_enumeracion .
-  153           | const_de_enumeracion . '=' exp_constante
+  151 enumerador: const_de_enumeracion .
+  152           | const_de_enumeracion . '=' exp_constante
 
     '='  desplazar e ir al estado 253
 
-    $default  reduce usando la regla 152 (enumerador)
+    $default  reduce usando la regla 151 (enumerador)
 
 
 estado 220
 
-  183 sentencia_seleccion: IF '(' expresion ')' . sentencia
-  184                    | IF '(' expresion ')' . sentencia ELSE sentencia
+  182 sentencia_seleccion: IF '(' expresion ')' . sentencia
+  183                    | IF '(' expresion ')' . sentencia ELSE sentencia
 
     NUM_ENTERO      desplazar e ir al estado 3
     NUM_REAL        desplazar e ir al estado 4
@@ -4067,7 +4066,7 @@ estado 220
     '!'             desplazar e ir al estado 32
     '{'             desplazar e ir al estado 33
 
-    $default  reduce usando la regla 172 (expresion_opc)
+    $default  reduce usando la regla 171 (expresion_opc)
 
     const                 ir al estado 35
     const_enum            ir al estado 36
@@ -4101,7 +4100,7 @@ estado 220
 
 estado 221
 
-  185 sentencia_seleccion: SWITCH '(' expresion ')' . sentencia
+  184 sentencia_seleccion: SWITCH '(' expresion ')' . sentencia
 
     NUM_ENTERO      desplazar e ir al estado 3
     NUM_REAL        desplazar e ir al estado 4
@@ -4130,7 +4129,7 @@ estado 221
     '!'             desplazar e ir al estado 32
     '{'             desplazar e ir al estado 33
 
-    $default  reduce usando la regla 172 (expresion_opc)
+    $default  reduce usando la regla 171 (expresion_opc)
 
     const                 ir al estado 35
     const_enum            ir al estado 36
@@ -4164,7 +4163,7 @@ estado 221
 
 estado 222
 
-  188 sentencia_iteracion: FOR '(' expresion_opc ';' . expresion_opc ';' expresion_opc ')' sentencia
+  187 sentencia_iteracion: FOR '(' expresion_opc ';' . expresion_opc ';' expresion_opc ')' sentencia
 
     NUM_ENTERO  desplazar e ir al estado 3
     NUM_REAL    desplazar e ir al estado 4
@@ -4182,7 +4181,7 @@ estado 222
     '~'         desplazar e ir al estado 31
     '!'         desplazar e ir al estado 32
 
-    $default  reduce usando la regla 172 (expresion_opc)
+    $default  reduce usando la regla 171 (expresion_opc)
 
     const            ir al estado 35
     const_enum       ir al estado 36
@@ -4209,7 +4208,7 @@ estado 222
 
 estado 223
 
-  187 sentencia_iteracion: DO sentencia WHILE '(' . expresion ')' ';'
+  186 sentencia_iteracion: DO sentencia WHILE '(' . expresion ')' ';'
 
     NUM_ENTERO  desplazar e ir al estado 3
     NUM_REAL    desplazar e ir al estado 4
@@ -4251,7 +4250,7 @@ estado 223
 
 estado 224
 
-  186 sentencia_iteracion: WHILE '(' expresion ')' . sentencia
+  185 sentencia_iteracion: WHILE '(' expresion ')' . sentencia
 
     NUM_ENTERO      desplazar e ir al estado 3
     NUM_REAL        desplazar e ir al estado 4
@@ -4280,7 +4279,7 @@ estado 224
     '!'             desplazar e ir al estado 32
     '{'             desplazar e ir al estado 33
 
-    $default  reduce usando la regla 172 (expresion_opc)
+    $default  reduce usando la regla 171 (expresion_opc)
 
     const                 ir al estado 35
     const_enum            ir al estado 36
@@ -4314,14 +4313,14 @@ estado 224
 
 estado 225
 
-  189 sentencia_etiquetada: CASE exp_constante ':' sentencia .
+  188 sentencia_etiquetada: CASE exp_constante ':' sentencia .
 
-    $default  reduce usando la regla 189 (sentencia_etiquetada)
+    $default  reduce usando la regla 188 (sentencia_etiquetada)
 
 
 estado 226
 
-  158 declarador_abstracto_directo: '(' . declarador_abstracto ')'
+  157 declarador_abstracto_directo: '(' . declarador_abstracto ')'
 
     '*'  desplazar e ir al estado 144
 
@@ -4334,18 +4333,18 @@ estado 226
 
 estado 227
 
-  157 declarador_abstracto: puntero_opc declarador_abstracto_directo .
-  162 declarador_abstracto_directo_opc: declarador_abstracto_directo .
+  156 declarador_abstracto: puntero_opc declarador_abstracto_directo .
+  161 declarador_abstracto_directo_opc: declarador_abstracto_directo .
 
-    '('       reduce usando la regla 162 (declarador_abstracto_directo_opc)
-    '['       reduce usando la regla 162 (declarador_abstracto_directo_opc)
-    $default  reduce usando la regla 157 (declarador_abstracto)
+    '('       reduce usando la regla 161 (declarador_abstracto_directo_opc)
+    '['       reduce usando la regla 161 (declarador_abstracto_directo_opc)
+    $default  reduce usando la regla 156 (declarador_abstracto)
 
 
 estado 228
 
-  159 declarador_abstracto_directo: declarador_abstracto_directo_opc . '[' exp_constante_opc ']'
-  160                             | declarador_abstracto_directo_opc . '(' lista_tipos_param_opc ')'
+  158 declarador_abstracto_directo: declarador_abstracto_directo_opc . '[' exp_constante_opc ']'
+  159                             | declarador_abstracto_directo_opc . '(' lista_tipos_param_opc ')'
 
     '('  desplazar e ir al estado 260
     '['  desplazar e ir al estado 261
@@ -4381,16 +4380,16 @@ estado 229
 
 estado 230
 
-  174 sentencia_compuesta: '{' lista_declaraciones_opc lista_sentencias_opc '}' .
+  173 sentencia_compuesta: '{' lista_declaraciones_opc lista_sentencias_opc '}' .
 
-    $default  reduce usando la regla 174 (sentencia_compuesta)
+    $default  reduce usando la regla 173 (sentencia_compuesta)
 
 
 estado 231
 
-  182 lista_sentencias: lista_sentencias sentencia .
+  181 lista_sentencias: lista_sentencias sentencia .
 
-    $default  reduce usando la regla 182 (lista_sentencias)
+    $default  reduce usando la regla 181 (lista_sentencias)
 
 
 estado 232
@@ -4691,7 +4690,7 @@ estado 250
 
 estado 251
 
-  151 lista_enumeradores: lista_enumeradores ',' . enumerador
+  150 lista_enumeradores: lista_enumeradores ',' . enumerador
 
     ID  desplazar e ir al estado 216
 
@@ -4701,14 +4700,14 @@ estado 251
 
 estado 252
 
-  148 especificador_enum: ENUM ID_opc '{' lista_enumeradores '}' .
+  147 especificador_enum: ENUM ID_opc '{' lista_enumeradores '}' .
 
-    $default  reduce usando la regla 148 (especificador_enum)
+    $default  reduce usando la regla 147 (especificador_enum)
 
 
 estado 253
 
-  153 enumerador: const_de_enumeracion '=' . exp_constante
+  152 enumerador: const_de_enumeracion '=' . exp_constante
 
     NUM_ENTERO  desplazar e ir al estado 3
     NUM_REAL    desplazar e ir al estado 4
@@ -4749,25 +4748,25 @@ estado 253
 
 estado 254
 
-  183 sentencia_seleccion: IF '(' expresion ')' sentencia .
-  184                    | IF '(' expresion ')' sentencia . ELSE sentencia
+  182 sentencia_seleccion: IF '(' expresion ')' sentencia .
+  183                    | IF '(' expresion ')' sentencia . ELSE sentencia
 
     ELSE  desplazar e ir al estado 282
 
-    ELSE      [reduce usando la regla 183 (sentencia_seleccion)]
-    $default  reduce usando la regla 183 (sentencia_seleccion)
+    ELSE      [reduce usando la regla 182 (sentencia_seleccion)]
+    $default  reduce usando la regla 182 (sentencia_seleccion)
 
 
 estado 255
 
-  185 sentencia_seleccion: SWITCH '(' expresion ')' sentencia .
+  184 sentencia_seleccion: SWITCH '(' expresion ')' sentencia .
 
-    $default  reduce usando la regla 185 (sentencia_seleccion)
+    $default  reduce usando la regla 184 (sentencia_seleccion)
 
 
 estado 256
 
-  188 sentencia_iteracion: FOR '(' expresion_opc ';' expresion_opc . ';' expresion_opc ')' sentencia
+  187 sentencia_iteracion: FOR '(' expresion_opc ';' expresion_opc . ';' expresion_opc ')' sentencia
 
     ';'  desplazar e ir al estado 283
 
@@ -4775,7 +4774,7 @@ estado 256
 estado 257
 
    13 expresion: expresion . ',' exp_asignacion
-  187 sentencia_iteracion: DO sentencia WHILE '(' expresion . ')' ';'
+  186 sentencia_iteracion: DO sentencia WHILE '(' expresion . ')' ';'
 
     ','  desplazar e ir al estado 104
     ')'  desplazar e ir al estado 284
@@ -4783,21 +4782,21 @@ estado 257
 
 estado 258
 
-  186 sentencia_iteracion: WHILE '(' expresion ')' sentencia .
+  185 sentencia_iteracion: WHILE '(' expresion ')' sentencia .
 
-    $default  reduce usando la regla 186 (sentencia_iteracion)
+    $default  reduce usando la regla 185 (sentencia_iteracion)
 
 
 estado 259
 
-  158 declarador_abstracto_directo: '(' declarador_abstracto . ')'
+  157 declarador_abstracto_directo: '(' declarador_abstracto . ')'
 
     ')'  desplazar e ir al estado 285
 
 
 estado 260
 
-  160 declarador_abstracto_directo: declarador_abstracto_directo_opc '(' . lista_tipos_param_opc ')'
+  159 declarador_abstracto_directo: declarador_abstracto_directo_opc '(' . lista_tipos_param_opc ')'
 
     TIPO_DATO     desplazar e ir al estado 5
     CLASE_ALM     desplazar e ir al estado 12
@@ -4805,7 +4804,7 @@ estado 260
     STRUCT_UNION  desplazar e ir al estado 14
     ENUM          desplazar e ir al estado 15
 
-    $default  reduce usando la regla 163 (lista_tipos_param_opc)
+    $default  reduce usando la regla 162 (lista_tipos_param_opc)
 
     especificadores_declaracion  ir al estado 269
     especificador_tipo           ir al estado 57
@@ -4819,7 +4818,7 @@ estado 260
 
 estado 261
 
-  159 declarador_abstracto_directo: declarador_abstracto_directo_opc '[' . exp_constante_opc ']'
+  158 declarador_abstracto_directo: declarador_abstracto_directo_opc '[' . exp_constante_opc ']'
 
     NUM_ENTERO  desplazar e ir al estado 3
     NUM_REAL    desplazar e ir al estado 4
@@ -4910,20 +4909,20 @@ estado 267
 
 estado 268
 
-  146 lista_identificadores: ID .
+  145 lista_identificadores: ID .
 
-    $default  reduce usando la regla 146 (lista_identificadores)
+    $default  reduce usando la regla 145 (lista_identificadores)
 
 
 estado 269
 
-  142 declaracion_parametro: especificadores_declaracion . decla
-  143                      | especificadores_declaracion . declarador_abstracto_opc
+  141 declaracion_parametro: especificadores_declaracion . decla
+  142                      | especificadores_declaracion . declarador_abstracto_opc
 
     '*'  desplazar e ir al estado 144
 
-    ','       reduce usando la regla 144 (declarador_abstracto_opc)
-    ')'       reduce usando la regla 144 (declarador_abstracto_opc)
+    ','       reduce usando la regla 143 (declarador_abstracto_opc)
+    ')'       reduce usando la regla 143 (declarador_abstracto_opc)
     $default  reduce usando la regla 123 (puntero_opc)
 
     decla                     ir al estado 291
@@ -4950,8 +4949,7 @@ estado 271
 estado 272
 
   138 lista_tipos_param: lista_parametros .
-  139                  | lista_parametros . ',' '.' '.' '.'
-  141 lista_parametros: lista_parametros . ',' declaracion_parametro
+  140 lista_parametros: lista_parametros . ',' declaracion_parametro
 
     ','  desplazar e ir al estado 296
 
@@ -4960,15 +4958,15 @@ estado 272
 
 estado 273
 
-  140 lista_parametros: declaracion_parametro .
+  139 lista_parametros: declaracion_parametro .
 
-    $default  reduce usando la regla 140 (lista_parametros)
+    $default  reduce usando la regla 139 (lista_parametros)
 
 
 estado 274
 
   137 lista_identificadores_opc: lista_identificadores .
-  147 lista_identificadores: lista_identificadores . ',' ID
+  146 lista_identificadores: lista_identificadores . ',' ID
 
     ','  desplazar e ir al estado 297
 
@@ -5055,21 +5053,21 @@ estado 279
 
 estado 280
 
-  151 lista_enumeradores: lista_enumeradores ',' enumerador .
+  150 lista_enumeradores: lista_enumeradores ',' enumerador .
 
-    $default  reduce usando la regla 151 (lista_enumeradores)
+    $default  reduce usando la regla 150 (lista_enumeradores)
 
 
 estado 281
 
-  153 enumerador: const_de_enumeracion '=' exp_constante .
+  152 enumerador: const_de_enumeracion '=' exp_constante .
 
-    $default  reduce usando la regla 153 (enumerador)
+    $default  reduce usando la regla 152 (enumerador)
 
 
 estado 282
 
-  184 sentencia_seleccion: IF '(' expresion ')' sentencia ELSE . sentencia
+  183 sentencia_seleccion: IF '(' expresion ')' sentencia ELSE . sentencia
 
     NUM_ENTERO      desplazar e ir al estado 3
     NUM_REAL        desplazar e ir al estado 4
@@ -5098,7 +5096,7 @@ estado 282
     '!'             desplazar e ir al estado 32
     '{'             desplazar e ir al estado 33
 
-    $default  reduce usando la regla 172 (expresion_opc)
+    $default  reduce usando la regla 171 (expresion_opc)
 
     const                 ir al estado 35
     const_enum            ir al estado 36
@@ -5132,7 +5130,7 @@ estado 282
 
 estado 283
 
-  188 sentencia_iteracion: FOR '(' expresion_opc ';' expresion_opc ';' . expresion_opc ')' sentencia
+  187 sentencia_iteracion: FOR '(' expresion_opc ';' expresion_opc ';' . expresion_opc ')' sentencia
 
     NUM_ENTERO  desplazar e ir al estado 3
     NUM_REAL    desplazar e ir al estado 4
@@ -5150,7 +5148,7 @@ estado 283
     '~'         desplazar e ir al estado 31
     '!'         desplazar e ir al estado 32
 
-    $default  reduce usando la regla 172 (expresion_opc)
+    $default  reduce usando la regla 171 (expresion_opc)
 
     const            ir al estado 35
     const_enum       ir al estado 36
@@ -5177,35 +5175,35 @@ estado 283
 
 estado 284
 
-  187 sentencia_iteracion: DO sentencia WHILE '(' expresion ')' . ';'
+  186 sentencia_iteracion: DO sentencia WHILE '(' expresion ')' . ';'
 
     ';'  desplazar e ir al estado 303
 
 
 estado 285
 
-  158 declarador_abstracto_directo: '(' declarador_abstracto ')' .
+  157 declarador_abstracto_directo: '(' declarador_abstracto ')' .
 
-    $default  reduce usando la regla 158 (declarador_abstracto_directo)
+    $default  reduce usando la regla 157 (declarador_abstracto_directo)
 
 
 estado 286
 
-  164 lista_tipos_param_opc: lista_tipos_param .
+  163 lista_tipos_param_opc: lista_tipos_param .
 
-    $default  reduce usando la regla 164 (lista_tipos_param_opc)
+    $default  reduce usando la regla 163 (lista_tipos_param_opc)
 
 
 estado 287
 
-  160 declarador_abstracto_directo: declarador_abstracto_directo_opc '(' lista_tipos_param_opc . ')'
+  159 declarador_abstracto_directo: declarador_abstracto_directo_opc '(' lista_tipos_param_opc . ')'
 
     ')'  desplazar e ir al estado 304
 
 
 estado 288
 
-  159 declarador_abstracto_directo: declarador_abstracto_directo_opc '[' exp_constante_opc . ']'
+  158 declarador_abstracto_directo: declarador_abstracto_directo_opc '[' exp_constante_opc . ']'
 
     ']'  desplazar e ir al estado 305
 
@@ -5265,21 +5263,21 @@ estado 290
 
 estado 291
 
-  142 declaracion_parametro: especificadores_declaracion decla .
+  141 declaracion_parametro: especificadores_declaracion decla .
 
-    $default  reduce usando la regla 142 (declaracion_parametro)
+    $default  reduce usando la regla 141 (declaracion_parametro)
 
 
 estado 292
 
   122 decla: puntero_opc . declarador_directo
-  157 declarador_abstracto: puntero_opc . declarador_abstracto_directo
+  156 declarador_abstracto: puntero_opc . declarador_abstracto_directo
 
     ID   desplazar e ir al estado 209
     '('  desplazar e ir al estado 308
 
-    '('       [reduce usando la regla 161 (declarador_abstracto_directo_opc)]
-    $default  reduce usando la regla 161 (declarador_abstracto_directo_opc)
+    '('       [reduce usando la regla 160 (declarador_abstracto_directo_opc)]
+    $default  reduce usando la regla 160 (declarador_abstracto_directo_opc)
 
     declarador_directo                ir al estado 211
     declarador_abstracto_directo      ir al estado 227
@@ -5288,9 +5286,9 @@ estado 292
 
 estado 293
 
-  143 declaracion_parametro: especificadores_declaracion declarador_abstracto_opc .
+  142 declaracion_parametro: especificadores_declaracion declarador_abstracto_opc .
 
-    $default  reduce usando la regla 143 (declaracion_parametro)
+    $default  reduce usando la regla 142 (declaracion_parametro)
 
 
 estado 294
@@ -5309,28 +5307,26 @@ estado 295
 
 estado 296
 
-  139 lista_tipos_param: lista_parametros ',' . '.' '.' '.'
-  141 lista_parametros: lista_parametros ',' . declaracion_parametro
+  140 lista_parametros: lista_parametros ',' . declaracion_parametro
 
     TIPO_DATO     desplazar e ir al estado 5
     CLASE_ALM     desplazar e ir al estado 12
     CALIF_TIPO    desplazar e ir al estado 13
     STRUCT_UNION  desplazar e ir al estado 14
     ENUM          desplazar e ir al estado 15
-    '.'           desplazar e ir al estado 309
 
     especificadores_declaracion  ir al estado 269
     especificador_tipo           ir al estado 57
     especificador_struct_union   ir al estado 58
-    declaracion_parametro        ir al estado 310
+    declaracion_parametro        ir al estado 309
     especificador_enum           ir al estado 59
 
 
 estado 297
 
-  147 lista_identificadores: lista_identificadores ',' . ID
+  146 lista_identificadores: lista_identificadores ',' . ID
 
-    ID  desplazar e ir al estado 311
+    ID  desplazar e ir al estado 310
 
 
 estado 298
@@ -5356,37 +5352,37 @@ estado 300
 
 estado 301
 
-  184 sentencia_seleccion: IF '(' expresion ')' sentencia ELSE sentencia .
+  183 sentencia_seleccion: IF '(' expresion ')' sentencia ELSE sentencia .
 
-    $default  reduce usando la regla 184 (sentencia_seleccion)
+    $default  reduce usando la regla 183 (sentencia_seleccion)
 
 
 estado 302
 
-  188 sentencia_iteracion: FOR '(' expresion_opc ';' expresion_opc ';' expresion_opc . ')' sentencia
+  187 sentencia_iteracion: FOR '(' expresion_opc ';' expresion_opc ';' expresion_opc . ')' sentencia
 
-    ')'  desplazar e ir al estado 312
+    ')'  desplazar e ir al estado 311
 
 
 estado 303
 
-  187 sentencia_iteracion: DO sentencia WHILE '(' expresion ')' ';' .
+  186 sentencia_iteracion: DO sentencia WHILE '(' expresion ')' ';' .
 
-    $default  reduce usando la regla 187 (sentencia_iteracion)
+    $default  reduce usando la regla 186 (sentencia_iteracion)
 
 
 estado 304
 
-  160 declarador_abstracto_directo: declarador_abstracto_directo_opc '(' lista_tipos_param_opc ')' .
+  159 declarador_abstracto_directo: declarador_abstracto_directo_opc '(' lista_tipos_param_opc ')' .
 
-    $default  reduce usando la regla 160 (declarador_abstracto_directo)
+    $default  reduce usando la regla 159 (declarador_abstracto_directo)
 
 
 estado 305
 
-  159 declarador_abstracto_directo: declarador_abstracto_directo_opc '[' exp_constante_opc ']' .
+  158 declarador_abstracto_directo: declarador_abstracto_directo_opc '[' exp_constante_opc ']' .
 
-    $default  reduce usando la regla 159 (declarador_abstracto_directo)
+    $default  reduce usando la regla 158 (declarador_abstracto_directo)
 
 
 estado 306
@@ -5406,7 +5402,7 @@ estado 307
 estado 308
 
   132 declarador_directo: '(' . decla ')'
-  158 declarador_abstracto_directo: '(' . declarador_abstracto ')'
+  157 declarador_abstracto_directo: '(' . declarador_abstracto ')'
 
     '*'  desplazar e ir al estado 144
 
@@ -5420,28 +5416,21 @@ estado 308
 
 estado 309
 
-  139 lista_tipos_param: lista_parametros ',' '.' . '.' '.'
+  140 lista_parametros: lista_parametros ',' declaracion_parametro .
 
-    '.'  desplazar e ir al estado 313
+    $default  reduce usando la regla 140 (lista_parametros)
 
 
 estado 310
 
-  141 lista_parametros: lista_parametros ',' declaracion_parametro .
+  146 lista_identificadores: lista_identificadores ',' ID .
 
-    $default  reduce usando la regla 141 (lista_parametros)
+    $default  reduce usando la regla 146 (lista_identificadores)
 
 
 estado 311
 
-  147 lista_identificadores: lista_identificadores ',' ID .
-
-    $default  reduce usando la regla 147 (lista_identificadores)
-
-
-estado 312
-
-  188 sentencia_iteracion: FOR '(' expresion_opc ';' expresion_opc ';' expresion_opc ')' . sentencia
+  187 sentencia_iteracion: FOR '(' expresion_opc ';' expresion_opc ';' expresion_opc ')' . sentencia
 
     NUM_ENTERO      desplazar e ir al estado 3
     NUM_REAL        desplazar e ir al estado 4
@@ -5470,7 +5459,7 @@ estado 312
     '!'             desplazar e ir al estado 32
     '{'             desplazar e ir al estado 33
 
-    $default  reduce usando la regla 172 (expresion_opc)
+    $default  reduce usando la regla 171 (expresion_opc)
 
     const                 ir al estado 35
     const_enum            ir al estado 36
@@ -5492,7 +5481,7 @@ estado 312
     op_unario             ir al estado 52
     exp_sufijo            ir al estado 53
     exp_primaria          ir al estado 54
-    sentencia             ir al estado 314
+    sentencia             ir al estado 312
     sentencia_exp         ir al estado 61
     expresion_opc         ir al estado 62
     sentencia_compuesta   ir al estado 63
@@ -5502,22 +5491,8 @@ estado 312
     sentencia_salto       ir al estado 67
 
 
-estado 313
+estado 312
 
-  139 lista_tipos_param: lista_parametros ',' '.' '.' . '.'
+  187 sentencia_iteracion: FOR '(' expresion_opc ';' expresion_opc ';' expresion_opc ')' sentencia .
 
-    '.'  desplazar e ir al estado 315
-
-
-estado 314
-
-  188 sentencia_iteracion: FOR '(' expresion_opc ';' expresion_opc ';' expresion_opc ')' sentencia .
-
-    $default  reduce usando la regla 188 (sentencia_iteracion)
-
-
-estado 315
-
-  139 lista_tipos_param: lista_parametros ',' '.' '.' '.' .
-
-    $default  reduce usando la regla 139 (lista_tipos_param)
+    $default  reduce usando la regla 187 (sentencia_iteracion)

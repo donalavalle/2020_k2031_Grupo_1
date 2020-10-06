@@ -1,11 +1,3 @@
-#include <stdio.h>
-#define PI 3.1415
-
-/*
-
-    Este es un comentario de bloque
-
-*/
-int asd = (5 + 1;
-int helloWorld$ = 1;
-char* ptr = "Hola Mundo!";
+int sumar(int a, int b){
+    return ab;
+}

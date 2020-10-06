@@ -25,13 +25,11 @@
         errorFlag = 1;
     } 
 
-    int finalDeError(){
+    void finalDeError(){
         if (errorFlag)
         {
             printError(cadenaErronea, cantLineas);
             cadenaErronea = NULL;
-            errorFlag = 0;
-            return 2;
         }
         errorFlag = 0;
     }

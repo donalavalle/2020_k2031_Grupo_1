@@ -313,7 +313,6 @@ lista_identificadores_opc:   /* Vacio */
 ;
 
 lista_tipos_param:   lista_parametros
-                   | lista_parametros ',' '.' '.' '.'
 ;
 
 lista_parametros:   declaracion_parametro
