@@ -1,8 +1,4 @@
-ID = i
-Se utiliza el '='
-Numero Entero = 0
-ID = valor
-ID = i
-Se utiliza el '=='
-Se utiliza el IF
-Se utiliza el FOR
+ID = asd
+Numero Entero = 5
+Numero Entero = 1
+Se utiliza el '+'

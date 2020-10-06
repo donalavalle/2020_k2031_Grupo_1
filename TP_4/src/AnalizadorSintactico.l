@@ -5,6 +5,49 @@
     #include <stdlib.h>
     #include <string.h>
     #include "AnalizadorSintactico.tab.h"
+
+    char* cadenaErronea = NULL;
+    unsigned errorFlag = 0;
+    unsigned cantLineas = 1;
+
+    int printError(char*, int);
+
+    void esError(char* charErroneo){
+        if(cadenaErronea == NULL)
+            cadenaErronea = strdup(charErroneo);
+        else
+        {
+            char * ptr = malloc(strlen(charErroneo) + strlen(cadenaErronea) + 1);
+            strcpy(ptr, cadenaErronea);
+            strcat(ptr, charErroneo);
+            cadenaErronea = strdup(ptr);
+        }
+        errorFlag = 1;
+    } 
+
+    int finalDeError(){
+        if (errorFlag)
+        {
+            printError(cadenaErronea, cantLineas);
+            cadenaErronea = NULL;
+            errorFlag = 0;
+            return 2;
+        }
+        errorFlag = 0;
+    }
+
+    int cantidadSaltosDeLinea(char* data){
+        int cant = 0;
+        int i = 0;
+        while(data[i] != '\0')
+        {
+            if(data[i] == '\n')
+                cant++;
+            i++;
+        }
+
+        return cant;
+    }
 %}
 
 CARACT_SIMPLES "+"|"-"|"*"|"/"|"^"|"("|")"|","|";"|"="|"<"|">"|"%"|"&"|"|"|"~"|"!"|"?"|":"|"["|"]"|"{"|"}"|"."
@@ -29,61 +72,71 @@ CONTINUE_BREAK "continue"|"break"
 
 IDENTIFICADOR ({LETRA}|_)({LETRA}|{DECIMAL}|_)*
 
-ESPACIOS       " "|"\t"|"\n"
+COMENTARIO_LINEA "//".*
+COMENTARIO_BLOQUE "/*"([^*]|\*+[^/])*\*+\/
+
+INCLUDE #include(" ")+(\".+\"|<.+>)
+DEFINE #define(" ")+[^" "|"\n"]+(" ")*.*
+
+ESPACIOS       " "|"\t"
 COMODIN        .
 
 %%
 
-{CONST_DECIMAL}   {yylval.valorEntero = atoi(yytext); return NUM_ENTERO;}
-{CONST_HEXA}      {yylval.valorEntero = strtoll(yytext, NULL, 16); return NUM_ENTERO;}
-{CONST_OCTAL}     {yylval.valorEntero = strtoll(yytext, NULL, 8); return NUM_ENTERO;}
-{CONST_REAL}      {yylval.valorReal   = atof(yytext); return NUM_REAL;}
-{CARACT_SIMPLES}  {return yytext[0];}
-{CONTINUE_BREAK}  {return CONTINUE_BREAK;}
-"if"              {yylval.valorString = strdup(yytext); return IF;}
-"else"            {yylval.valorString = strdup(yytext); return ELSE;}
-"switch"          {yylval.valorString = strdup(yytext); return SWITCH;}
-"while"           {yylval.valorString = strdup(yytext); return WHILE;}
-"do"              {yylval.valorString = strdup(yytext); return DO;}
-"for"             {yylval.valorString = strdup(yytext); return FOR;}
-"case"            {yylval.valorString = strdup(yytext); return CASE;}
-"default"         {yylval.valorString = strdup(yytext); return DEFAULT;}
-"return"          {yylval.valorString = strdup(yytext); return RETURN;}
-"goto"            {yylval.valorString = strdup(yytext); return GOTO;}
-{TIPOS_DATO}      {yylval.valorString = strdup(yytext); return TIPO_DATO;}
-{CLASE_ALM}       {yylval.valorString = strdup(yytext); return CLASE_ALM;}
-{CALIF_TIPO}      {return CALIF_TIPO;}
-{STRUCT_UNION}    {return STRUCT_UNION;}
-"sizeof"          {return SIZEOF;}
-"enum"            {return ENUM;}
-{IDENTIFICADOR}   {yylval.valorString = strdup(yytext); return ID;}
+{CONST_DECIMAL}    {yylval.valorEntero = atoi(yytext); finalDeError(); return NUM_ENTERO;}
+{CONST_HEXA}       {yylval.valorEntero = strtoll(yytext, NULL, 16); finalDeError(); return NUM_ENTERO;}
+{CONST_OCTAL}      {yylval.valorEntero = strtoll(yytext, NULL, 8); finalDeError(); return NUM_ENTERO;}
+{CONST_REAL}       {yylval.valorReal   = atof(yytext); finalDeError(); return NUM_REAL;}
+{CARACT_SIMPLES}   {finalDeError(); return yytext[0];}
+{CONTINUE_BREAK}   {finalDeError(); return CONTINUE_BREAK;}
+{INCLUDE}          {finalDeError();}
+{DEFINE}           {finalDeError();}
+"if"               {yylval.valorString = strdup(yytext); finalDeError(); return IF;}
+"else"             {yylval.valorString = strdup(yytext); finalDeError(); return ELSE;}
+"switch"           {yylval.valorString = strdup(yytext); finalDeError(); return SWITCH;}
+"while"            {yylval.valorString = strdup(yytext); finalDeError(); return WHILE;}
+"do"               {yylval.valorString = strdup(yytext); finalDeError(); return DO;}
+"for"              {yylval.valorString = strdup(yytext); finalDeError(); return FOR;}
+"case"             {yylval.valorString = strdup(yytext); finalDeError(); return CASE;}
+"default"          {yylval.valorString = strdup(yytext); finalDeError(); return DEFAULT;}
+"return"           {yylval.valorString = strdup(yytext); finalDeError(); return RETURN;}
+"goto"             {yylval.valorString = strdup(yytext); finalDeError(); return GOTO;}
+{TIPOS_DATO}       {yylval.valorString = strdup(yytext); finalDeError(); return TIPO_DATO;}
+{CLASE_ALM}        {yylval.valorString = strdup(yytext); finalDeError(); return CLASE_ALM;}
+{CALIF_TIPO}       {finalDeError(); return CALIF_TIPO;}
+{STRUCT_UNION}     {finalDeError(); return STRUCT_UNION;}
+"sizeof"           {finalDeError(); return SIZEOF;}
+"enum"             {finalDeError(); return ENUM;}
+{IDENTIFICADOR}    {yylval.valorString = strdup(yytext); finalDeError(); return ID;}
+{COMENTARIO_LINEA} {finalDeError();}
+{COMENTARIO_BLOQUE} {cantLineas += cantidadSaltosDeLinea(yytext); finalDeError();}
+"\n"               {cantLineas++;}
+{ESPACIOS}+        {finalDeError();}
+{COMODIN}          {esError(yytext);}
 
-{ESPACIOS}+       {}
-{COMODIN}         {}
 
+{CONST_CHAR}       {yylval.valorString = strdup(yytext); finalDeError(); return CHAR;}
+{LITERAL_CADENA}   {yylval.valorString = strdup(yytext); finalDeError(); return STRING;}
 
-{CONST_CHAR}      {yylval.valorString = strdup(yytext); return CHAR;}
-{LITERAL_CADENA}  {yylval.valorString = strdup(yytext); return STRING;}
-
-"*="              {return ASIG_MULT;}
-"/="              {return ASIG_DIV;}
-"%="              {return ASIG_MOD;}
-"+="              {return ASIG_SUMA;}
-"-="              {return ASIG_RESTA;}
-"<<="             {return ASIG_DESP_IZQ;}
-">>="             {return ASIG_DESP_DER;}
-"&="              {return ASIG_AND_BIN;}
-"^="              {return ASIG_XOR_BIN;}
-"|="              {return ASIG_OR_BIN;}
-"++"              {return OP_INC;}
-"--"              {return OP_DEC;}
-"=="              {return OP_IGUALDAD;}
-"!="              {return OP_DESIGUALDAD;}
-"&&"              {return OP_AND;}
-"||"              {return OP_OR;}
-"<="              {return OP_MENOR_IGUAL;}
-">="              {return OP_MAYOR_IGUAL;}
-"<<"              {return OP_DESP_IZQ;}
-">>"              {return OP_DESP_DER;}
-"->"              {return OP_MIEMBRO_PUNT;}
+"*="               {finalDeError(); return ASIG_MULT;}
+"/="               {finalDeError(); return ASIG_DIV;}
+"%="               {finalDeError(); return ASIG_MOD;}
+"+="               {finalDeError(); return ASIG_SUMA;}
+"-="               {finalDeError(); return ASIG_RESTA;}
+"<<="              {finalDeError(); return ASIG_DESP_IZQ;}
+">>="              {finalDeError(); return ASIG_DESP_DER;}
+"&="               {finalDeError(); return ASIG_AND_BIN;}
+"^="               {finalDeError(); return ASIG_XOR_BIN;}
+"|="               {finalDeError(); return ASIG_OR_BIN;}
+"++"               {finalDeError(); return OP_INC;}
+"--"               {finalDeError(); return OP_DEC;}
+"=="               {finalDeError(); return OP_IGUALDAD;}
+"!="               {finalDeError(); return OP_DESIGUALDAD;}
+"&&"               {finalDeError(); return OP_AND;}
+"||"               {finalDeError(); return OP_OR;}
+"<="               {finalDeError(); return OP_MENOR_IGUAL;}
+">="               {finalDeError(); return OP_MAYOR_IGUAL;}
+"<<"               {finalDeError(); return OP_DESP_IZQ;}
+">>"               {finalDeError(); return OP_DESP_DER;}
+"->"               {finalDeError(); return OP_MIEMBRO_PUNT;}
 %%

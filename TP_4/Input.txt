@@ -1,9 +1,11 @@
-for (i = 0; ; )
-{
-    if (valor==i){
-        while(5<1){
-            break;
-        }
-    }
-}
-AHI VENGO
+#include <stdio.h>
+#define PI 3.1415
+
+/*
+
+    Este es un comentario de bloque
+
+*/
+int asd = (5 + 1;
+int helloWorld$ = 1;
+char* ptr = "Hola Mundo!";

@@ -80,6 +80,7 @@
 
 int yylex ();
 int yyerror (char*);
+int printError(char*, int);
 
 unsigned count = 0; 
 
@@ -89,7 +90,7 @@ FILE* yyout;
 
 
 /* Line 189 of yacc.c  */
-#line 93 "AnalizadorSintactico.tab.c"
+#line 94 "AnalizadorSintactico.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -169,7 +170,7 @@ typedef union YYSTYPE
 {
 
 /* Line 214 of yacc.c  */
-#line 66 "../src/AnalizadorSintactico.y"
+#line 67 "../src/AnalizadorSintactico.y"
 
   int   valorEntero;
   double valorReal;
@@ -178,7 +179,7 @@ typedef union YYSTYPE
 
 
 /* Line 214 of yacc.c  */
-#line 182 "AnalizadorSintactico.tab.c"
+#line 183 "AnalizadorSintactico.tab.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -190,7 +191,7 @@ typedef union YYSTYPE
 
 
 /* Line 264 of yacc.c  */
-#line 194 "AnalizadorSintactico.tab.c"
+#line 195 "AnalizadorSintactico.tab.c"
 
 #ifdef short
 # undef short
@@ -551,26 +552,26 @@ static const yytype_int16 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    74,    74,    75,    78,    79,    80,    81,    84,    85,
-      86,    87,    90,    93,    94,    97,    98,   101,   102,   105,
-     106,   107,   108,   109,   110,   111,   112,   113,   114,   115,
-     118,   119,   122,   123,   126,   127,   130,   131,   134,   135,
-     138,   139,   140,   143,   144,   145,   146,   147,   150,   151,
-     152,   155,   156,   157,   160,   161,   162,   163,   166,   167,
-     170,   171,   172,   173,   174,   175,   178,   179,   180,   181,
-     182,   183,   186,   187,   188,   189,   190,   191,   192,   195,
-     196,   199,   200,   201,   205,   208,   209,   210,   213,   214,
-     217,   218,   221,   222,   225,   226,   229,   230,   233,   234,
-     237,   238,   239,   242,   243,   246,   247,   250,   251,   254,
-     257,   258,   261,   262,   265,   266,   269,   270,   273,   274,
-     277,   280,   281,   284,   287,   288,   291,   292,   295,   296,
-     299,   300,   303,   304,   305,   306,   307,   310,   311,   314,
-     315,   318,   319,   322,   323,   326,   327,   330,   331,   334,
-     335,   338,   339,   342,   343,   346,   349,   352,   353,   356,
-     357,   358,   361,   362,   365,   366,   372,   373,   374,   375,
-     376,   377,   380,   383,   384,   387,   390,   391,   394,   395,
-     398,   399,   402,   403,   407,   408,   409,   412,   413,   414,
-     417,   418,   419,   422,   423,   424
+       0,    75,    75,    76,    79,    80,    81,    82,    85,    86,
+      87,    88,    91,    94,    95,    98,    99,   102,   103,   106,
+     107,   108,   109,   110,   111,   112,   113,   114,   115,   116,
+     119,   120,   123,   124,   127,   128,   131,   132,   135,   136,
+     139,   140,   141,   144,   145,   146,   147,   148,   151,   152,
+     153,   156,   157,   158,   161,   162,   163,   164,   167,   168,
+     171,   172,   173,   174,   175,   176,   179,   180,   181,   182,
+     183,   184,   187,   188,   189,   190,   191,   192,   193,   196,
+     197,   200,   201,   202,   206,   209,   210,   211,   214,   215,
+     218,   219,   222,   223,   226,   227,   230,   231,   234,   235,
+     238,   239,   240,   243,   244,   247,   248,   251,   252,   255,
+     258,   259,   262,   263,   266,   267,   270,   271,   274,   275,
+     278,   281,   282,   285,   288,   289,   292,   293,   296,   297,
+     300,   301,   304,   305,   306,   307,   308,   311,   312,   315,
+     316,   319,   320,   323,   324,   327,   328,   331,   332,   335,
+     336,   339,   340,   343,   344,   347,   350,   353,   354,   357,
+     358,   359,   362,   363,   366,   367,   370,   371,   372,   373,
+     374,   375,   378,   381,   382,   385,   388,   389,   392,   393,
+     396,   397,   400,   401,   405,   406,   407,   410,   411,   412,
+     415,   416,   417,   420,   421,   422
 };
 #endif
 
@@ -1769,441 +1770,441 @@ yyreduce:
         case 8:
 
 /* Line 1455 of yacc.c  */
-#line 84 "../src/AnalizadorSintactico.y"
+#line 85 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Numero Entero = %d\n", (yyvsp[(1) - (1)].valorEntero));;}
     break;
 
   case 9:
 
 /* Line 1455 of yacc.c  */
-#line 85 "../src/AnalizadorSintactico.y"
+#line 86 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Numero Real = %.2f\n", (yyvsp[(1) - (1)].valorReal));;}
     break;
 
   case 10:
 
 /* Line 1455 of yacc.c  */
-#line 86 "../src/AnalizadorSintactico.y"
+#line 87 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Caracter = %s\n", (yyvsp[(1) - (1)].valorString));;}
     break;
 
   case 12:
 
 /* Line 1455 of yacc.c  */
-#line 90 "../src/AnalizadorSintactico.y"
+#line 91 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "ID = %s\n", (yyvsp[(1) - (1)].valorString));;}
     break;
 
   case 14:
 
 /* Line 1455 of yacc.c  */
-#line 94 "../src/AnalizadorSintactico.y"
+#line 95 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \',\'\n");;}
     break;
 
   case 18:
 
 /* Line 1455 of yacc.c  */
-#line 102 "../src/AnalizadorSintactico.y"
+#line 103 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \': ?\'\n");;}
     break;
 
   case 19:
 
 /* Line 1455 of yacc.c  */
-#line 105 "../src/AnalizadorSintactico.y"
+#line 106 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \'=\'\n"  );;}
     break;
 
   case 20:
 
 /* Line 1455 of yacc.c  */
-#line 106 "../src/AnalizadorSintactico.y"
+#line 107 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \'*=\'\n" );;}
     break;
 
   case 21:
 
 /* Line 1455 of yacc.c  */
-#line 107 "../src/AnalizadorSintactico.y"
+#line 108 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \'/=\'\n" );;}
     break;
 
   case 22:
 
 /* Line 1455 of yacc.c  */
-#line 108 "../src/AnalizadorSintactico.y"
+#line 109 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \'%=\'\n" );;}
     break;
 
   case 23:
 
 /* Line 1455 of yacc.c  */
-#line 109 "../src/AnalizadorSintactico.y"
+#line 110 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \'+=\'\n" );;}
     break;
 
   case 24:
 
 /* Line 1455 of yacc.c  */
-#line 110 "../src/AnalizadorSintactico.y"
+#line 111 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \'-=\'\n" );;}
     break;
 
   case 25:
 
 /* Line 1455 of yacc.c  */
-#line 111 "../src/AnalizadorSintactico.y"
+#line 112 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \'<<=\'\n");;}
     break;
 
   case 26:
 
 /* Line 1455 of yacc.c  */
-#line 112 "../src/AnalizadorSintactico.y"
+#line 113 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \'>>=\'\n");;}
     break;
 
   case 27:
 
 /* Line 1455 of yacc.c  */
-#line 113 "../src/AnalizadorSintactico.y"
+#line 114 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \'&=\'\n" );;}
     break;
 
   case 28:
 
 /* Line 1455 of yacc.c  */
-#line 114 "../src/AnalizadorSintactico.y"
+#line 115 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \'^=\'\n" );;}
     break;
 
   case 29:
 
 /* Line 1455 of yacc.c  */
-#line 115 "../src/AnalizadorSintactico.y"
+#line 116 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \'|=\'\n" );;}
     break;
 
   case 31:
 
 /* Line 1455 of yacc.c  */
-#line 119 "../src/AnalizadorSintactico.y"
+#line 120 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \'||\'\n");;}
     break;
 
   case 33:
 
 /* Line 1455 of yacc.c  */
-#line 123 "../src/AnalizadorSintactico.y"
+#line 124 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \'&&\'\n");;}
     break;
 
   case 35:
 
 /* Line 1455 of yacc.c  */
-#line 127 "../src/AnalizadorSintactico.y"
+#line 128 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \'|\'\n");;}
     break;
 
   case 37:
 
 /* Line 1455 of yacc.c  */
-#line 131 "../src/AnalizadorSintactico.y"
+#line 132 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \'^\'\n");;}
     break;
 
   case 39:
 
 /* Line 1455 of yacc.c  */
-#line 135 "../src/AnalizadorSintactico.y"
+#line 136 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \'&\'\n");;}
     break;
 
   case 41:
 
 /* Line 1455 of yacc.c  */
-#line 139 "../src/AnalizadorSintactico.y"
+#line 140 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \'==\'\n");;}
     break;
 
   case 42:
 
 /* Line 1455 of yacc.c  */
-#line 140 "../src/AnalizadorSintactico.y"
+#line 141 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \'!=\'\n");;}
     break;
 
   case 44:
 
 /* Line 1455 of yacc.c  */
-#line 144 "../src/AnalizadorSintactico.y"
+#line 145 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \'<\'\n" );;}
     break;
 
   case 45:
 
 /* Line 1455 of yacc.c  */
-#line 145 "../src/AnalizadorSintactico.y"
+#line 146 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \'>\'\n" );;}
     break;
 
   case 46:
 
 /* Line 1455 of yacc.c  */
-#line 146 "../src/AnalizadorSintactico.y"
+#line 147 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \'<=\'\n");;}
     break;
 
   case 47:
 
 /* Line 1455 of yacc.c  */
-#line 147 "../src/AnalizadorSintactico.y"
+#line 148 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \'>=\'\n");;}
     break;
 
   case 49:
 
 /* Line 1455 of yacc.c  */
-#line 151 "../src/AnalizadorSintactico.y"
+#line 152 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \'<<\'\n");;}
     break;
 
   case 50:
 
 /* Line 1455 of yacc.c  */
-#line 152 "../src/AnalizadorSintactico.y"
+#line 153 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \'>>\'\n");;}
     break;
 
   case 52:
 
 /* Line 1455 of yacc.c  */
-#line 156 "../src/AnalizadorSintactico.y"
+#line 157 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \'+\'\n");;}
     break;
 
   case 53:
 
 /* Line 1455 of yacc.c  */
-#line 157 "../src/AnalizadorSintactico.y"
+#line 158 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \'-\'\n");;}
     break;
 
   case 55:
 
 /* Line 1455 of yacc.c  */
-#line 161 "../src/AnalizadorSintactico.y"
+#line 162 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \'*\'\n");;}
     break;
 
   case 56:
 
 /* Line 1455 of yacc.c  */
-#line 162 "../src/AnalizadorSintactico.y"
+#line 163 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \'/\'\n");}
     break;
 
   case 57:
 
 /* Line 1455 of yacc.c  */
-#line 163 "../src/AnalizadorSintactico.y"
+#line 164 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \'%\'\n");;}
     break;
 
   case 59:
 
 /* Line 1455 of yacc.c  */
-#line 167 "../src/AnalizadorSintactico.y"
+#line 168 "../src/AnalizadorSintactico.y"
     {/*CAMBIAR POR nombre_tipo*/;}
     break;
 
   case 61:
 
 /* Line 1455 of yacc.c  */
-#line 171 "../src/AnalizadorSintactico.y"
+#line 172 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \'++\'\n");;}
     break;
 
   case 62:
 
 /* Line 1455 of yacc.c  */
-#line 172 "../src/AnalizadorSintactico.y"
+#line 173 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \'--\'\n");;}
     break;
 
   case 65:
 
 /* Line 1455 of yacc.c  */
-#line 175 "../src/AnalizadorSintactico.y"
+#line 176 "../src/AnalizadorSintactico.y"
     {/*CAMBIAR POR nombre_tipo*/;}
     break;
 
   case 73:
 
 /* Line 1455 of yacc.c  */
-#line 187 "../src/AnalizadorSintactico.y"
+#line 188 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \'[\' y el \']\'\n");                                    ;}
     break;
 
   case 74:
 
 /* Line 1455 of yacc.c  */
-#line 188 "../src/AnalizadorSintactico.y"
+#line 189 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \'(\' y el \')\'\n");                                    ;}
     break;
 
   case 75:
 
 /* Line 1455 of yacc.c  */
-#line 189 "../src/AnalizadorSintactico.y"
+#line 190 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \'.\'\n"); fprintf(yyout, "ID = %s\n", (yyvsp[(3) - (3)].valorString)); ;}
     break;
 
   case 76:
 
 /* Line 1455 of yacc.c  */
-#line 190 "../src/AnalizadorSintactico.y"
+#line 191 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \'->\'\n"); fprintf(yyout, "ID = %s\n", (yyvsp[(3) - (3)].valorString));;}
     break;
 
   case 77:
 
 /* Line 1455 of yacc.c  */
-#line 191 "../src/AnalizadorSintactico.y"
+#line 192 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \'++\'\n");                                              ;}
     break;
 
   case 78:
 
 /* Line 1455 of yacc.c  */
-#line 192 "../src/AnalizadorSintactico.y"
+#line 193 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \'--\'\n");                                              ;}
     break;
 
   case 82:
 
 /* Line 1455 of yacc.c  */
-#line 200 "../src/AnalizadorSintactico.y"
+#line 201 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "String = %s\n", (yyvsp[(1) - (1)].valorString));  ;}
     break;
 
   case 83:
 
 /* Line 1455 of yacc.c  */
-#line 201 "../src/AnalizadorSintactico.y"
+#line 202 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el \'(\' y el \')\'\n");;}
     break;
 
   case 85:
 
 /* Line 1455 of yacc.c  */
-#line 208 "../src/AnalizadorSintactico.y"
+#line 209 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "String = %s\n", (yyvsp[(1) - (2)].valorString));;}
     break;
 
   case 102:
 
 /* Line 1455 of yacc.c  */
-#line 239 "../src/AnalizadorSintactico.y"
+#line 240 "../src/AnalizadorSintactico.y"
     {/*Sacamos nombre_typedef*/;}
     break;
 
   case 103:
 
 /* Line 1455 of yacc.c  */
-#line 242 "../src/AnalizadorSintactico.y"
+#line 243 "../src/AnalizadorSintactico.y"
     {/*Hay problemas con el typedef ya que no tiene un identificador final*/;}
     break;
 
   case 132:
 
 /* Line 1455 of yacc.c  */
-#line 303 "../src/AnalizadorSintactico.y"
+#line 304 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "ID = %s\n", (yyvsp[(1) - (1)].valorString));;}
     break;
 
   case 184:
 
 /* Line 1455 of yacc.c  */
-#line 407 "../src/AnalizadorSintactico.y"
+#line 405 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el IF\n");;}
     break;
 
   case 185:
 
 /* Line 1455 of yacc.c  */
-#line 408 "../src/AnalizadorSintactico.y"
+#line 406 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el IF y el ELSE\n");;}
     break;
 
   case 186:
 
 /* Line 1455 of yacc.c  */
-#line 409 "../src/AnalizadorSintactico.y"
+#line 407 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el SWITCH\n");;}
     break;
 
   case 187:
 
 /* Line 1455 of yacc.c  */
-#line 412 "../src/AnalizadorSintactico.y"
+#line 410 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el WHILE\n");;}
     break;
 
   case 188:
 
 /* Line 1455 of yacc.c  */
-#line 413 "../src/AnalizadorSintactico.y"
+#line 411 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el DO WHILE\n");;}
     break;
 
   case 189:
 
 /* Line 1455 of yacc.c  */
-#line 414 "../src/AnalizadorSintactico.y"
+#line 412 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el FOR\n");;}
     break;
 
   case 190:
 
 /* Line 1455 of yacc.c  */
-#line 417 "../src/AnalizadorSintactico.y"
+#line 415 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza un CASE\n");;}
     break;
 
   case 191:
 
 /* Line 1455 of yacc.c  */
-#line 418 "../src/AnalizadorSintactico.y"
+#line 416 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el DEFAULT\n");;}
     break;
 
   case 193:
 
 /* Line 1455 of yacc.c  */
-#line 422 "../src/AnalizadorSintactico.y"
+#line 420 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el CONTINUE o BREAK\n");;}
     break;
 
   case 194:
 
 /* Line 1455 of yacc.c  */
-#line 423 "../src/AnalizadorSintactico.y"
+#line 421 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el RETURN\n");;}
     break;
 
   case 195:
 
 /* Line 1455 of yacc.c  */
-#line 424 "../src/AnalizadorSintactico.y"
+#line 422 "../src/AnalizadorSintactico.y"
     {fprintf(yyout, "Se utiliza el GOTO\n");;}
     break;
 
 
 
 /* Line 1455 of yacc.c  */
-#line 2207 "AnalizadorSintactico.tab.c"
+#line 2208 "AnalizadorSintactico.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2415,12 +2416,17 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 427 "../src/AnalizadorSintactico.y"
+#line 425 "../src/AnalizadorSintactico.y"
 
 
 int yyerror (char *mensaje)  /* Funcion de error */
 {
   printf ("Error: %s\n", mensaje);
+}
+
+int printError(char *mensaje, int linea)
+{
+  fprintf(yyout, "Se encontro la cadena erronea: %s en la linea: %d\n", mensaje, linea);
 }
 
 void main(){ 

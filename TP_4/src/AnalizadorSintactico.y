@@ -9,6 +9,7 @@
 
 int yylex ();
 int yyerror (char*);
+int printError(char*, int);
 
 unsigned count = 0; 
 
@@ -366,9 +367,6 @@ lista_tipos_param_opc:   /* Vacio */
                        | lista_tipos_param
 ;
 
-
-
-
 sentencia:   sentencia_exp
            | sentencia_compuesta
            | sentencia_seleccion
@@ -429,6 +427,11 @@ sentencia_salto: CONTINUE_BREAK ';'         {fprintf(yyout, "Se utiliza el CONTI
 int yyerror (char *mensaje)  /* Funcion de error */
 {
   printf ("Error: %s\n", mensaje);
+}
+
+int printError(char *mensaje, int linea)
+{
+  fprintf(yyout, "Se encontro la cadena erronea: %s en la linea: %d\n", mensaje, linea);
 }
 
 void main(){ 
