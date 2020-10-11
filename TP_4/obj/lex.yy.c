@@ -916,22 +916,22 @@ YY_RULE_SETUP
 case 21:
 YY_RULE_SETUP
 #line 104 "../src/AnalizadorSintactico.l"
-{finalDeError(); return CALIF_TIPO;}
+{yylval.valorString = strdup(yytext); finalDeError(); return CALIF_TIPO;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
 #line 105 "../src/AnalizadorSintactico.l"
-{finalDeError(); return STRUCT_UNION;}
+{yylval.valorString = strdup(yytext); finalDeError(); return STRUCT_UNION;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
 #line 106 "../src/AnalizadorSintactico.l"
-{finalDeError(); return SIZEOF;}
+{yylval.valorString = strdup(yytext); finalDeError(); return SIZEOF;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
 #line 107 "../src/AnalizadorSintactico.l"
-{finalDeError(); return ENUM;}
+{yylval.valorString = strdup(yytext); finalDeError(); return ENUM;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP

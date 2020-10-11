@@ -2,7 +2,7 @@
 
 #include <stdio.h>  
 #include <stdlib.h>
-#include <math.h>
+#include <string.h>
 #include <ctype.h>
 
 #define YYDEBUG 1
@@ -11,12 +11,19 @@ int yylex ();
 int yyerror (char*);
 int printError(char*, int);
 
-unsigned count = 0; 
+unsigned count = 0;
 
 FILE* yyin;
 FILE* yyout;
 
+char* tempVar;
+
 %}
+
+%type <valorString> declarador_directo
+%type <valorString> decla
+%type <valorString> declarador
+%type <valorString> especificadores_declaracion
 
 %token <valorEntero> NUM_ENTERO
 %token <valorReal> NUM_REAL
@@ -64,10 +71,11 @@ FILE* yyout;
 %token <valorString> RETURN 
 %token <valorString> GOTO
 
+
 %union {
-  int   valorEntero;
+  int    valorEntero;
   double valorReal;
-  char* valorString;
+  char*  valorString;
 }
 
 %%
@@ -77,23 +85,21 @@ input:   /* vacio */
 ;
 
 line:  /* Vacio */
-      | expresion ';'
-      | declaracion ';'
+      | declaracion ';' {tempVar = NULL;}
       | sentencia
-      | definicion
 ;
 
-const:   NUM_ENTERO     {fprintf(yyout, "Numero Entero = %d\n", $<valorEntero>1);}
-       | NUM_REAL       {fprintf(yyout, "Numero Real = %.2f\n", $<valorReal>1);}
-       | CHAR           {fprintf(yyout, "Caracter = %s\n", $<valorString>1);}
+const:   NUM_ENTERO
+       | NUM_REAL  
+       | CHAR      
        | const_enum
 ;
 
-const_enum: ID {fprintf(yyout, "ID = %s\n", $<valorString>1);}
+const_enum: ID 
 ;
 
 expresion:   exp_asignacion
-           | expresion ',' exp_asignacion   {fprintf(yyout, "Se utiliza el \',\'\n");}
+           | expresion ',' exp_asignacion
 ;
 
 exp_asignacion:   exp_condicional
@@ -101,68 +107,68 @@ exp_asignacion:   exp_condicional
 ;
 
 exp_condicional:   exp_OR_log
-                 | exp_OR_log '?' expresion ':' exp_condicional {fprintf(yyout, "Se utiliza el \': ?\'\n");}
+                 | exp_OR_log '?' expresion ':' exp_condicional
 ;
 
-op_asignacion:   '='            {fprintf(yyout, "Se utiliza el \'=\'\n"  );}
-               | ASIG_MULT      {fprintf(yyout, "Se utiliza el \'*=\'\n" );}
-               | ASIG_DIV       {fprintf(yyout, "Se utiliza el \'/=\'\n" );}
-               | ASIG_MOD       {fprintf(yyout, "Se utiliza el \'%=\'\n" );}
-               | ASIG_SUMA      {fprintf(yyout, "Se utiliza el \'+=\'\n" );}
-               | ASIG_RESTA     {fprintf(yyout, "Se utiliza el \'-=\'\n" );}
-               | ASIG_DESP_IZQ  {fprintf(yyout, "Se utiliza el \'<<=\'\n");}
-               | ASIG_DESP_DER  {fprintf(yyout, "Se utiliza el \'>>=\'\n");}
-               | ASIG_AND_BIN   {fprintf(yyout, "Se utiliza el \'&=\'\n" );}
-               | ASIG_XOR_BIN   {fprintf(yyout, "Se utiliza el \'^=\'\n" );}
-               | ASIG_OR_BIN    {fprintf(yyout, "Se utiliza el \'|=\'\n" );}
+op_asignacion:   '='          
+               | ASIG_MULT    
+               | ASIG_DIV     
+               | ASIG_MOD     
+               | ASIG_SUMA    
+               | ASIG_RESTA   
+               | ASIG_DESP_IZQ
+               | ASIG_DESP_DER
+               | ASIG_AND_BIN 
+               | ASIG_XOR_BIN 
+               | ASIG_OR_BIN  
 ;
 
 exp_OR_log:   exp_AND_log
-            | exp_OR_log OP_OR exp_AND_log   {fprintf(yyout, "Se utiliza el \'||\'\n");}
+            | exp_OR_log OP_OR exp_AND_log
 ;
 
 exp_AND_log:   exp_OR_in
-             | exp_AND_log OP_AND exp_OR_in  {fprintf(yyout, "Se utiliza el \'&&\'\n");}
+             | exp_AND_log OP_AND exp_OR_in
 ;
 
 exp_OR_in:   exp_OR_ex
-           | exp_OR_in '|' exp_OR_ex {fprintf(yyout, "Se utiliza el \'|\'\n");}
+           | exp_OR_in '|' exp_OR_ex 
 ;
 
 exp_OR_ex:   exp_AND
-           | exp_OR_ex '^' exp_AND {fprintf(yyout, "Se utiliza el \'^\'\n");}
+           | exp_OR_ex '^' exp_AND 
 ;
 
 exp_AND:   exp_igualdad
-         | exp_AND '&' exp_igualdad {fprintf(yyout, "Se utiliza el \'&\'\n");}
+         | exp_AND '&' exp_igualdad 
 ;
 
 exp_igualdad:   exp_relacional
-              | exp_igualdad OP_IGUALDAD    exp_relacional  {fprintf(yyout, "Se utiliza el \'==\'\n");}
-              | exp_igualdad OP_DESIGUALDAD exp_relacional  {fprintf(yyout, "Se utiliza el \'!=\'\n");}
+              | exp_igualdad OP_IGUALDAD    exp_relacional  
+              | exp_igualdad OP_DESIGUALDAD exp_relacional  
 ;
 
 exp_relacional:   exp_desp
-                | exp_relacional      '<'       exp_desp  {fprintf(yyout, "Se utiliza el \'<\'\n" );}
-                | exp_relacional      '>'       exp_desp  {fprintf(yyout, "Se utiliza el \'>\'\n" );}
-                | exp_relacional OP_MENOR_IGUAL exp_desp  {fprintf(yyout, "Se utiliza el \'<=\'\n");}
-                | exp_relacional OP_MAYOR_IGUAL exp_desp  {fprintf(yyout, "Se utiliza el \'>=\'\n");}
+                | exp_relacional      '<'       exp_desp  
+                | exp_relacional      '>'       exp_desp  
+                | exp_relacional OP_MENOR_IGUAL exp_desp  
+                | exp_relacional OP_MAYOR_IGUAL exp_desp  
 ;
 
 exp_desp:   exp_aditiva
-          | exp_desp OP_DESP_IZQ exp_aditiva  {fprintf(yyout, "Se utiliza el \'<<\'\n");}
-          | exp_desp OP_DESP_DER exp_aditiva  {fprintf(yyout, "Se utiliza el \'>>\'\n");}
+          | exp_desp OP_DESP_IZQ exp_aditiva  
+          | exp_desp OP_DESP_DER exp_aditiva  
 ;
 
 exp_aditiva:   exp_multip
-             | exp_aditiva '+' exp_multip   {fprintf(yyout, "Se utiliza el \'+\'\n");}
-             | exp_aditiva '-' exp_multip   {fprintf(yyout, "Se utiliza el \'-\'\n");}
+             | exp_aditiva '+' exp_multip   
+             | exp_aditiva '-' exp_multip   
 ;
 
 exp_multip:   exp_conversion
-            | exp_multip '*' exp_conversion   {fprintf(yyout, "Se utiliza el \'*\'\n");}
-            | exp_multip '/' exp_conversion   {fprintf(yyout, "Se utiliza el \'/\'\n")}
-            | exp_multip '%' exp_conversion   {fprintf(yyout, "Se utiliza el \'%\'\n");}
+            | exp_multip '*' exp_conversion   
+            | exp_multip '/' exp_conversion   
+            | exp_multip '%' exp_conversion   
 ;
 
 exp_conversion:   exp_unaria
@@ -170,8 +176,8 @@ exp_conversion:   exp_unaria
 ;
 
 exp_unaria:   exp_sufijo
-            | OP_INC exp_unaria           {fprintf(yyout, "Se utiliza el \'++\'\n");}
-            | OP_DEC exp_unaria           {fprintf(yyout, "Se utiliza el \'--\'\n");}
+            | OP_INC exp_unaria           
+            | OP_DEC exp_unaria           
             | op_unario exp_conversion
             | SIZEOF exp_unaria
             | SIZEOF '(' nombre_tipo ')'  {/*CAMBIAR POR nombre_tipo*/}
@@ -186,12 +192,12 @@ op_unario:   '&'
 ;
 
 exp_sufijo:   exp_primaria
-            | exp_sufijo '[' expresion ']'        {fprintf(yyout, "Se utiliza el \'[\' y el \']\'\n");                                    }
-            | exp_sufijo '(' lista_argumentos ')' {fprintf(yyout, "Se utiliza el \'(\' y el \')\'\n");                                    }
-            | exp_sufijo '.' ID                   {fprintf(yyout, "Se utiliza el \'.\'\n"); fprintf(yyout, "ID = %s\n", $<valorString>3); }
-            | exp_sufijo OP_MIEMBRO_PUNT ID       {fprintf(yyout, "Se utiliza el \'->\'\n"); fprintf(yyout, "ID = %s\n", $<valorString>3);}
-            | exp_sufijo OP_INC                   {fprintf(yyout, "Se utiliza el \'++\'\n");                                              }
-            | exp_sufijo OP_DEC                   {fprintf(yyout, "Se utiliza el \'--\'\n");                                              }
+            | exp_sufijo '[' expresion ']'        
+            | exp_sufijo '(' lista_argumentos ')' 
+            | exp_sufijo '.' ID                   
+            | exp_sufijo OP_MIEMBRO_PUNT ID       
+            | exp_sufijo OP_INC                   
+            | exp_sufijo OP_DEC                   
 ;
 
 lista_argumentos:   exp_asignacion
@@ -199,29 +205,29 @@ lista_argumentos:   exp_asignacion
 ;
 
 exp_primaria:   const
-              | STRING              {fprintf(yyout, "String = %s\n", $<valorString>1);  }
-              | '(' expresion ')'   {fprintf(yyout, "Se utiliza el \'(\' y el \')\'\n");}               
+              | STRING              
+              | '(' expresion ')'            
 ;
 
 
 declaracion: especificadores_declaracion lista_declaradores
 ;
 
-especificadores_declaracion:   CLASE_ALM           especificadores_declaracion_opc  {fprintf(yyout, "String = %s\n", $<valorString>1);}
-                             | especificador_tipo  especificadores_declaracion_opc
-                             | CALIF_TIPO          especificadores_declaracion_opc
+especificadores_declaracion:   CLASE_ALM           especificadores_declaracion_opc  {$<valorString>$ = strdup($<valorString>1);}
+                             | especificador_tipo  especificadores_declaracion_opc  {$<valorString>$ = strdup($<valorString>1);}
+                             | CALIF_TIPO          especificadores_declaracion_opc  {$<valorString>$ = strdup($<valorString>1);}
 ;
 
 especificadores_declaracion_opc:   /* Vacio */
                                  | especificadores_declaracion
 ;
 
-lista_declaradores:   declarador
-                    | lista_declaradores ',' declarador
+lista_declaradores:   declarador                        {fprintf(yyout, "Se declara la variable: \'%s\' de tipo: \'%s\'\n", $<valorString>1, tempVar);}          
+                    | declarador ',' lista_declaradores {fprintf(yyout, "Se declara la variable: \'%s\' de tipo: \'%s\'\n", $<valorString>1, tempVar);}
 ;
 
-declarador:   decla
-            | decla '=' inicializador
+declarador:   decla                   {$<valorString>$ = strdup($<valorString>1);}
+            | decla '=' inicializador {$<valorString>$ = strdup($<valorString>1);}
 ;
 
 inicializador:   exp_asignacion
@@ -236,7 +242,7 @@ lista_inicializadores:   inicializador
                        | lista_inicializadores ',' inicializador
 ;
 
-especificador_tipo:   TIPO_DATO
+especificador_tipo:   TIPO_DATO                   {tempVar = strdup($<valorString>1);}              
                     | especificador_struct_union
                     | especificador_enum  {/*Sacamos nombre_typedef*/}
 ;
@@ -283,7 +289,7 @@ exp_constante_opc:   /* Vacio */
                    | exp_constante
 ;
 
-decla: puntero_opc declarador_directo
+decla: puntero_opc declarador_directo {$<valorString>$ = strdup($<valorString>2);}
 ;
 
 puntero_opc:   /* Vacio */
@@ -302,18 +308,18 @@ lista_calificadores_tipos:   CALIF_TIPO
                            | lista_calificadores_tipos CALIF_TIPO
 ;
 
-declarador_directo:   ID                                                   {fprintf(yyout, "ID = %s\n", $<valorString>1);}
-                    | '(' decla ')'
-                    | declarador_directo '[' exp_constante_opc ']'
-                    | declarador_directo '(' lista_tipos_param ')'
-                    | declarador_directo '(' lista_identificadores_opc ')'
+declarador_directo:   ID                                                    {$<valorString>$ = strdup($<valorString>1);}
+                    | '(' decla ')'                                         {$<valorString>$ = strdup($<valorString>2);}
+                    | declarador_directo '[' exp_constante_opc ']'          {$<valorString>$ = strdup($<valorString>1);}
+                    | declarador_directo '(' lista_tipos_param_opc ')'      {$<valorString>$ = strdup($<valorString>1);}
+                    | declarador_directo '(' lista_identificadores_opc ')'  {$<valorString>$ = strdup($<valorString>1);}
 ;
 
 lista_identificadores_opc:   /* Vacio */
                            | lista_identificadores
 ;
 
-lista_tipos_param:   lista_parametros
+lista_tipos_param: lista_parametros
 ;
 
 lista_parametros:   declaracion_parametro
@@ -373,6 +379,7 @@ sentencia:   sentencia_exp
            | sentencia_iteracion
            | sentencia_etiquetada
            | sentencia_salto
+           | especificadores_declaracion decla sentencia_compuesta  {fprintf(yyout, "Se declara la funcion: \'%s\' que devuelve: \'%s\'\n", $<valorString>2, $<valorString>1);}
 ;
 
 sentencia_exp: expresion_opc ';'
@@ -402,37 +409,26 @@ lista_sentencias:   sentencia
 ;
 
 
-sentencia_seleccion:  IF '(' expresion ')' sentencia                 {fprintf(yyout, "Se utiliza el IF\n");}
-                    | IF '(' expresion ')' sentencia ELSE sentencia  {fprintf(yyout, "Se utiliza el IF y el ELSE\n");}
-                    | SWITCH '(' expresion ')' sentencia             {fprintf(yyout, "Se utiliza el SWITCH\n");}     
+sentencia_seleccion:  IF '(' expresion ')' sentencia                 
+                    | IF '(' expresion ')' sentencia ELSE sentencia  
+                    | SWITCH '(' expresion ')' sentencia             
 ;
 
-sentencia_iteracion:  WHILE '(' expresion ')' sentencia                                         {fprintf(yyout, "Se utiliza el WHILE\n");}
-                    | DO sentencia WHILE '(' expresion ')' ';'                                  {fprintf(yyout, "Se utiliza el DO WHILE\n");}
-                    | FOR '(' expresion_opc ';' expresion_opc ';' expresion_opc ')' sentencia   {fprintf(yyout, "Se utiliza el FOR\n");}
+sentencia_iteracion:  WHILE '(' expresion ')' sentencia                                         
+                    | DO sentencia WHILE '(' expresion ')' ';'                                  
+                    | FOR '(' expresion_opc ';' expresion_opc ';' expresion_opc ')' sentencia   
 ;
 
-sentencia_etiquetada: CASE exp_constante ':' sentencia  {fprintf(yyout, "Se utiliza un CASE\n");}
-                     | DEFAULT ':' sentencia            {fprintf(yyout, "Se utiliza el DEFAULT\n");}
+sentencia_etiquetada: CASE exp_constante ':' sentencia  
+                     | DEFAULT ':' sentencia            
                      | ID ':' sentencia  
 ;  
  
-sentencia_salto: CONTINUE_BREAK ';'         {fprintf(yyout, "Se utiliza el CONTINUE o BREAK\n");}
-                | RETURN expresion_opc ';'  {fprintf(yyout, "Se utiliza el RETURN\n");}
-                | GOTO ID ';'               {fprintf(yyout, "Se utiliza el GOTO\n");}
+sentencia_salto: CONTINUE_BREAK ';'         
+                | RETURN expresion_opc ';'  
+                | GOTO ID ';'               
 ;  
 
-definicion: TIPO_DATO ID '(' lista_declaradores_def ')' sentencia_compuesta
-;
-
-
-lista_declaradores_def:   decla_def
-                        | lista_declaradores_def ',' decla_def
-
-;
-
-decla_def: TIPO_DATO ID
-;
 
 
 %%

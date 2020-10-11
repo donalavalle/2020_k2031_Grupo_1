@@ -92,11 +92,11 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 67 "../src/AnalizadorSintactico.y"
+#line 75 "../src/AnalizadorSintactico.y"
 
-  int   valorEntero;
+  int    valorEntero;
   double valorReal;
-  char* valorString;
+  char*  valorString;
 
 
 

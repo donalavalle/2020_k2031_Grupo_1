@@ -101,10 +101,10 @@ COMODIN        .
 "goto"             {yylval.valorString = strdup(yytext); finalDeError(); return GOTO;}
 {TIPOS_DATO}       {yylval.valorString = strdup(yytext); finalDeError(); return TIPO_DATO;}
 {CLASE_ALM}        {yylval.valorString = strdup(yytext); finalDeError(); return CLASE_ALM;}
-{CALIF_TIPO}       {finalDeError(); return CALIF_TIPO;}
-{STRUCT_UNION}     {finalDeError(); return STRUCT_UNION;}
-"sizeof"           {finalDeError(); return SIZEOF;}
-"enum"             {finalDeError(); return ENUM;}
+{CALIF_TIPO}       {yylval.valorString = strdup(yytext); finalDeError(); return CALIF_TIPO;}
+{STRUCT_UNION}     {yylval.valorString = strdup(yytext); finalDeError(); return STRUCT_UNION;}
+"sizeof"           {yylval.valorString = strdup(yytext); finalDeError(); return SIZEOF;}
+"enum"             {yylval.valorString = strdup(yytext); finalDeError(); return ENUM;}
 {IDENTIFICADOR}    {yylval.valorString = strdup(yytext); finalDeError(); return ID;}
 {COMENTARIO_LINEA} {finalDeError();}
 {COMENTARIO_BLOQUE} {cantLineas += cantidadSaltosDeLinea(yytext); finalDeError();}
