@@ -66,7 +66,6 @@ TIPOS_DATO    "void"|"char"|"short"|"int"|"long"|"float"|"double"|"signed"|"unsi
 CLASE_ALM     "typedef"|"static"|"auto"|"register"|"extern"
 CALIF_TIPO    "const"|"volatile"
 STRUCT_UNION  "struct"|"union"
-CONTINUE_BREAK "continue"|"break"
 
 IDENTIFICADOR ({LETRA}|_)({LETRA}|{DECIMAL}|_)*
 
@@ -86,7 +85,8 @@ COMODIN        .
 {CONST_OCTAL}      {yylval.valorEntero = strtoll(yytext, NULL, 8); finalDeError(); return NUM_ENTERO;}
 {CONST_REAL}       {yylval.valorReal   = atof(yytext); finalDeError(); return NUM_REAL;}
 {CARACT_SIMPLES}   {finalDeError(); return yytext[0];}
-{CONTINUE_BREAK}   {finalDeError(); return CONTINUE_BREAK;}
+"continue"         {yylval.valorString = strdup(yytext); finalDeError(); return CONTINUE;}
+"break"            {yylval.valorString = strdup(yytext); finalDeError(); return BREAK;}
 {INCLUDE}          {finalDeError();}
 {DEFINE}           {finalDeError();}
 "if"               {yylval.valorString = strdup(yytext); finalDeError(); return IF;}

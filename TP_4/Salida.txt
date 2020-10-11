@@ -1,5 +1,11 @@
-Se declara la variable: 'c' de tipo: 'int'
-Se declara la funcion: 'sumar' que devuelve: 'int'
-Se declara la variable: 'c' de tipo: 'int'
-Se declara la variable: 'b' de tipo: 'int'
 Se declara la variable: 'a' de tipo: 'int'
+Se declara la variable: 'b' de tipo: 'char'
+Se declara la variable: 'AFN' de tipo: 'char'
+Se declara la variable: 'santiFerreiros' de tipo: 'char'
+Se encontro la sentencia CONTINUE
+Se encontro la sentencia WHILE
+Se encontro la sentencia BREAK
+Se encontro la sentencia FOR
+Se encontro la sentencia IF
+Se encontro la sentencia RETURN
+Se declara la funcion: 'main' que devuelve: 'int'

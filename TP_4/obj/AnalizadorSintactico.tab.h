@@ -71,17 +71,18 @@
      CALIF_TIPO = 287,
      STRUCT_UNION = 288,
      ENUM = 289,
-     CONTINUE_BREAK = 290,
-     IF = 291,
-     ELSE = 292,
-     SWITCH = 293,
-     FOR = 294,
-     DO = 295,
-     WHILE = 296,
-     CASE = 297,
-     DEFAULT = 298,
-     RETURN = 299,
-     GOTO = 300
+     CONTINUE = 290,
+     BREAK = 291,
+     IF = 292,
+     ELSE = 293,
+     SWITCH = 294,
+     FOR = 295,
+     DO = 296,
+     WHILE = 297,
+     CASE = 298,
+     DEFAULT = 299,
+     RETURN = 300,
+     GOTO = 301
    };
 #endif
 
@@ -92,7 +93,7 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 75 "../src/AnalizadorSintactico.y"
+#line 77 "../src/AnalizadorSintactico.y"
 
   int    valorEntero;
   double valorReal;
@@ -101,7 +102,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 105 "AnalizadorSintactico.tab.h"
+#line 106 "AnalizadorSintactico.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

@@ -16,7 +16,8 @@ unsigned count = 0;
 FILE* yyin;
 FILE* yyout;
 
-char* tempVar;
+char* tempVar = NULL;
+char* tempPointer = NULL;
 
 %}
 
@@ -59,7 +60,8 @@ char* tempVar;
 %token CALIF_TIPO
 %token STRUCT_UNION
 %token ENUM
-%token <valorString> CONTINUE_BREAK
+%token <valorString> CONTINUE
+%token <valorString> BREAK
 %token <valorString> IF
 %token <valorString> ELSE
 %token <valorString> SWITCH
@@ -85,7 +87,7 @@ input:   /* vacio */
 ;
 
 line:  /* Vacio */
-      | declaracion ';' {tempVar = NULL;}
+      | declaracion ';' {tempVar = NULL; tempPointer = NULL;}
       | sentencia
 ;
 
@@ -389,7 +391,11 @@ expresion_opc:   /* Vacio */
                | expresion
 ;
 
-sentencia_compuesta: '{' lista_declaraciones_opc lista_sentencias_opc '}'
+sentencia_compuesta: '{' lista_compuesta '}'
+;
+
+lista_compuesta:   lista_declaraciones_opc lista_sentencias_opc
+                 | lista_compuesta lista_declaraciones_opc lista_sentencias_opc
 ;
 
 lista_declaraciones_opc:   /* Vacio */
@@ -400,8 +406,8 @@ lista_sentencias_opc:   /* Vacio */
                       | lista_sentencias
 ;
 
-lista_declaraciones:   declaracion
-                     | lista_declaraciones declaracion
+lista_declaraciones:   declaracion ';'
+                     | lista_declaraciones declaracion ';'
 ;
 
 lista_sentencias:   sentencia
@@ -409,24 +415,30 @@ lista_sentencias:   sentencia
 ;
 
 
-sentencia_seleccion:  IF '(' expresion ')' sentencia                 
-                    | IF '(' expresion ')' sentencia ELSE sentencia  
-                    | SWITCH '(' expresion ')' sentencia             
+sentencia_seleccion:  IF '(' expresion ')' sentencia                                            {fprintf(yyout, "Se encontro la sentencia IF\n");}
+                    | IF '(' expresion ')' sentencia ELSE sentencia                             {fprintf(yyout, "Se encontro la sentencia IF y ELSE\n");}
+                    | SWITCH '(' expresion ')' sentencia                                        {fprintf(yyout, "Se encontro la sentencia SWITCH\n");}
 ;
 
-sentencia_iteracion:  WHILE '(' expresion ')' sentencia                                         
-                    | DO sentencia WHILE '(' expresion ')' ';'                                  
-                    | FOR '(' expresion_opc ';' expresion_opc ';' expresion_opc ')' sentencia   
+sentencia_iteracion:  WHILE '(' expresion ')' sentencia                                         {fprintf(yyout, "Se encontro la sentencia WHILE\n");}                                         
+                    | DO sentencia WHILE '(' expresion ')' ';'                                  {fprintf(yyout, "Se encontro la sentencia DO WHILE\n");}                                  
+                    | FOR '(' for_opc ';' expresion_opc ';' expresion_opc ')' sentencia         {fprintf(yyout, "Se encontro la sentencia FOR\n");}
 ;
 
-sentencia_etiquetada: CASE exp_constante ':' sentencia  
+for_opc:   /* Vacio */
+         | expresion
+         | declaracion
+;
+
+sentencia_etiquetada:  CASE exp_constante ':' sentencia  
                      | DEFAULT ':' sentencia            
                      | ID ':' sentencia  
 ;  
  
-sentencia_salto: CONTINUE_BREAK ';'         
-                | RETURN expresion_opc ';'  
-                | GOTO ID ';'               
+sentencia_salto:  CONTINUE ';'                                                                  {fprintf(yyout, "Se encontro la sentencia CONTINUE\n");}
+                | BREAK ';'                                                                     {fprintf(yyout, "Se encontro la sentencia BREAK\n");}
+                | RETURN expresion_opc ';'                                                      {fprintf(yyout, "Se encontro la sentencia RETURN\n");}  
+                | GOTO ID ';'                                                                   {fprintf(yyout, "Se encontro la sentencia GO TO\n");}               
 ;  
 
 
@@ -435,7 +447,7 @@ sentencia_salto: CONTINUE_BREAK ';'
 
 int yyerror (char *mensaje)  /* Funcion de error */
 {
-  printf ("Error: %s\n", mensaje);
+  fprintf (yyout, "Error: %s\n", mensaje);
 }
 
 int printError(char *mensaje, int linea)
@@ -445,7 +457,7 @@ int printError(char *mensaje, int linea)
 
 void main(){ 
 
-    yyin = fopen("Input.txt", "r");
+    yyin = fopen("Codigo.c", "r");
     yyout = fopen("Salida.txt", "w");
 
     #ifdef BISON_DEBUG
