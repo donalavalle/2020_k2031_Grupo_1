@@ -1,3 +1,6 @@
+#include <stdlib.h>
+#include <stdio.h>
+
 #ifndef ANALIZADORSEMANTICO_H
 #define ANALIZADORSEMANTICO_H
 
@@ -24,8 +27,11 @@ typedef struct Simbolo{
 
 Simbolo* crearSimbolo(char*, char*, int);
 void     insertarSimbolo(char*, char*, int);
+Funcion* crearParametro(char*);
+void     insertarParametro(Funcion**, char*);
 Simbolo* devolverSimbolo(char*);
-void     mostrarTabla();
+void     mostrarTabla(FILE*);
+void     mostrarParametros(FILE*, Funcion*);
 char*    toUpper(char*);
 
 extern Simbolo* tablaSimbolos;

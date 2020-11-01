@@ -1,0 +1,2 @@
+Identificador: caracter  - Valor: NULL
+Identificador: helloWorld  - Valor: 0
