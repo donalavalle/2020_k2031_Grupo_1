@@ -6,6 +6,13 @@
 
 enum {TIPO_VAR, TIPO_FUNC};
 
+typedef union{
+        int      valEnt; 
+        double   valReal;
+        char*    valChar;
+        Funcion* func;
+} TipoValor;
+
 typedef struct Funcion{
     char*  tipoDatoParam;
     struct Funcion* sig;
@@ -15,19 +22,15 @@ typedef struct Simbolo{
     char* nombre;
     char* tipoDato;
     int   tipoID;
-    union{
-        int      valEnt; 
-        double   valReal;
-        char*    valChar;
-        Funcion* func;
-    } valor;
+    TipoValor valor;
 
     struct Simbolo* sig;  
 } Simbolo;
 
 Simbolo* crearSimbolo(char*, char*, int);
-void     insertarSimbolo(char*, char*, int);
+void     insertarSimbolo(Simbolo*);
 Funcion* crearParametro(char*);
+void     modificarTabla(Simbolo*, TipoValor);
 void     insertarParametro(Funcion**, char*);
 Simbolo* devolverSimbolo(char*);
 void     mostrarTabla(FILE*);

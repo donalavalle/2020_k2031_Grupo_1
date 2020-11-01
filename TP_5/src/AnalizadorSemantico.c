@@ -18,7 +18,7 @@ Simbolo* crearSimbolo(char* tipoDato, char* nombreID, int tipoID){
                     nuevoNodo -> valor.valEnt = 0;
                 else if(! strcmp(tipoDato, "float") || ! strcmp(tipoDato, "double"))
                     nuevoNodo -> valor.valReal = 0;
-                else if(! strcmp(tipoDato, "char"))
+                else i(! strcmp(tipoDato, "char"))
                     nuevoNodo -> valor.valChar = "NULL";
             break;
         case TIPO_FUNC:
@@ -31,17 +31,18 @@ Simbolo* crearSimbolo(char* tipoDato, char* nombreID, int tipoID){
     return nuevoNodo;
 }
 
-void insertarSimbolo(char* tipoDato, char* nombreID, int tipoID){
+void insertarSimbolo(Simbolo* nuevoSimbolo){
     
-    Simbolo* nuevoNodo = devolverSimbolo(nombreID);
+    Simbolo* nuevoNodo = devolverSimbolo(nuevoSimbolo -> nombre);
 
     if(! nuevoNodo){ // [!] Si no esta declarado dentro de la TS, genero un símbolo y lo inserto ordenado
-        nuevoNodo = crearSimbolo(tipoDato, nombreID, tipoID);
+
+        nuevoNodo = nuevoSimbolo;
 
         Simbolo* aux1 = tablaSimbolos;
         Simbolo* aux2;
 
-        while(aux1 != NULL && strcmp(toUpper(nombreID), toUpper(aux1 -> nombre)) > 0){
+        while(aux1 != NULL && strcmp(toUpper(nuevoNodo -> nombre), toUpper(aux1 -> nombre)) > 0){
             aux2 = aux1;
             aux1 = aux1 -> sig;
         }
@@ -102,6 +103,8 @@ Simbolo* devolverSimbolo(char* nombreID){
 }
 
 void mostrarTabla(FILE* archivoSalida){
+    fprintf(archivoSalida, "\n - Tabla de Simbolos -\n");
+
     for(Simbolo* aux = tablaSimbolos; aux != NULL; aux = aux -> sig){
         fprintf(archivoSalida, "Identificador: %s ", aux -> nombre);
         
@@ -149,9 +152,39 @@ void mostrarParametros(FILE* archivoSalida, Funcion* listaParametros){
 
 */
 
+void modificarTabla(Simbolo* simboloACambiar){
+    Simbolo* temp = devolverSimbolo(simboloACambiar -> nombre);
+
+    printf("Valor Anterior: %d\tNuevo Valor:%d", temp -> valor.valEnt, simboloACambiar -> valor.valEnt);
+    eliminarSimbolo(temp);
+    //insertarSimbolo(simboloACambiar);
+}
 
 char* toUpper(char* nombreID){
     char* temporal = strdup(nombreID);
     return strupr(temporal);
 }
 
+void eliminarSimbolo(Simbolo* simboloAEliminar){
+    Simbolo* temp = devolverSimbolo(simboloAEliminar -> nombre);
+
+    if(temp){
+        
+        Simbolo* aux = tablaSimbolos;
+
+        if(aux == temp)
+            tablaSimbolos = aux -> sig;
+        else{
+            while(aux -> sig != temp) // Recorre la lista hasta encontrar que el siguiente simbolo sea el simbolo a eliminar
+                aux = aux -> sig;
+
+            aux -> sig = temp -> sig; // Hace el cambio de punteros 
+        }
+        
+        free(temp); // Elimina el nodo 
+    }
+}
+
+void modificarTabla(Simbolo* simboloAModificar, TipoValor valorModificado){
+    simboloAModificar -> valor = valorModificado;
+}
