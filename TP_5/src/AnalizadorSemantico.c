@@ -18,7 +18,7 @@ Simbolo* crearSimbolo(char* tipoDato, char* nombreID, int tipoID){
                     nuevoNodo -> valor.valEnt = 0;
                 else if(! strcmp(tipoDato, "float") || ! strcmp(tipoDato, "double"))
                     nuevoNodo -> valor.valReal = 0;
-                else i(! strcmp(tipoDato, "char"))
+                else if(! strcmp(tipoDato, "char"))
                     nuevoNodo -> valor.valChar = "NULL";
             break;
         case TIPO_FUNC:
