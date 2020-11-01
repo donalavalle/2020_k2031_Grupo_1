@@ -40,4 +40,3 @@ int main(){
 
 
 // TODO: Insertar, de ser necesario, los simbolos en la TS con sus valores correspondientes
- 
