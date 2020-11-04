@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <stdlib.h>
+#include <stdlib.h> 
 #include <string.h>
 #include "AnalizadorSemantico.h"
 
@@ -152,37 +152,9 @@ void mostrarParametros(FILE* archivoSalida, Funcion* listaParametros){
 
 */
 
-void modificarTabla(Simbolo* simboloACambiar){
-    Simbolo* temp = devolverSimbolo(simboloACambiar -> nombre);
-
-    printf("Valor Anterior: %d\tNuevo Valor:%d", temp -> valor.valEnt, simboloACambiar -> valor.valEnt);
-    eliminarSimbolo(temp);
-    //insertarSimbolo(simboloACambiar);
-}
-
 char* toUpper(char* nombreID){
     char* temporal = strdup(nombreID);
     return strupr(temporal);
-}
-
-void eliminarSimbolo(Simbolo* simboloAEliminar){
-    Simbolo* temp = devolverSimbolo(simboloAEliminar -> nombre);
-
-    if(temp){
-        
-        Simbolo* aux = tablaSimbolos;
-
-        if(aux == temp)
-            tablaSimbolos = aux -> sig;
-        else{
-            while(aux -> sig != temp) // Recorre la lista hasta encontrar que el siguiente simbolo sea el simbolo a eliminar
-                aux = aux -> sig;
-
-            aux -> sig = temp -> sig; // Hace el cambio de punteros 
-        }
-        
-        free(temp); // Elimina el nodo 
-    }
 }
 
 void modificarTabla(Simbolo* simboloAModificar, TipoValor valorModificado){

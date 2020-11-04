@@ -1,10 +1,14 @@
 #include <stdlib.h>
-#include <stdio.h>
+#include <stdio.h> 
 
 #ifndef ANALIZADORSEMANTICO_H
 #define ANALIZADORSEMANTICO_H
 
 enum {TIPO_VAR, TIPO_FUNC};
+typedef struct Funcion{
+    char*  tipoDatoParam;
+    struct Funcion* sig;
+} Funcion;
 
 typedef union{
         int      valEnt; 
@@ -12,11 +16,6 @@ typedef union{
         char*    valChar;
         Funcion* func;
 } TipoValor;
-
-typedef struct Funcion{
-    char*  tipoDatoParam;
-    struct Funcion* sig;
-} Funcion;
 
 typedef struct Simbolo{
     char* nombre;
@@ -30,7 +29,6 @@ typedef struct Simbolo{
 Simbolo* crearSimbolo(char*, char*, int);
 void     insertarSimbolo(Simbolo*);
 Funcion* crearParametro(char*);
-void     modificarTabla(Simbolo*, TipoValor);
 void     insertarParametro(Funcion**, char*);
 Simbolo* devolverSimbolo(char*);
 void     mostrarTabla(FILE*);
