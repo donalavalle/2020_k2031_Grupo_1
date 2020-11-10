@@ -52,9 +52,10 @@ input:   /* vacio */
 
 line:   declaracion
       | asignacion
+      | ENTERO
 ; 
 
-asignacion: IDENTIFICADOR '=' valor ';'  {  Simbolo* aux = devolverSimbolo($1);
+asignacion: IDENTIFICADOR '=' valor ';'  {  /* Simbolo* aux = devolverSimbolo($1);
                                             if(aux) {
                                               if(! strcmp(aux->tipoDato, tipoDeDatoGlobal))
                                                 cambiarValor(aux, valorTemporal);
@@ -62,7 +63,7 @@ asignacion: IDENTIFICADOR '=' valor ';'  {  Simbolo* aux = devolverSimbolo($1);
                                                 fprintf(yyout, "No coinciden los tipos de datos.\n");
                                             }
                                             else
-                                              fprintf(yyout, "La variable \'%s\' no fue declarada.\n", $1);}
+                                              fprintf(yyout, "La variable \'%s\' no fue declarada.\n", $1); */}
 ;
 
 declaracion:      TIPO_DATO tipoDeclaracion ';' 
