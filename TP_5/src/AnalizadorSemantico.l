@@ -10,7 +10,7 @@
 DECIMAL         [0-9]
 LETRA           [a-zA-Z]
 
-CONST_DECIMAL    [1-9]{DECIMAL}
+CONST_DECIMAL    [1-9]{DECIMAL}*
 CONST_OCTAL      0[0-7]*
 CONST_HEXA       0[xX][a-fA-F0-9]+
 CONST_CHAR       \'.\'
@@ -36,6 +36,5 @@ SALTO_LINEA      "\n"
 {ESPACIOS}+       { }
 {CARACTER_SIMPLE} { return yytext[0]; }
 {SALTO_LINEA}     { }   
-.                 { }  
 
 %%

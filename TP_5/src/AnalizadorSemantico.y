@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "AnalizadorSemantico.h"
+#include "Tabla_Simbolos.h"
 
 #include <stddef.h>
 #include <stdint.h> 
@@ -22,6 +22,7 @@
 
 int yylex ();
 int yyerror (char*);
+void mostrarErrorDeVariable(char*);
 
 char* tipoDeDatoGlobal = NULL;
 union TipoValor valorTemporal;
@@ -46,26 +47,28 @@ FILE* yyout;
 
 %%
 
-input:   /* vacio */
+input:   /* Vacío */
        | input line
 ;
 
-line:   declaracion
-      | asignacion
+line:   /* Vacío */
+      | asignacion  ';'
+      | declaracion ';'
 ; 
 
-asignacion: IDENTIFICADOR '=' valor ';'  {  Simbolo* aux = devolverSimbolo($1);
+asignacion: IDENTIFICADOR '=' valor   {  Simbolo* aux = devolverSimbolo($1);
                                             if(aux) {
                                               if(! strcmp(aux->tipoDato, tipoDeDatoGlobal))
                                                 cambiarValor(aux, valorTemporal);
                                               else
-                                                fprintf(yyout, "No coinciden los tipos de datos.\n");
+                                                yyerror("No coinciden los tipos de datos.\n");
                                             }
-                                            else
-                                              fprintf(yyout, "La variable \'%s\' no fue declarada.\n", $1);}
+                                            else{
+                                              mostrarErrorDeVariable($1);
+                                            }}
 ;
 
-declaracion:      TIPO_DATO tipoDeclaracion ';' 
+declaracion:      TIPO_DATO tipoDeclaracion 
 ;
 
 tipoDeclaracion:     IDENTIFICADOR asignacionOPC 
@@ -88,7 +91,11 @@ valor:   ENTERO   { tipoDeDatoGlobal = strdup(tipoDeDato($1)); valorTemporal.val
 Simbolo* tablaSimbolos;
 
 int yyerror (char *mensaje) {  /* Función de error */
-  fprintf(yyout, "Error: %s\n", mensaje);
+  fprintf(yyout, "\nError: %s\n", mensaje);
+}
+
+void mostrarErrorDeVariable(char* nombreVariable) {
+  fprintf(yyout, "\nError: La variable \'%s\' no fue declarada.\n", nombreVariable);
 }
 
 void main() {
@@ -101,11 +108,22 @@ void main() {
 
     
 
-    //Simbolo* nuevoSimbolo = crearSimbolo("int", "octi", TIPO_VAR);
-    //mostrarTabla(yyout);
-    //puts("\n\n");
+    Simbolo* nuevoSimbolo = crearSimbolo("char", "unString", TIPO_VAR);
+    insertarSimbolo(nuevoSimbolo);
+
+    mostrarTabla(yyout);
+
+    nuevoSimbolo = crearSimbolo("float", "otraVariable", TIPO_VAR);
+    insertarSimbolo(nuevoSimbolo);
+
+    mostrarTabla(yyout);
+
+    nuevoSimbolo = crearSimbolo("int", "estaEsUnaVariableEntera", TIPO_VAR);
+    insertarSimbolo(nuevoSimbolo);
+
     yyparse();
-    //mostrarTabla(yyout);
+
+    mostrarTabla(yyout);
 
     fclose(yyin);
     fclose(yyout);

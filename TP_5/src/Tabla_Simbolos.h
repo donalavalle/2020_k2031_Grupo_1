@@ -35,6 +35,8 @@ void     mostrarTabla(FILE*);
 void     mostrarParametros(FILE*, Funcion*);
 char*    toUpper(char*);
 void     cambiarValor(Simbolo*, TipoValor);
+unsigned encontrarMasLargo();
+char*    cantidadDeEspacios(unsigned);
 
 extern Simbolo* tablaSimbolos;
 

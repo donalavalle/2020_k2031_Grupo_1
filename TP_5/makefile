@@ -34,7 +34,7 @@ TARGETS:=$(patsubst $(SRCDIR)/%.l,%.$(FILE_EXT),$(SRC))
 	@echo "<<< lex.yy.c creado. >>>"
 	@echo ""
 	@echo "<<< Compilando y enlazando con libfl.a y liby.a >>>"
-	$(CC) $(CFLAGS) $(patsubst $(SRCDIR)/%.l,$(ODIR)/%.tab.c,$<) $(patsubst $(SRCDIR)/%.l,$(ODIR)/%.tab.h,$<) $(ODIR)/lex.yy.c $(SRCDIR)/AnalizadorSemantico.c $(SRCDIR)/AnalizadorSemantico.h -o $@ 
+	$(CC) $(CFLAGS) $(patsubst $(SRCDIR)/%.l,$(ODIR)/%.tab.c,$<) $(patsubst $(SRCDIR)/%.l,$(ODIR)/%.tab.h,$<) $(ODIR)/lex.yy.c $(SRCDIR)/Tabla_Simbolos.c $(SRCDIR)/Tabla_Simbolos.h -o $@ 
 	@echo "<<< $@ creado. >>>"
 	@echo ""
 
@@ -43,8 +43,9 @@ all: $(TARGETS)
 .PHONY: clean debug
 
 clean:
-	rm -f $(ODIR)/*
+	rm -rf $(ODIR)
 	rm -f *.$(FILE_EXT)
+	rm -f Output.txt
 
 debug: CFLAGS += -DBISON_DEBUG
 debug: BFLAGS += --debug

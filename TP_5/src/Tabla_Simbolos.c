@@ -2,7 +2,7 @@
 #include <stdlib.h> 
 #include <string.h>
 
-#include "AnalizadorSemantico.h"
+#include "Tabla_Simbolos.h"
 
 Simbolo* crearSimbolo(char* tipoDato, char* nombreID, int tipoID){
     Simbolo* nuevoNodo = (Simbolo*) malloc (sizeof(Simbolo));
@@ -104,10 +104,24 @@ Simbolo* devolverSimbolo(char* nombreID){
 }
 
 void mostrarTabla(FILE* archivoSalida){
-    fprintf(archivoSalida, "\n - Tabla de Simbolos -\n");
+
+    unsigned masLargo = encontrarMasLargo();
+    char* centrado;
+    if(! masLargo % 2)
+        centrado = strdup(cantidadDeEspacios(masLargo / 2));
+    else
+        centrado = strdup(cantidadDeEspacios(masLargo / 2 - 1));
+
+    fprintf(archivoSalida, "\n");
+    fprintf(archivoSalida, "%s╔═══════════════════╗ \n", centrado);
+    fprintf(archivoSalida, "%s║ Tabla de Simbolos ║ \n", centrado);
+    fprintf(archivoSalida, "%s╚═══════════════════╝ \n", centrado);
+    fprintf(archivoSalida, "\n");
 
     for(Simbolo* aux = tablaSimbolos; aux != NULL; aux = aux -> sig){
-        fprintf(archivoSalida, "Identificador: %s ", aux -> nombre);
+        
+        char* espacios = strdup(cantidadDeEspacios(masLargo - strlen(aux -> nombre)));
+        fprintf(archivoSalida, "ID: %s %s", aux -> nombre, espacios);
         
         switch(aux -> tipoID){
             case TIPO_VAR: 
@@ -165,4 +179,30 @@ void cambiarValor(Simbolo* simbolo, TipoValor valorNuevo) {
         simbolo -> valor.valReal = valorNuevo.valReal;
     else if(! strcmp(simbolo -> tipoDato, "char"))
         simbolo -> valor.valChar = strdup(valorNuevo.valChar);
+}
+
+unsigned encontrarMasLargo()
+{
+    unsigned maximo = 0;
+
+    for(Simbolo* p = tablaSimbolos; p != NULL; p = p -> sig){
+        unsigned largo = strlen(p -> nombre);
+        if(maximo < largo)
+            maximo = largo;
+    }
+
+    return maximo;
+}
+
+char* cantidadDeEspacios(unsigned maximo)
+{
+    char* string = " ";
+    int largo = strlen(string);
+    char* resultado = malloc(largo * maximo + 1);
+
+    for (int i = 0 ; i < maximo ; i++)
+        memcpy(resultado + i * largo, string, largo);
+    resultado[largo * maximo] = '\0';
+
+    return resultado;
 }

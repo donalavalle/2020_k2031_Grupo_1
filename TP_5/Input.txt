@@ -1,1 +1,2 @@
-int a = 4;
+otraVariable = 1;
+otraVariable = 3.1415;
