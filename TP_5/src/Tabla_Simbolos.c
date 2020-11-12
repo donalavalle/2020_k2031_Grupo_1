@@ -128,7 +128,7 @@ void mostrarTabla(FILE* archivoSalida){
                 if(! strcmp(aux -> tipoDato, "int") || ! strcmp(aux -> tipoDato, "unsigned") || ! strcmp(aux -> tipoDato, "long")) // [!] 
                     fprintf(archivoSalida, " - Valor: %d\n", aux->valor.valEnt);
                 else if(! strcmp(aux -> tipoDato, "float") || ! strcmp(aux -> tipoDato, "double"))
-                    fprintf(archivoSalida, " - Valor: %.4f\n", aux -> valor.valReal);
+                    fprintf(archivoSalida, " - Valor: %lg\n", aux -> valor.valReal);
                 else if(! strcmp(aux -> tipoDato, "char"))
                     fprintf(archivoSalida, " - Valor: %s\n", aux -> valor.valChar);
                 break;
