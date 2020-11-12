@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h> 
 
-#ifndef ANALIZADORSEMANTICO_H
-#define ANALIZADORSEMANTICO_H
+#ifndef TABLA_SIMBOLOS_H
+#define TABLA_SIMBOLOS_H
 
 enum {TIPO_VAR, TIPO_FUNC};
 typedef struct Funcion{
