@@ -5,9 +5,12 @@
 
 La tabla de simbolos esta vacia.
 
+Error en linea 3: No coinciden los tipos de datos.
+
     ╔═══════════════════╗ 
     ║ Tabla de Simbolos ║ 
     ╚═══════════════════╝ 
 
-ID: hola         - Parametro/s: (int, int)
+ID: b            - Valor: 123459
+ID: hola         - Parametro/s: (char, int, char*)
 ID: unaVariable  - Valor: 0

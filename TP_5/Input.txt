@@ -1,1 +1,3 @@
-int hola(int , int b);
+char* hola(char a, int, char* b);
+int b = 123459;
+b = 'c';
