@@ -55,7 +55,7 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 38 "../src/AnalizadorSemantico.y"
+#line 40 "../src/AnalizadorSemantico.y"
 
     int   entero;
     float real;

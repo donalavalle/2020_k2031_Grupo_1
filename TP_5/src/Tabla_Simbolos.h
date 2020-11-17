@@ -24,7 +24,7 @@ typedef struct Simbolo{
     int   tipoID;
     TipoValor valor;
 
-    struct Simbolo* sig;  
+    struct Simbolo* sig;
 } Simbolo;
 
 Simbolo*  crearSimbolo(char*, char*, int);
@@ -39,7 +39,9 @@ void      cambiarValor(Simbolo*, TipoValor);
 unsigned  encontrarMasLargo();
 char*     cantidadDeEspacios(unsigned);
 TipoValor limpiarUnion();
+void      sumarLinea();
 
 extern Simbolo* tablaSimbolos;
+extern unsigned cantidadDeLineas;
 
 #endif

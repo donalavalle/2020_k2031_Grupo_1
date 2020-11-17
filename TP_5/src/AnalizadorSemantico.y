@@ -18,13 +18,15 @@ int yylex ();
 int yyerror (char*);
 void mostrarErrorDeVariable(char*);
 
-char* tipoDeDatoVar = NULL;
-char* tipoDeDatoID = NULL;
+char* tipoDeDatoVar   = NULL;
+char* tipoDeDatoID    = NULL;
+char* tipoDeDatoParam = NULL;
 
 FILE* yyin;
 FILE* yyout;
 
 union TipoValor valorTemporal;
+Funcion* listaDeParametrosTemporal;
 
 %}
 
@@ -50,7 +52,10 @@ input:   /* Vacío */
 
 line:   /* Vacío */
       | asignacion  ';' {tipoDeDatoVar = NULL;}
-      | declaracion ';'
+      | declaracion ';' {
+                          free(tipoDeDatoID); // [❗] Limpia la lista de parametros temporal para poder reutilizarla en un futuro
+                          listaDeParametrosTemporal = NULL;
+                        }
 ; 
 
 asignacion: IDENTIFICADOR '=' valor   {
@@ -59,7 +64,7 @@ asignacion: IDENTIFICADOR '=' valor   {
                                           if(! strcmp(aux->tipoDato, tipoDeDatoVar)) // [!] Si no hay error de tipo, cambia el valor correctamente.
                                             cambiarValor(aux, valorTemporal);
                                           else 
-                                            yyerror("No coinciden los tipos de datos.\n"); 
+                                            yyerror("No coinciden los tipos de datos"); 
                                         }
                                         else{
                                           mostrarErrorDeVariable($1);
@@ -67,11 +72,19 @@ asignacion: IDENTIFICADOR '=' valor   {
                                       }
 ;
 
-declaracion: declaradorDeTipo tipoDeclaracion {}
+declaracion: declaradorDeTipo punteroOpcional tipoDeclaracion
+;
+
+punteroOpcional:   /* Vacio */
+                 | '*'          {
+                                  strcat(tipoDeDatoID, "*"); // Concatenación de string, para agregar * al tipo de dato.
+                                  strcat(tipoDeDatoParam, "*"); // Concatenación de string, para agregar * al tipo de dato.
+                                }
 ;
 
 declaradorDeTipo: TIPO_DATO   { 
                                 tipoDeDatoID = strdup($1);
+                                tipoDeDatoParam = strdup($1);
                               } 
 ;
 
@@ -87,19 +100,63 @@ tipoDeclaracion:     IDENTIFICADOR asignacionOPC                      {
                                                                             if(! strcmp(tipoDeDatoID, tipoDeDatoVar))
                                                                               cambiarValor(aux, valorTemporal);
                                                                             else
-                                                                              yyerror("El valor asignado no coincide con el tipo de dato declarado")
+                                                                              yyerror("El valor asignado no coincide con el tipo de dato declarado");
                                                                           }
                                                                         }
                                                                         else
                                                                           yyerror("Doble declaración de la variable");
                                                                       }
-                   | IDENTIFICADOR asignacionOPC ',' tipoDeclaracion
+                   | IDENTIFICADOR asignacionOPC ',' tipoDeclaracion  {
+                                                                        Simbolo* aux = devolverSimbolo($1);
+                                                                        if(! aux){ // [!] Pregunta si el valor no fue declarado anteriormente
+                                                                          // [!] Crea un simbolo nuevo y lo inserta en la TS.
+                                                                          aux = crearSimbolo(tipoDeDatoID, $1, TIPO_VAR);
+                                                                          insertarSimbolo(aux);
+
+                                                                          if(tipoDeDatoVar){ // [!] Pregunta si existe una inicializacion de la variable
+                                                                            // [!] Si es asi, verifica que los tipos coincidan. Si se cumple, modifica, si no, lanza un error
+                                                                            if(! strcmp(tipoDeDatoID, tipoDeDatoVar))
+                                                                              cambiarValor(aux, valorTemporal);
+                                                                            else
+                                                                              yyerror("El valor asignado no coincide con el tipo de dato declarado");
+                                                                          }
+                                                                        }
+                                                                        else
+                                                                          yyerror("Doble declaración de la variable");
+                                                                      }
+                   | IDENTIFICADOR '(' listaDeParametros ')'          {
+                                                                        Simbolo* aux = devolverSimbolo($1);
+                                                                        if(! aux){
+                                                                          aux = crearSimbolo(tipoDeDatoID, $1, TIPO_FUNC); // [❗] Crea un simbolo de tipo FUNCION
+                                                                          insertarSimbolo(aux);
+                                                                          aux -> valor . func = listaDeParametrosTemporal;
+                                                                        }
+                                                                        else {
+                                                                          yyerror("Doble declaración de la variable");
+                                                                        }
+                                                                      }
 ;
 
-asignacionOPC:  /* VACIO */
-                | '=' valor 
+asignacionOPC:  /* Vacio */
+              | '=' valor
 ;
 
+listaDeParametros:  /* Vacio */
+                   | parametro otrosParametros
+;
+
+otrosParametros:   /* Vacio */                      
+              | ',' parametro otrosParametros
+;
+
+parametro: declaradorDeTipo punteroOpcional idOPC {
+                                                    insertarParametro(&listaDeParametrosTemporal, tipoDeDatoParam);
+                                                  }
+;
+
+idOPC:  /* Vacio */
+      | IDENTIFICADOR
+;
 
 valor:   ENTERO   {
                     // [!] Asigna el tipo de dato del VALOR en la variable global para que posteriormente 
@@ -126,13 +183,14 @@ valor:   ENTERO   {
 %%
 
 Simbolo* tablaSimbolos;
+unsigned cantidadDeLineas = 1;
 
 int yyerror (char *mensaje) {  /* Función de error */
-  fprintf(yyout, "\nError: %s.\n", mensaje);
+  fprintf(yyout, "\nError en linea %d: %s.\n", cantidadDeLineas, mensaje);
 }
 
 void mostrarErrorDeVariable(char* nombreVariable) {
-  fprintf(yyout, "\nError: La variable \'%s\' no fue declarada.\n", nombreVariable);
+  fprintf(yyout, "\nError: La variable \'%s\' no fue declarada. Linea: %s\n", nombreVariable, cantidadDeLineas);
 }
 
 void main() {
@@ -148,11 +206,7 @@ void main() {
     Simbolo* nuevoSimbolo = crearSimbolo("int", "unaVariable", TIPO_VAR);
     insertarSimbolo(nuevoSimbolo);
 
-    nuevoSimbolo = crearSimbolo("int", "a", TIPO_VAR);
-    insertarSimbolo(nuevoSimbolo);
 /*
-    
-
     nuevoSimbolo = crearSimbolo("char", "b", TIPO_VAR);
     insertarSimbolo(nuevoSimbolo);
 
@@ -164,4 +218,18 @@ void main() {
 
     fclose(yyin);
     fclose(yyout);
+
+    /*
+       ◼◾ Sentencias simples y compuestas (for, if, while, etc) -> INCLUIDAS EN TP4 ❌
+       ◼◾ Declaracion variables y almacenamiento en TS: punteros y arreglos ❌💜
+       ◼◾ Declaracion funciones y almacenamiento de TS ❌💜💜💜
+       ◼◾ Expresiones (también incluidas dentro de sentencias) ❌
+       ◼◾ Control de tipo de datos en alguna operacion binaria ❌
+       ◼◾ Control doble declaracion de variables ✅ (casi)
+       ◼◾ Control de cantidad y tipo de datos en declaracion de funciones ❌
+       ◼◾ ❗❗ GENERAR REPORTE ❗❗: 
+              Lista variables declaradas con su tipo ❌
+              Lista de funciones declaradas con su tipo (retorno), cantidad y tipo de parametros. ❌
+              Errores lexicos (FLEX), sintacticos(TOKEN ERROR) y semanticos (RUTINAS) encontrados. ❌
+    */
 }

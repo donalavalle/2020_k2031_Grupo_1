@@ -9,6 +9,5 @@ La tabla de simbolos esta vacia.
     ║ Tabla de Simbolos ║ 
     ╚═══════════════════╝ 
 
-ID: a            - Valor: 0
-ID: b            - Valor: 0
+ID: hola         - Parametro/s: (int, int)
 ID: unaVariable  - Valor: 0

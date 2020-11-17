@@ -5,6 +5,7 @@
     #include <string.h>
     #include <stdlib.h>
     #include "AnalizadorSemantico.tab.h"
+    #include "Tabla_Simbolos.h"
 %}
 
 DECIMAL         [0-9]
@@ -20,7 +21,7 @@ LITERAL_CADENA   \".+\"
 TIPO_DATO        "int"|"char"|"float"
 IDENTIFICADOR    ({LETRA}|_)({LETRA}|_|{DECIMAL})*
 ESPACIOS         " "|"\t"
-CARACTER_SIMPLE  "="|";"|","
+CARACTER_SIMPLE  "="|";"|","|"*"|"("|")"
 COM_SIMPLE       "//".*
 COM_BLOQUE       "/*"([^*]|\*+[^/])*\*+\/
 SALTO_LINEA      "\n" 
@@ -39,6 +40,6 @@ SALTO_LINEA      "\n"
 {CARACTER_SIMPLE} { return yytext[0]; }
 {COM_SIMPLE}      { }
 {COM_BLOQUE}      { }
-{SALTO_LINEA}     { }   
+{SALTO_LINEA}     {sumarLinea();}   
 
 %%

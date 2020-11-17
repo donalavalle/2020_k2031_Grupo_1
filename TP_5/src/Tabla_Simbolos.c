@@ -45,8 +45,6 @@ Funcion* crearParametro(char* parametro){
     nuevoParam -> tipoDatoParam = strdup(parametro);
     nuevoParam -> sig = NULL;
 
-    puts("Creo parametro.");
-
     return nuevoParam;
 }
 
@@ -149,7 +147,7 @@ void mostrarParametros(FILE* archivoSalida, Funcion* listaParametros){
         else        
             fprintf(archivoSalida, "%s, ", aux -> tipoDatoParam);
     }
-    fprintf(archivoSalida, ")");
+    fprintf(archivoSalida, ")\n");
 }
 
 /* 
@@ -209,7 +207,6 @@ char* cantidadDeEspacios(unsigned maximo)
     return resultado;
 }
 
-
 TipoValor limpiarUnion() {
     TipoValor unionLimpia;
 
@@ -220,4 +217,8 @@ TipoValor limpiarUnion() {
     unionLimpia.func      = NULL;
     
     return unionLimpia;
+}
+
+void sumarLinea() {
+    cantidadDeLineas++;
 }
