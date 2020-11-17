@@ -21,20 +21,24 @@ TIPO_DATO        "int"|"char"|"float"
 IDENTIFICADOR    ({LETRA}|_)({LETRA}|_|{DECIMAL})*
 ESPACIOS         " "|"\t"
 CARACTER_SIMPLE  "="|";"|","
+COM_SIMPLE       "//".*
+COM_BLOQUE       "/*"([^*]|\*+[^/])*\*+\/
 SALTO_LINEA      "\n" 
 
 %%
 
-{CONST_DECIMAL}   { yylval.entero  = atoi(yytext); return ENTERO; }
-{CONST_OCTAL}     { yylval.entero  = strtoll(yytext, NULL, 8); return ENTERO; }
-{CONST_HEXA}      { yylval.entero  = strtoll(yytext, NULL, 16); return ENTERO; } 
-{CONST_REAL}      { yylval.real    = atof(yytext); return REAL; }
-{CONST_CHAR}      { yylval.string  = strdup(yytext); return CHAR; }
-{LITERAL_CADENA}  { yylval.string  = strdup(yytext); return STRING; }
-{TIPO_DATO}       { yylval.string  = strdup(yytext); return TIPO_DATO; }
-{IDENTIFICADOR}   { yylval.string  = strdup(yytext); return IDENTIFICADOR; }
+{CONST_DECIMAL}   { yylval.entero    = atoi(yytext); return ENTERO; }
+{CONST_OCTAL}     { yylval.entero    = strtoll(yytext, NULL, 8); return ENTERO; }
+{CONST_HEXA}      { yylval.entero    = strtoll(yytext, NULL, 16); return ENTERO; } 
+{CONST_REAL}      { yylval.real      = atof(yytext); return REAL; }
+{CONST_CHAR}      { yylval.caracter  = yytext[1]; return CHAR; /* [!] Accedemos a la posicion 1 del yytext para obtener unicamente el caracter deseado y no las comillas simples */}
+{LITERAL_CADENA}  { yylval.string    = strdup(yytext); return STRING; }
+{TIPO_DATO}       { yylval.string    = strdup(yytext); return TIPO_DATO; }
+{IDENTIFICADOR}   { yylval.string    = strdup(yytext); return IDENTIFICADOR; }
 {ESPACIOS}+       { }
 {CARACTER_SIMPLE} { return yytext[0]; }
+{COM_SIMPLE}      { }
+{COM_BLOQUE}      { }
 {SALTO_LINEA}     { }   
 
 %%

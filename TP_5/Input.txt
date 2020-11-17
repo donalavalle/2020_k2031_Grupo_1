@@ -1,2 +1,1 @@
-otraVariable = 1;
-otraVariable = 3.1234567;
+int b = 1;

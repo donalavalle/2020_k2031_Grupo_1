@@ -10,23 +10,7 @@ Simbolo* crearSimbolo(char* tipoDato, char* nombreID, int tipoID){
     nuevoNodo -> nombre   = strdup(nombreID);
     nuevoNodo -> tipoDato = strdup(tipoDato);
     nuevoNodo -> tipoID   = tipoID;
-
-    switch(tipoID){
-        default:
-            break;
-        case TIPO_VAR:
-                if(! strcmp(tipoDato, "int") || ! strcmp(tipoDato, "unsigned") || ! strcmp(tipoDato, "long")) // [!] 
-                    nuevoNodo -> valor.valEnt = 0;
-                else if(! strcmp(tipoDato, "float") || ! strcmp(tipoDato, "double"))
-                    nuevoNodo -> valor.valReal = 0;
-                else if(! strcmp(tipoDato, "char"))
-                    nuevoNodo -> valor.valChar = "NULL";
-            break;
-        case TIPO_FUNC:
-            nuevoNodo -> valor.func = NULL;
-            break;
-    }
-
+    nuevoNodo -> valor    = limpiarUnion();
     nuevoNodo -> sig = NULL;
 
     return nuevoNodo;
@@ -105,18 +89,31 @@ Simbolo* devolverSimbolo(char* nombreID){
 
 void mostrarTabla(FILE* archivoSalida){
 
-    unsigned masLargo = encontrarMasLargo();
-    char* centrado;
-    if(! masLargo % 2)
-        centrado = strdup(cantidadDeEspacios(masLargo / 2));
-    else
-        centrado = strdup(cantidadDeEspacios(masLargo / 2 - 1));
+    unsigned masLargo;
 
-    fprintf(archivoSalida, "\n");
-    fprintf(archivoSalida, "%s╔═══════════════════╗ \n", centrado);
-    fprintf(archivoSalida, "%s║ Tabla de Simbolos ║ \n", centrado);
-    fprintf(archivoSalida, "%s╚═══════════════════╝ \n", centrado);
-    fprintf(archivoSalida, "\n");
+    if(tablaSimbolos) {
+        masLargo = encontrarMasLargo();
+        char* centrado;
+        if(! masLargo % 2)
+            centrado = strdup(cantidadDeEspacios(masLargo / 2));
+        else
+            centrado = strdup(cantidadDeEspacios(masLargo / 2 - 1));
+            
+        fprintf(archivoSalida, "\n");
+        fprintf(archivoSalida, "%s╔═══════════════════╗ \n", centrado);
+        fprintf(archivoSalida, "%s║ Tabla de Simbolos ║ \n", centrado);
+        fprintf(archivoSalida, "%s╚═══════════════════╝ \n", centrado);
+        fprintf(archivoSalida, "\n");
+    }
+
+    else {
+        fprintf(archivoSalida, "\n");
+        fprintf(archivoSalida, "╔═══════════════════╗ \n");
+        fprintf(archivoSalida, "║ Tabla de Simbolos ║ \n");
+        fprintf(archivoSalida, "╚═══════════════════╝ \n");
+        fprintf(archivoSalida, "\n");
+        fprintf(archivoSalida, "La tabla de simbolos esta vacia.\n");
+    }
 
     for(Simbolo* aux = tablaSimbolos; aux != NULL; aux = aux -> sig){
         
@@ -125,12 +122,14 @@ void mostrarTabla(FILE* archivoSalida){
         
         switch(aux -> tipoID){
             case TIPO_VAR: 
-                if(! strcmp(aux -> tipoDato, "int") || ! strcmp(aux -> tipoDato, "unsigned") || ! strcmp(aux -> tipoDato, "long")) // [!] 
+                if(! strcmp(aux -> tipoDato, "int")) // [!] 
                     fprintf(archivoSalida, " - Valor: %d\n", aux->valor.valEnt);
-                else if(! strcmp(aux -> tipoDato, "float") || ! strcmp(aux -> tipoDato, "double"))
-                    fprintf(archivoSalida, " - Valor: %lg\n", aux -> valor.valReal);
+                else if(! strcmp(aux -> tipoDato, "float"))
+                    fprintf(archivoSalida, " - Valor: %f\n", aux -> valor.valReal);
                 else if(! strcmp(aux -> tipoDato, "char"))
-                    fprintf(archivoSalida, " - Valor: %s\n", aux -> valor.valChar);
+                    fprintf(archivoSalida, " - Valor: \'%c\'\n", aux -> valor.valChar); // le agregamos las comillas para no confundir después con algún identificador 
+                else if(! strcmp(aux -> tipoDato, "char*"))
+                    fprintf(archivoSalida, " - Valor: %s\n", aux -> valor.valString); //Hicimos la separación entre char y string
                 break;
             case TIPO_FUNC:
                     mostrarParametros(archivoSalida, aux -> valor.func);
@@ -172,13 +171,16 @@ char* toUpper(char* nombreID){
     return strupr(temporal);
 }
 
+// [!] Se copia los valores que tenga valorNuevo al union del Simbolo [!] .
 void cambiarValor(Simbolo* simbolo, TipoValor valorNuevo) {
-    if(! strcmp(simbolo -> tipoDato, "int") || ! strcmp(simbolo -> tipoDato, "unsigned") || ! strcmp(simbolo -> tipoDato, "long")) 
+    if(! strcmp(simbolo -> tipoDato, "int")) 
         simbolo->valor.valEnt = valorNuevo.valEnt;
-    else if(! strcmp(simbolo -> tipoDato, "float") || ! strcmp(simbolo -> tipoDato, "double"))
+    else if(! strcmp(simbolo -> tipoDato, "float"))
         simbolo -> valor.valReal = valorNuevo.valReal;
     else if(! strcmp(simbolo -> tipoDato, "char"))
-        simbolo -> valor.valChar = strdup(valorNuevo.valChar);
+        simbolo -> valor.valChar = valorNuevo.valChar;
+    else if(! strcmp(simbolo -> tipoDato, "char*"))
+        simbolo -> valor.valString = strdup(valorNuevo.valString);
 }
 
 unsigned encontrarMasLargo()
@@ -205,4 +207,17 @@ char* cantidadDeEspacios(unsigned maximo)
     resultado[largo * maximo] = '\0';
 
     return resultado;
+}
+
+
+TipoValor limpiarUnion() {
+    TipoValor unionLimpia;
+
+    unionLimpia.valEnt    = 0;
+    unionLimpia.valReal   = 0.0;
+    unionLimpia.valChar   = '\0';
+    unionLimpia.valString = NULL;
+    unionLimpia.func      = NULL;
+    
+    return unionLimpia;
 }

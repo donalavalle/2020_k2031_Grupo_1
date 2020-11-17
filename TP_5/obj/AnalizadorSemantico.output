@@ -1,0 +1,276 @@
+Rules useless in parser due to conflicts
+
+    3 line: /* vacío */
+
+
+Estado 1 conflictos: 3 desplazamiento(s)/reducción(ones)
+
+
+Gramática
+
+    0 $accept: input $end
+
+    1 input: /* vacío */
+    2      | input line
+
+    3 line: /* vacío */
+    4     | asignacion ';'
+    5     | declaracion ';'
+
+    6 asignacion: IDENTIFICADOR '=' valor
+
+    7 declaracion: declaradorDeTipo tipoDeclaracion
+
+    8 declaradorDeTipo: TIPO_DATO
+
+    9 tipoDeclaracion: IDENTIFICADOR asignacionOPC
+   10                | IDENTIFICADOR asignacionOPC ',' tipoDeclaracion
+
+   11 asignacionOPC: /* vacío */
+   12              | '=' valor
+
+   13 valor: ENTERO
+   14      | REAL
+   15      | CHAR
+   16      | STRING
+
+
+Terminales con las reglas donde aparecen
+
+$end (0) 0
+',' (44) 10
+';' (59) 4 5
+'=' (61) 6 12
+error (256)
+ENTERO (258) 13
+REAL (259) 14
+CHAR (260) 15
+STRING (261) 16
+TIPO_DATO (262) 8
+IDENTIFICADOR (263) 6 9 10
+
+
+No terminales con las reglas donde aparecen
+
+$accept (12)
+    en la izquierda: 0
+input (13)
+    en la izquierda: 1 2, en la derecha: 0 2
+line (14)
+    en la izquierda: 3 4 5, en la derecha: 2
+asignacion (15)
+    en la izquierda: 6, en la derecha: 4
+declaracion (16)
+    en la izquierda: 7, en la derecha: 5
+declaradorDeTipo (17)
+    en la izquierda: 8, en la derecha: 7
+tipoDeclaracion (18)
+    en la izquierda: 9 10, en la derecha: 7 10
+asignacionOPC (19)
+    en la izquierda: 11 12, en la derecha: 9 10
+valor (20)
+    en la izquierda: 13 14 15 16, en la derecha: 6 12
+
+
+estado 0
+
+    0 $accept: . input $end
+
+    $default  reduce usando la regla 1 (input)
+
+    input  ir al estado 1
+
+
+estado 1
+
+    0 $accept: input . $end
+    2 input: input . line
+
+    $end           desplazar e ir al estado 2
+    TIPO_DATO      desplazar e ir al estado 3
+    IDENTIFICADOR  desplazar e ir al estado 4
+
+    $end           [reduce usando la regla 3 (line)]
+    TIPO_DATO      [reduce usando la regla 3 (line)]
+    IDENTIFICADOR  [reduce usando la regla 3 (line)]
+
+    line              ir al estado 5
+    asignacion        ir al estado 6
+    declaracion       ir al estado 7
+    declaradorDeTipo  ir al estado 8
+
+
+estado 2
+
+    0 $accept: input $end .
+
+    $default  aceptar
+
+
+estado 3
+
+    8 declaradorDeTipo: TIPO_DATO .
+
+    $default  reduce usando la regla 8 (declaradorDeTipo)
+
+
+estado 4
+
+    6 asignacion: IDENTIFICADOR . '=' valor
+
+    '='  desplazar e ir al estado 9
+
+
+estado 5
+
+    2 input: input line .
+
+    $default  reduce usando la regla 2 (input)
+
+
+estado 6
+
+    4 line: asignacion . ';'
+
+    ';'  desplazar e ir al estado 10
+
+
+estado 7
+
+    5 line: declaracion . ';'
+
+    ';'  desplazar e ir al estado 11
+
+
+estado 8
+
+    7 declaracion: declaradorDeTipo . tipoDeclaracion
+
+    IDENTIFICADOR  desplazar e ir al estado 12
+
+    tipoDeclaracion  ir al estado 13
+
+
+estado 9
+
+    6 asignacion: IDENTIFICADOR '=' . valor
+
+    ENTERO  desplazar e ir al estado 14
+    REAL    desplazar e ir al estado 15
+    CHAR    desplazar e ir al estado 16
+    STRING  desplazar e ir al estado 17
+
+    valor  ir al estado 18
+
+
+estado 10
+
+    4 line: asignacion ';' .
+
+    $default  reduce usando la regla 4 (line)
+
+
+estado 11
+
+    5 line: declaracion ';' .
+
+    $default  reduce usando la regla 5 (line)
+
+
+estado 12
+
+    9 tipoDeclaracion: IDENTIFICADOR . asignacionOPC
+   10                | IDENTIFICADOR . asignacionOPC ',' tipoDeclaracion
+
+    '='  desplazar e ir al estado 19
+
+    $default  reduce usando la regla 11 (asignacionOPC)
+
+    asignacionOPC  ir al estado 20
+
+
+estado 13
+
+    7 declaracion: declaradorDeTipo tipoDeclaracion .
+
+    $default  reduce usando la regla 7 (declaracion)
+
+
+estado 14
+
+   13 valor: ENTERO .
+
+    $default  reduce usando la regla 13 (valor)
+
+
+estado 15
+
+   14 valor: REAL .
+
+    $default  reduce usando la regla 14 (valor)
+
+
+estado 16
+
+   15 valor: CHAR .
+
+    $default  reduce usando la regla 15 (valor)
+
+
+estado 17
+
+   16 valor: STRING .
+
+    $default  reduce usando la regla 16 (valor)
+
+
+estado 18
+
+    6 asignacion: IDENTIFICADOR '=' valor .
+
+    $default  reduce usando la regla 6 (asignacion)
+
+
+estado 19
+
+   12 asignacionOPC: '=' . valor
+
+    ENTERO  desplazar e ir al estado 14
+    REAL    desplazar e ir al estado 15
+    CHAR    desplazar e ir al estado 16
+    STRING  desplazar e ir al estado 17
+
+    valor  ir al estado 21
+
+
+estado 20
+
+    9 tipoDeclaracion: IDENTIFICADOR asignacionOPC .
+   10                | IDENTIFICADOR asignacionOPC . ',' tipoDeclaracion
+
+    ','  desplazar e ir al estado 22
+
+    $default  reduce usando la regla 9 (tipoDeclaracion)
+
+
+estado 21
+
+   12 asignacionOPC: '=' valor .
+
+    $default  reduce usando la regla 12 (asignacionOPC)
+
+
+estado 22
+
+   10 tipoDeclaracion: IDENTIFICADOR asignacionOPC ',' . tipoDeclaracion
+
+    IDENTIFICADOR  desplazar e ir al estado 12
+
+    tipoDeclaracion  ir al estado 23
+
+
+estado 23
+
+   10 tipoDeclaracion: IDENTIFICADOR asignacionOPC ',' tipoDeclaracion .
+
+    $default  reduce usando la regla 10 (tipoDeclaracion)
