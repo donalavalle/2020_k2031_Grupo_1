@@ -382,16 +382,16 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  2
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   30
+#define YYLAST   34
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  15
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  14
+#define YYNNTS  15
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  27
+#define YYNRULES  28
 /* YYNRULES -- Number of states.  */
-#define YYNSTATES  38
+#define YYNSTATES  40
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
 #define YYUNDEFTOK  2
@@ -438,28 +438,28 @@ static const yytype_uint8 yytranslate[] =
 static const yytype_uint8 yyprhs[] =
 {
        0,     0,     3,     4,     7,     8,    11,    14,    18,    22,
-      23,    25,    27,    30,    35,    40,    41,    44,    45,    48,
-      49,    53,    57,    58,    60,    62,    64,    66
+      23,    25,    27,    29,    33,    38,    41,    42,    45,    46,
+      49,    50,    54,    58,    59,    61,    63,    65,    67
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
 static const yytype_int8 yyrhs[] =
 {
       16,     0,    -1,    -1,    16,    17,    -1,    -1,    18,     9,
-      -1,    19,     9,    -1,     8,    10,    28,    -1,    21,    20,
-      22,    -1,    -1,    11,    -1,     7,    -1,     8,    23,    -1,
-       8,    23,    12,    22,    -1,     8,    13,    24,    14,    -1,
-      -1,    10,    28,    -1,    -1,    26,    25,    -1,    -1,    12,
-      26,    25,    -1,    21,    20,    27,    -1,    -1,     8,    -1,
-       3,    -1,     4,    -1,     5,    -1,     6,    -1
+      -1,    19,     9,    -1,     8,    10,    29,    -1,    21,    20,
+      22,    -1,    -1,    11,    -1,     7,    -1,    23,    -1,    22,
+      12,    23,    -1,     8,    13,    25,    14,    -1,     8,    24,
+      -1,    -1,    10,    29,    -1,    -1,    27,    26,    -1,    -1,
+      12,    27,    26,    -1,    21,    20,    28,    -1,    -1,     8,
+      -1,     3,    -1,     4,    -1,     5,    -1,     6,    -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
        0,    49,    49,    50,    53,    54,    55,    61,    75,    78,
-      79,    85,    91,   109,   127,   140,   141,   144,   145,   148,
-     149,   152,   157,   158,   161,   169,   173,   177
+      79,    85,    91,    92,    93,   106,   128,   129,   132,   133,
+     136,   137,   140,   145,   146,   149,   157,   161,   165
 };
 #endif
 
@@ -471,7 +471,7 @@ static const char *const yytname[] =
   "$end", "error", "$undefined", "ENTERO", "REAL", "CHAR", "STRING",
   "TIPO_DATO", "IDENTIFICADOR", "';'", "'='", "'*'", "','", "'('", "')'",
   "$accept", "input", "line", "asignacion", "declaracion",
-  "punteroOpcional", "declaradorDeTipo", "tipoDeclaracion",
+  "punteroOpcional", "declaradorDeTipo", "tipoDeclaracion", "decla",
   "asignacionOPC", "listaDeParametros", "otrosParametros", "parametro",
   "idOPC", "valor", 0
 };
@@ -491,16 +491,16 @@ static const yytype_uint16 yytoknum[] =
 static const yytype_uint8 yyr1[] =
 {
        0,    15,    16,    16,    17,    17,    17,    18,    19,    20,
-      20,    21,    22,    22,    22,    23,    23,    24,    24,    25,
-      25,    26,    27,    27,    28,    28,    28,    28
+      20,    21,    22,    22,    22,    23,    24,    24,    25,    25,
+      26,    26,    27,    28,    28,    29,    29,    29,    29
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
        0,     2,     0,     2,     0,     2,     2,     3,     3,     0,
-       1,     1,     2,     4,     4,     0,     2,     0,     2,     0,
-       3,     3,     0,     1,     1,     1,     1,     1
+       1,     1,     1,     3,     4,     2,     0,     2,     0,     2,
+       0,     3,     3,     0,     1,     1,     1,     1,     1
 };
 
 /* YYDEFACT[STATE-NAME] -- Default rule to reduce with in state
@@ -509,34 +509,34 @@ static const yytype_uint8 yyr2[] =
 static const yytype_uint8 yydefact[] =
 {
        2,     0,     1,    11,     0,     3,     0,     0,     9,     0,
-       5,     6,    10,     0,    24,    25,    26,    27,     7,    15,
-       8,     0,    17,    12,    16,     9,     0,    19,     0,    22,
-      14,     0,    18,    13,    23,    21,    19,    20
+       5,     6,    10,     0,    25,    26,    27,    28,     7,    16,
+       8,    12,     0,    18,    15,     0,    17,     9,     0,    20,
+      16,    13,    23,    14,     0,    19,    24,    22,    20,    21
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     1,     5,     6,     7,    13,    25,    20,    23,    26,
-      32,    27,    35,    18
+      -1,     1,     5,     6,     7,    13,    27,    20,    21,    24,
+      28,    35,    29,    37,    18
 };
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
-#define YYPACT_NINF -15
+#define YYPACT_NINF -16
 static const yytype_int8 yypact[] =
 {
-     -15,     0,   -15,   -15,    -5,   -15,     1,     2,     3,    -2,
-     -15,   -15,   -15,     4,   -15,   -15,   -15,   -15,   -15,    -4,
-     -15,    -2,     6,     5,   -15,     3,     7,     8,     4,    10,
-     -15,     6,   -15,   -15,   -15,   -15,     8,   -15
+     -16,     0,   -16,   -16,    -5,   -16,     1,     2,     3,    -2,
+     -16,   -16,   -16,     4,   -16,   -16,   -16,   -16,   -16,    -4,
+       5,   -16,    -2,     6,   -16,     7,   -16,     3,     8,     9,
+      10,   -16,    11,   -16,     6,   -16,   -16,   -16,     9,   -16
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -15,   -15,   -15,   -15,   -15,   -10,    15,    -9,   -15,   -15,
-     -14,    -8,   -15,     9
+     -16,   -16,   -16,   -16,   -16,   -11,    17,   -16,    -1,   -16,
+     -16,   -15,    -9,   -16,    12
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -546,18 +546,18 @@ static const yytype_int8 yypgoto[] =
 #define YYTABLE_NINF -1
 static const yytype_uint8 yytable[] =
 {
-       2,    14,    15,    16,    17,     9,    21,     3,     4,    22,
-      10,    11,    19,     3,    12,    29,     8,    28,    34,    33,
-      31,    30,    37,    36,     0,     0,     0,     0,     0,     0,
-      24
+       2,    14,    15,    16,    17,     9,    22,     3,     4,    23,
+      10,    11,    19,     3,    12,    30,    32,    25,     8,    36,
+      22,    34,    33,    39,    31,    38,     0,     0,     0,     0,
+       0,     0,     0,     0,    26
 };
 
 static const yytype_int8 yycheck[] =
 {
        0,     3,     4,     5,     6,    10,    10,     7,     8,    13,
-       9,     9,     8,     7,    11,    25,     1,    12,     8,    28,
-      12,    14,    36,    31,    -1,    -1,    -1,    -1,    -1,    -1,
-      21
+       9,     9,     8,     7,    11,     8,    27,    12,     1,     8,
+      10,    12,    14,    38,    25,    34,    -1,    -1,    -1,    -1,
+      -1,    -1,    -1,    -1,    22
 };
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
@@ -565,9 +565,9 @@ static const yytype_int8 yycheck[] =
 static const yytype_uint8 yystos[] =
 {
        0,    16,     0,     7,     8,    17,    18,    19,    21,    10,
-       9,     9,    11,    20,     3,     4,     5,     6,    28,     8,
-      22,    10,    13,    23,    28,    21,    24,    26,    12,    20,
-      14,    12,    25,    22,     8,    27,    26,    25
+       9,     9,    11,    20,     3,     4,     5,     6,    29,     8,
+      22,    23,    10,    13,    24,    12,    29,    21,    25,    27,
+       8,    23,    20,    14,    12,    26,     8,    28,    27,    26
 };
 
 #define yyerrok		(yyerrstatus = 0)
@@ -1433,84 +1433,62 @@ yyreduce:
                               ;}
     break;
 
-  case 12:
-
-/* Line 1455 of yacc.c  */
-#line 91 "../src/AnalizadorSemantico.y"
-    {
-                                                                        Simbolo* aux = devolverSimbolo((yyvsp[(1) - (2)].string));
-                                                                        if(! aux){ // [!] Pregunta si el valor no fue declarado anteriormente
-                                                                          // [!] Crea un simbolo nuevo y lo inserta en la TS.
-                                                                          aux = crearSimbolo(tipoDeDatoID, (yyvsp[(1) - (2)].string), TIPO_VAR);
-                                                                          insertarSimbolo(aux);
-
-                                                                          if(tipoDeDatoVar){ // [!] Pregunta si existe una inicializacion de la variable
-                                                                            // [!] Si es asi, verifica que los tipos coincidan. Si se cumple, modifica, si no, lanza un error
-                                                                            if(! strcmp(tipoDeDatoID, tipoDeDatoVar))
-                                                                              cambiarValor(aux, valorTemporal);
-                                                                            else
-                                                                              yyerror("El valor asignado no coincide con el tipo de dato declarado");
-                                                                          }
-                                                                        }
-                                                                        else
-                                                                          yyerror("Doble declaración de la variable");
-                                                                      ;}
-    break;
-
-  case 13:
-
-/* Line 1455 of yacc.c  */
-#line 109 "../src/AnalizadorSemantico.y"
-    {
-                                                                        Simbolo* aux = devolverSimbolo((yyvsp[(1) - (4)].string));
-                                                                        if(! aux){ // [!] Pregunta si el valor no fue declarado anteriormente
-                                                                          // [!] Crea un simbolo nuevo y lo inserta en la TS.
-                                                                          aux = crearSimbolo(tipoDeDatoID, (yyvsp[(1) - (4)].string), TIPO_VAR);
-                                                                          insertarSimbolo(aux);
-
-                                                                          if(tipoDeDatoVar){ // [!] Pregunta si existe una inicializacion de la variable
-                                                                            // [!] Si es asi, verifica que los tipos coincidan. Si se cumple, modifica, si no, lanza un error
-                                                                            if(! strcmp(tipoDeDatoID, tipoDeDatoVar))
-                                                                              cambiarValor(aux, valorTemporal);
-                                                                            else
-                                                                              yyerror("El valor asignado no coincide con el tipo de dato declarado");
-                                                                          }
-                                                                        }
-                                                                        else
-                                                                          yyerror("Doble declaración de la variable");
-                                                                      ;}
-    break;
-
   case 14:
 
 /* Line 1455 of yacc.c  */
-#line 127 "../src/AnalizadorSemantico.y"
+#line 93 "../src/AnalizadorSemantico.y"
     {
-                                                                        Simbolo* aux = devolverSimbolo((yyvsp[(1) - (4)].string));
-                                                                        if(! aux){
-                                                                          aux = crearSimbolo(tipoDeDatoID, (yyvsp[(1) - (4)].string), TIPO_FUNC); // [❗] Crea un simbolo de tipo FUNCION
-                                                                          insertarSimbolo(aux);
-                                                                          aux -> valor . func = listaDeParametrosTemporal;
-                                                                        }
-                                                                        else {
-                                                                          yyerror("Doble declaración de la variable");
-                                                                        }
-                                                                      ;}
+                                                              Simbolo* aux = devolverSimbolo((yyvsp[(1) - (4)].string));
+                                                              if(! aux){
+                                                                aux = crearSimbolo(tipoDeDatoID, (yyvsp[(1) - (4)].string), TIPO_FUNC); // [❗] Crea un simbolo de tipo FUNCION
+                                                                insertarSimbolo(aux);
+                                                                aux -> valor . func = listaDeParametrosTemporal;
+                                                              } 
+                                                              else {
+                                                                yyerror("Doble declaración de la variable");
+                                                              }
+                                                             ;}
     break;
 
-  case 21:
+  case 15:
 
 /* Line 1455 of yacc.c  */
-#line 152 "../src/AnalizadorSemantico.y"
+#line 106 "../src/AnalizadorSemantico.y"
+    {
+                                      Simbolo* aux = devolverSimbolo((yyvsp[(1) - (2)].string));
+                                      if(! aux){ // [!] Pregunta si el valor no fue declarado anteriormente
+                                        // [!] Crea un simbolo nuevo y lo inserta en la TS.
+                                        aux = crearSimbolo(tipoDeDatoID, (yyvsp[(1) - (2)].string), TIPO_VAR);
+                                        insertarSimbolo(aux);
+
+                                        if(tipoDeDatoVar){ // [!] Pregunta si existe una inicializacion de la variable
+                                          // [!] Si es asi, verifica que los tipos coincidan. Si se cumple, modifica, si no, lanza un error
+                                          if(! strcmp(tipoDeDatoID, tipoDeDatoVar))
+                                            cambiarValor(aux, valorTemporal);
+                                          else
+                                            yyerror("El valor asignado no coincide con el tipo de dato declarado");
+                                        }
+
+                                        valorTemporal = limpiarUnion(); // [!] Limpio la variable que guarda el valor a asignar
+                                      }
+                                      else
+                                        yyerror("Doble declaración de la variable");
+                                   ;}
+    break;
+
+  case 22:
+
+/* Line 1455 of yacc.c  */
+#line 140 "../src/AnalizadorSemantico.y"
     {
                                                     insertarParametro(&listaDeParametrosTemporal, tipoDeDatoParam);
                                                   ;}
     break;
 
-  case 24:
+  case 25:
 
 /* Line 1455 of yacc.c  */
-#line 161 "../src/AnalizadorSemantico.y"
+#line 149 "../src/AnalizadorSemantico.y"
     {
                     // [!] Asigna el tipo de dato del VALOR en la variable global para que posteriormente 
                     //     sea utilizado en la verificacion de tipos :)
@@ -1521,30 +1499,30 @@ yyreduce:
                   ;}
     break;
 
-  case 25:
+  case 26:
 
 /* Line 1455 of yacc.c  */
-#line 169 "../src/AnalizadorSemantico.y"
+#line 157 "../src/AnalizadorSemantico.y"
     {
                     tipoDeDatoVar = strdup(tipoDeDato((yyvsp[(1) - (1)].real)));
                     valorTemporal . valReal = (yyvsp[(1) - (1)].real);
                   ;}
     break;
 
-  case 26:
+  case 27:
 
 /* Line 1455 of yacc.c  */
-#line 173 "../src/AnalizadorSemantico.y"
+#line 161 "../src/AnalizadorSemantico.y"
     {
                     tipoDeDatoVar = strdup(tipoDeDato((yyvsp[(1) - (1)].caracter)));
                     valorTemporal . valChar = (yyvsp[(1) - (1)].caracter);
                   ;}
     break;
 
-  case 27:
+  case 28:
 
 /* Line 1455 of yacc.c  */
-#line 177 "../src/AnalizadorSemantico.y"
+#line 165 "../src/AnalizadorSemantico.y"
     {
                     tipoDeDatoVar = strdup(tipoDeDato((yyvsp[(1) - (1)].string)));
                     valorTemporal . valString = strdup((yyvsp[(1) - (1)].string));
@@ -1554,7 +1532,7 @@ yyreduce:
 
 
 /* Line 1455 of yacc.c  */
-#line 1558 "AnalizadorSemantico.tab.c"
+#line 1536 "AnalizadorSemantico.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1766,7 +1744,7 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 183 "../src/AnalizadorSemantico.y"
+#line 171 "../src/AnalizadorSemantico.y"
 
 
 Simbolo* tablaSimbolos;
@@ -1786,12 +1764,12 @@ void main() {
     #endif
 
     yyin = fopen("Input.txt", "r");
-    yyout = fopen("Output.txt", "w");
+    yyout = fopen("Reporte.txt", "w");
 
-    mostrarTabla(yyout);
+    /* mostrarTabla(yyout);
     
     Simbolo* nuevoSimbolo = crearSimbolo("int", "unaVariable", TIPO_VAR);
-    insertarSimbolo(nuevoSimbolo);
+    insertarSimbolo(nuevoSimbolo); */
 
 /*
     nuevoSimbolo = crearSimbolo("char", "b", TIPO_VAR);

@@ -92,7 +92,9 @@ void mostrarTabla(FILE* archivoSalida){
     if(tablaSimbolos) {
         masLargo = encontrarMasLargo();
         char* centrado;
-        if(! masLargo % 2)
+        if(masLargo == 1)
+            centrado = strdup(" ");
+        else if(! masLargo % 2)
             centrado = strdup(cantidadDeEspacios(masLargo / 2));
         else
             centrado = strdup(cantidadDeEspacios(masLargo / 2 - 1));

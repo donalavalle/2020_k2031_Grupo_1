@@ -88,53 +88,41 @@ declaradorDeTipo: TIPO_DATO   {
                               } 
 ;
 
-tipoDeclaracion:     IDENTIFICADOR asignacionOPC                      {
-                                                                        Simbolo* aux = devolverSimbolo($1);
-                                                                        if(! aux){ // [!] Pregunta si el valor no fue declarado anteriormente
-                                                                          // [!] Crea un simbolo nuevo y lo inserta en la TS.
-                                                                          aux = crearSimbolo(tipoDeDatoID, $1, TIPO_VAR);
-                                                                          insertarSimbolo(aux);
+tipoDeclaracion:     decla
+                   | tipoDeclaracion ',' decla
+                   | IDENTIFICADOR '(' listaDeParametros ')' {
+                                                              Simbolo* aux = devolverSimbolo($1);
+                                                              if(! aux){
+                                                                aux = crearSimbolo(tipoDeDatoID, $1, TIPO_FUNC); // [❗] Crea un simbolo de tipo FUNCION
+                                                                insertarSimbolo(aux);
+                                                                aux -> valor . func = listaDeParametrosTemporal;
+                                                              } 
+                                                              else {
+                                                                yyerror("Doble declaración de la variable");
+                                                              }
+                                                             }
+;
 
-                                                                          if(tipoDeDatoVar){ // [!] Pregunta si existe una inicializacion de la variable
-                                                                            // [!] Si es asi, verifica que los tipos coincidan. Si se cumple, modifica, si no, lanza un error
-                                                                            if(! strcmp(tipoDeDatoID, tipoDeDatoVar))
-                                                                              cambiarValor(aux, valorTemporal);
-                                                                            else
-                                                                              yyerror("El valor asignado no coincide con el tipo de dato declarado");
-                                                                          }
-                                                                        }
-                                                                        else
-                                                                          yyerror("Doble declaración de la variable");
-                                                                      }
-                   | IDENTIFICADOR asignacionOPC ',' tipoDeclaracion  {
-                                                                        Simbolo* aux = devolverSimbolo($1);
-                                                                        if(! aux){ // [!] Pregunta si el valor no fue declarado anteriormente
-                                                                          // [!] Crea un simbolo nuevo y lo inserta en la TS.
-                                                                          aux = crearSimbolo(tipoDeDatoID, $1, TIPO_VAR);
-                                                                          insertarSimbolo(aux);
+decla: IDENTIFICADOR asignacionOPC {
+                                      Simbolo* aux = devolverSimbolo($1);
+                                      if(! aux){ // [!] Pregunta si el valor no fue declarado anteriormente
+                                        // [!] Crea un simbolo nuevo y lo inserta en la TS.
+                                        aux = crearSimbolo(tipoDeDatoID, $1, TIPO_VAR);
+                                        insertarSimbolo(aux);
 
-                                                                          if(tipoDeDatoVar){ // [!] Pregunta si existe una inicializacion de la variable
-                                                                            // [!] Si es asi, verifica que los tipos coincidan. Si se cumple, modifica, si no, lanza un error
-                                                                            if(! strcmp(tipoDeDatoID, tipoDeDatoVar))
-                                                                              cambiarValor(aux, valorTemporal);
-                                                                            else
-                                                                              yyerror("El valor asignado no coincide con el tipo de dato declarado");
-                                                                          }
-                                                                        }
-                                                                        else
-                                                                          yyerror("Doble declaración de la variable");
-                                                                      }
-                   | IDENTIFICADOR '(' listaDeParametros ')'          {
-                                                                        Simbolo* aux = devolverSimbolo($1);
-                                                                        if(! aux){
-                                                                          aux = crearSimbolo(tipoDeDatoID, $1, TIPO_FUNC); // [❗] Crea un simbolo de tipo FUNCION
-                                                                          insertarSimbolo(aux);
-                                                                          aux -> valor . func = listaDeParametrosTemporal;
-                                                                        }
-                                                                        else {
-                                                                          yyerror("Doble declaración de la variable");
-                                                                        }
-                                                                      }
+                                        if(tipoDeDatoVar){ // [!] Pregunta si existe una inicializacion de la variable
+                                          // [!] Si es asi, verifica que los tipos coincidan. Si se cumple, modifica, si no, lanza un error
+                                          if(! strcmp(tipoDeDatoID, tipoDeDatoVar))
+                                            cambiarValor(aux, valorTemporal);
+                                          else
+                                            yyerror("El valor asignado no coincide con el tipo de dato declarado");
+                                        }
+
+                                        valorTemporal = limpiarUnion(); // [!] Limpio la variable que guarda el valor a asignar
+                                      }
+                                      else
+                                        yyerror("Doble declaración de la variable");
+                                   }
 ;
 
 asignacionOPC:  /* Vacio */
@@ -199,12 +187,12 @@ void main() {
     #endif
 
     yyin = fopen("Input.txt", "r");
-    yyout = fopen("Output.txt", "w");
+    yyout = fopen("Reporte.txt", "w");
 
-    mostrarTabla(yyout);
+    /* mostrarTabla(yyout);
     
     Simbolo* nuevoSimbolo = crearSimbolo("int", "unaVariable", TIPO_VAR);
-    insertarSimbolo(nuevoSimbolo);
+    insertarSimbolo(nuevoSimbolo); */
 
 /*
     nuevoSimbolo = crearSimbolo("char", "b", TIPO_VAR);

@@ -45,7 +45,7 @@ all: $(TARGETS)
 clean:
 	rm -rf $(ODIR)
 	rm -f *.$(FILE_EXT)
-	rm -f Output.txt
+	rm -f Reporte.txt
 
 debug: CFLAGS += -DBISON_DEBUG
 debug: BFLAGS += --debug

@@ -1,0 +1,8 @@
+
+ ╔═══════════════════╗ 
+ ║ Tabla de Simbolos ║ 
+ ╚═══════════════════╝ 
+
+ID: a  - Valor: 0
+ID: b  - Valor: 1234
+ID: c  - Valor: 3
