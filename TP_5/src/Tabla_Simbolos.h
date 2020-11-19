@@ -40,6 +40,8 @@ unsigned  encontrarMasLargo();
 char*     cantidadDeEspacios(unsigned);
 TipoValor limpiarUnion();
 void      sumarLinea();
+unsigned  cantidadDeParametros(Funcion*);
+void      verificarParametros(Simbolo*, Funcion*, FILE*);
 
 extern Simbolo* tablaSimbolos;
 extern unsigned cantidadDeLineas;

@@ -116,9 +116,10 @@ void mostrarTabla(FILE* archivoSalida){
     }
 
     for(Simbolo* aux = tablaSimbolos; aux != NULL; aux = aux -> sig){
-        
+        fprintf(archivoSalida, "- Tipo de Dato: \'%s\' ", aux -> tipoDato);
+
         char* espacios = strdup(cantidadDeEspacios(masLargo - strlen(aux -> nombre)));
-        fprintf(archivoSalida, "ID: %s %s", aux -> nombre, espacios);
+        fprintf(archivoSalida, " - ID: %s %s", aux -> nombre, espacios);
         
         switch(aux -> tipoID){
             case TIPO_VAR: 
@@ -130,11 +131,11 @@ void mostrarTabla(FILE* archivoSalida){
                     fprintf(archivoSalida, " - Valor: \'%c\'\n", aux -> valor.valChar); // le agregamos las comillas para no confundir después con algún identificador 
                 else if(! strcmp(aux -> tipoDato, "char*"))
                     fprintf(archivoSalida, " - Valor: %s\n", aux -> valor.valString); //Hicimos la separación entre char y string
+                else
+                    fprintf(archivoSalida, " - Valor: No corresponde a ningun tipo de valor que se toma en cuenta, Octi.\n");
                 break;
             case TIPO_FUNC:
                     mostrarParametros(archivoSalida, aux -> valor.func);
-                break;
-            default:
                 break;
         }
     }
@@ -223,4 +224,29 @@ TipoValor limpiarUnion() {
 
 void sumarLinea() {
     cantidadDeLineas++;
+}
+
+unsigned cantidadDeParametros(Funcion* parametros){
+    unsigned cantidad = 0;
+
+    for(Funcion* aux = parametros; aux != NULL; aux = aux -> sig)
+        cantidad++;
+
+    return cantidad;
+}
+
+void verificarParametros(Simbolo* unaFuncion, Funcion* unaListaDeParam, FILE* archivoSalida){
+    Funcion* parametros = unaFuncion -> valor . func;
+
+    if(cantidadDeParametros(parametros) != cantidadDeParametros(unaListaDeParam))
+        fprintf(archivoSalida, "Error en linea %d: La cantidad de parametros ingresados no coinciden en la funcion \'%s\'.\n", cantidadDeLineas, unaFuncion -> nombre);
+    else
+        for(Funcion* aux = parametros; aux != NULL; aux = aux -> sig){
+            if(strcmp(unaListaDeParam -> tipoDatoParam, aux -> tipoDatoParam)){
+                fprintf(archivoSalida, "Error en linea %d: El tipo de dato de los argumentos ingresados no coinciden con los esperados por la funcion \'%s\'.\n", cantidadDeLineas, unaFuncion -> nombre);
+                break;
+            }   
+            unaListaDeParam = unaListaDeParam -> sig;
+        }
+    
 }

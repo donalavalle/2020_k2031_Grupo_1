@@ -16,58 +16,75 @@ Gramática
     3 line: /* vacío */
     4     | asignacion ';'
     5     | declaracion ';'
+    6     | llamadoFuncion ';'
 
-    6 asignacion: IDENTIFICADOR '=' valor
+    7 llamadoFuncion: IDENTIFICADOR '(' argumentos ')'
 
-    7 declaracion: declaradorDeTipo punteroOpcional tipoDeclaracion
+    8 argumentos: tipoDeArgumento otroArgumentoOPC
 
-    8 punteroOpcional: /* vacío */
-    9                | '*'
+    9 tipoDeArgumento: /* vacío */
+   10                | valor
 
-   10 declaradorDeTipo: TIPO_DATO
+   11 otroArgumentoOPC: /* vacío */
+   12                 | ',' argumentos
 
-   11 tipoDeclaracion: decla
-   12                | tipoDeclaracion ',' decla
-   13                | IDENTIFICADOR '(' listaDeParametros ')'
+   13 asignacion: IDENTIFICADOR '=' valor
 
-   14 decla: IDENTIFICADOR asignacionOPC
+   14 declaracion: declaradorDeTipo punteroOpcional tipoDeclaracion
 
-   15 asignacionOPC: /* vacío */
-   16              | '=' valor
+   15 punteroOpcional: /* vacío */
+   16                | '*'
 
-   17 listaDeParametros: /* vacío */
-   18                  | parametro otrosParametros
+   17 declaradorDeTipo: TIPO_DATO
 
-   19 otrosParametros: /* vacío */
-   20                | ',' parametro otrosParametros
+   18 tipoDeclaracion: decla
+   19                | tipoDeclaracion ',' decla
+   20                | IDENTIFICADOR '(' listaDeParametros ')'
 
-   21 parametro: declaradorDeTipo punteroOpcional idOPC
+   21 decla: IDENTIFICADOR asignacionOPC
 
-   22 idOPC: /* vacío */
-   23      | IDENTIFICADOR
+   22 asignacionOPC: /* vacío */
+   23              | '=' valor
 
-   24 valor: ENTERO
-   25      | REAL
-   26      | CHAR
-   27      | STRING
+   24 listaDeParametros: /* vacío */
+   25                  | parametro otrosParametros
+
+   26 otrosParametros: /* vacío */
+   27                | ',' parametro otrosParametros
+
+   28 parametro: declaradorDeTipoParam punteroOpcionalParam idOPC
+
+   29 declaradorDeTipoParam: TIPO_DATO
+
+   30 punteroOpcionalParam: /* vacío */
+   31                     | '*'
+
+   32 idOPC: /* vacío */
+   33      | IDENTIFICADOR
+
+   34 valor: ENTERO
+   35      | REAL
+   36      | CHAR
+   37      | STRING
+   38      | IDENTIFICADOR
 
 
 Terminales con las reglas donde aparecen
 
 $end (0) 0
-'(' (40) 13
-')' (41) 13
-'*' (42) 9
-',' (44) 12 20
-';' (59) 4 5
-'=' (61) 6 16
+'(' (40) 7 20
+')' (41) 7 20
+'*' (42) 16 31
+',' (44) 12 19 27
+';' (59) 4 5 6
+'=' (61) 13 23
 error (256)
-ENTERO (258) 24
-REAL (259) 25
-CHAR (260) 26
-STRING (261) 27
-TIPO_DATO (262) 10
-IDENTIFICADOR (263) 6 13 14 23
+ENTERO (258) 34
+REAL (259) 35
+CHAR (260) 36
+STRING (261) 37
+TIPO_DATO (262) 17 29
+IDENTIFICADOR (263) 7 13 20 21 33 38
 
 
 No terminales con las reglas donde aparecen
@@ -77,31 +94,43 @@ $accept (15)
 input (16)
     en la izquierda: 1 2, en la derecha: 0 2
 line (17)
-    en la izquierda: 3 4 5, en la derecha: 2
-asignacion (18)
-    en la izquierda: 6, en la derecha: 4
-declaracion (19)
-    en la izquierda: 7, en la derecha: 5
-punteroOpcional (20)
-    en la izquierda: 8 9, en la derecha: 7 21
-declaradorDeTipo (21)
-    en la izquierda: 10, en la derecha: 7 21
-tipoDeclaracion (22)
-    en la izquierda: 11 12 13, en la derecha: 7 12
-decla (23)
-    en la izquierda: 14, en la derecha: 11 12
-asignacionOPC (24)
+    en la izquierda: 3 4 5 6, en la derecha: 2
+llamadoFuncion (18)
+    en la izquierda: 7, en la derecha: 6
+argumentos (19)
+    en la izquierda: 8, en la derecha: 7 12
+tipoDeArgumento (20)
+    en la izquierda: 9 10, en la derecha: 8
+otroArgumentoOPC (21)
+    en la izquierda: 11 12, en la derecha: 8
+asignacion (22)
+    en la izquierda: 13, en la derecha: 4
+declaracion (23)
+    en la izquierda: 14, en la derecha: 5
+punteroOpcional (24)
     en la izquierda: 15 16, en la derecha: 14
-listaDeParametros (25)
-    en la izquierda: 17 18, en la derecha: 13
-otrosParametros (26)
-    en la izquierda: 19 20, en la derecha: 18 20
-parametro (27)
-    en la izquierda: 21, en la derecha: 18 20
-idOPC (28)
+declaradorDeTipo (25)
+    en la izquierda: 17, en la derecha: 14
+tipoDeclaracion (26)
+    en la izquierda: 18 19 20, en la derecha: 14 19
+decla (27)
+    en la izquierda: 21, en la derecha: 18 19
+asignacionOPC (28)
     en la izquierda: 22 23, en la derecha: 21
-valor (29)
-    en la izquierda: 24 25 26 27, en la derecha: 6 16
+listaDeParametros (29)
+    en la izquierda: 24 25, en la derecha: 20
+otrosParametros (30)
+    en la izquierda: 26 27, en la derecha: 25 27
+parametro (31)
+    en la izquierda: 28, en la derecha: 25 27
+declaradorDeTipoParam (32)
+    en la izquierda: 29, en la derecha: 28
+punteroOpcionalParam (33)
+    en la izquierda: 30 31, en la derecha: 28
+idOPC (34)
+    en la izquierda: 32 33, en la derecha: 28
+valor (35)
+    en la izquierda: 34 35 36 37 38, en la derecha: 10 13 23
 
 
 estado 0
@@ -127,9 +156,10 @@ estado 1
     IDENTIFICADOR  [reduce usando la regla 3 (line)]
 
     line              ir al estado 5
-    asignacion        ir al estado 6
-    declaracion       ir al estado 7
-    declaradorDeTipo  ir al estado 8
+    llamadoFuncion    ir al estado 6
+    asignacion        ir al estado 7
+    declaracion       ir al estado 8
+    declaradorDeTipo  ir al estado 9
 
 
 estado 2
@@ -141,16 +171,18 @@ estado 2
 
 estado 3
 
-   10 declaradorDeTipo: TIPO_DATO .
+   17 declaradorDeTipo: TIPO_DATO .
 
-    $default  reduce usando la regla 10 (declaradorDeTipo)
+    $default  reduce usando la regla 17 (declaradorDeTipo)
 
 
 estado 4
 
-    6 asignacion: IDENTIFICADOR . '=' valor
+    7 llamadoFuncion: IDENTIFICADOR . '(' argumentos ')'
+   13 asignacion: IDENTIFICADOR . '=' valor
 
-    '='  desplazar e ir al estado 9
+    '('  desplazar e ir al estado 10
+    '='  desplazar e ir al estado 11
 
 
 estado 5
@@ -162,294 +194,411 @@ estado 5
 
 estado 6
 
-    4 line: asignacion . ';'
+    6 line: llamadoFuncion . ';'
 
-    ';'  desplazar e ir al estado 10
+    ';'  desplazar e ir al estado 12
 
 
 estado 7
 
-    5 line: declaracion . ';'
+    4 line: asignacion . ';'
 
-    ';'  desplazar e ir al estado 11
+    ';'  desplazar e ir al estado 13
 
 
 estado 8
 
-    7 declaracion: declaradorDeTipo . punteroOpcional tipoDeclaracion
+    5 line: declaracion . ';'
 
-    '*'  desplazar e ir al estado 12
-
-    $default  reduce usando la regla 8 (punteroOpcional)
-
-    punteroOpcional  ir al estado 13
+    ';'  desplazar e ir al estado 14
 
 
 estado 9
 
-    6 asignacion: IDENTIFICADOR '=' . valor
+   14 declaracion: declaradorDeTipo . punteroOpcional tipoDeclaracion
 
-    ENTERO  desplazar e ir al estado 14
-    REAL    desplazar e ir al estado 15
-    CHAR    desplazar e ir al estado 16
-    STRING  desplazar e ir al estado 17
+    '*'  desplazar e ir al estado 15
 
-    valor  ir al estado 18
+    $default  reduce usando la regla 15 (punteroOpcional)
+
+    punteroOpcional  ir al estado 16
 
 
 estado 10
+
+    7 llamadoFuncion: IDENTIFICADOR '(' . argumentos ')'
+
+    ENTERO         desplazar e ir al estado 17
+    REAL           desplazar e ir al estado 18
+    CHAR           desplazar e ir al estado 19
+    STRING         desplazar e ir al estado 20
+    IDENTIFICADOR  desplazar e ir al estado 21
+
+    $default  reduce usando la regla 9 (tipoDeArgumento)
+
+    argumentos       ir al estado 22
+    tipoDeArgumento  ir al estado 23
+    valor            ir al estado 24
+
+
+estado 11
+
+   13 asignacion: IDENTIFICADOR '=' . valor
+
+    ENTERO         desplazar e ir al estado 17
+    REAL           desplazar e ir al estado 18
+    CHAR           desplazar e ir al estado 19
+    STRING         desplazar e ir al estado 20
+    IDENTIFICADOR  desplazar e ir al estado 21
+
+    valor  ir al estado 25
+
+
+estado 12
+
+    6 line: llamadoFuncion ';' .
+
+    $default  reduce usando la regla 6 (line)
+
+
+estado 13
 
     4 line: asignacion ';' .
 
     $default  reduce usando la regla 4 (line)
 
 
-estado 11
+estado 14
 
     5 line: declaracion ';' .
 
     $default  reduce usando la regla 5 (line)
 
 
-estado 12
-
-    9 punteroOpcional: '*' .
-
-    $default  reduce usando la regla 9 (punteroOpcional)
-
-
-estado 13
-
-    7 declaracion: declaradorDeTipo punteroOpcional . tipoDeclaracion
-
-    IDENTIFICADOR  desplazar e ir al estado 19
-
-    tipoDeclaracion  ir al estado 20
-    decla            ir al estado 21
-
-
-estado 14
-
-   24 valor: ENTERO .
-
-    $default  reduce usando la regla 24 (valor)
-
-
 estado 15
 
-   25 valor: REAL .
+   16 punteroOpcional: '*' .
 
-    $default  reduce usando la regla 25 (valor)
+    $default  reduce usando la regla 16 (punteroOpcional)
 
 
 estado 16
 
-   26 valor: CHAR .
+   14 declaracion: declaradorDeTipo punteroOpcional . tipoDeclaracion
 
-    $default  reduce usando la regla 26 (valor)
+    IDENTIFICADOR  desplazar e ir al estado 26
+
+    tipoDeclaracion  ir al estado 27
+    decla            ir al estado 28
 
 
 estado 17
 
-   27 valor: STRING .
+   34 valor: ENTERO .
 
-    $default  reduce usando la regla 27 (valor)
+    $default  reduce usando la regla 34 (valor)
 
 
 estado 18
 
-    6 asignacion: IDENTIFICADOR '=' valor .
+   35 valor: REAL .
 
-    $default  reduce usando la regla 6 (asignacion)
+    $default  reduce usando la regla 35 (valor)
 
 
 estado 19
 
-   13 tipoDeclaracion: IDENTIFICADOR . '(' listaDeParametros ')'
-   14 decla: IDENTIFICADOR . asignacionOPC
+   36 valor: CHAR .
 
-    '='  desplazar e ir al estado 22
-    '('  desplazar e ir al estado 23
-
-    $default  reduce usando la regla 15 (asignacionOPC)
-
-    asignacionOPC  ir al estado 24
+    $default  reduce usando la regla 36 (valor)
 
 
 estado 20
 
-    7 declaracion: declaradorDeTipo punteroOpcional tipoDeclaracion .
-   12 tipoDeclaracion: tipoDeclaracion . ',' decla
+   37 valor: STRING .
 
-    ','  desplazar e ir al estado 25
-
-    $default  reduce usando la regla 7 (declaracion)
+    $default  reduce usando la regla 37 (valor)
 
 
 estado 21
 
-   11 tipoDeclaracion: decla .
+   38 valor: IDENTIFICADOR .
 
-    $default  reduce usando la regla 11 (tipoDeclaracion)
+    $default  reduce usando la regla 38 (valor)
 
 
 estado 22
 
-   16 asignacionOPC: '=' . valor
+    7 llamadoFuncion: IDENTIFICADOR '(' argumentos . ')'
 
-    ENTERO  desplazar e ir al estado 14
-    REAL    desplazar e ir al estado 15
-    CHAR    desplazar e ir al estado 16
-    STRING  desplazar e ir al estado 17
-
-    valor  ir al estado 26
+    ')'  desplazar e ir al estado 29
 
 
 estado 23
 
-   13 tipoDeclaracion: IDENTIFICADOR '(' . listaDeParametros ')'
+    8 argumentos: tipoDeArgumento . otroArgumentoOPC
 
-    TIPO_DATO  desplazar e ir al estado 3
+    ','  desplazar e ir al estado 30
 
-    $default  reduce usando la regla 17 (listaDeParametros)
+    $default  reduce usando la regla 11 (otroArgumentoOPC)
 
-    declaradorDeTipo   ir al estado 27
-    listaDeParametros  ir al estado 28
-    parametro          ir al estado 29
+    otroArgumentoOPC  ir al estado 31
 
 
 estado 24
 
-   14 decla: IDENTIFICADOR asignacionOPC .
+   10 tipoDeArgumento: valor .
 
-    $default  reduce usando la regla 14 (decla)
+    $default  reduce usando la regla 10 (tipoDeArgumento)
 
 
 estado 25
 
-   12 tipoDeclaracion: tipoDeclaracion ',' . decla
+   13 asignacion: IDENTIFICADOR '=' valor .
 
-    IDENTIFICADOR  desplazar e ir al estado 30
-
-    decla  ir al estado 31
+    $default  reduce usando la regla 13 (asignacion)
 
 
 estado 26
 
-   16 asignacionOPC: '=' valor .
+   20 tipoDeclaracion: IDENTIFICADOR . '(' listaDeParametros ')'
+   21 decla: IDENTIFICADOR . asignacionOPC
 
-    $default  reduce usando la regla 16 (asignacionOPC)
+    '('  desplazar e ir al estado 32
+    '='  desplazar e ir al estado 33
+
+    $default  reduce usando la regla 22 (asignacionOPC)
+
+    asignacionOPC  ir al estado 34
 
 
 estado 27
 
-   21 parametro: declaradorDeTipo . punteroOpcional idOPC
+   14 declaracion: declaradorDeTipo punteroOpcional tipoDeclaracion .
+   19 tipoDeclaracion: tipoDeclaracion . ',' decla
 
-    '*'  desplazar e ir al estado 12
+    ','  desplazar e ir al estado 35
 
-    $default  reduce usando la regla 8 (punteroOpcional)
-
-    punteroOpcional  ir al estado 32
+    $default  reduce usando la regla 14 (declaracion)
 
 
 estado 28
 
-   13 tipoDeclaracion: IDENTIFICADOR '(' listaDeParametros . ')'
+   18 tipoDeclaracion: decla .
 
-    ')'  desplazar e ir al estado 33
+    $default  reduce usando la regla 18 (tipoDeclaracion)
 
 
 estado 29
 
-   18 listaDeParametros: parametro . otrosParametros
+    7 llamadoFuncion: IDENTIFICADOR '(' argumentos ')' .
 
-    ','  desplazar e ir al estado 34
-
-    $default  reduce usando la regla 19 (otrosParametros)
-
-    otrosParametros  ir al estado 35
+    $default  reduce usando la regla 7 (llamadoFuncion)
 
 
 estado 30
 
-   14 decla: IDENTIFICADOR . asignacionOPC
+   12 otroArgumentoOPC: ',' . argumentos
 
-    '='  desplazar e ir al estado 22
+    ENTERO         desplazar e ir al estado 17
+    REAL           desplazar e ir al estado 18
+    CHAR           desplazar e ir al estado 19
+    STRING         desplazar e ir al estado 20
+    IDENTIFICADOR  desplazar e ir al estado 21
 
-    $default  reduce usando la regla 15 (asignacionOPC)
+    $default  reduce usando la regla 9 (tipoDeArgumento)
 
-    asignacionOPC  ir al estado 24
+    argumentos       ir al estado 36
+    tipoDeArgumento  ir al estado 23
+    valor            ir al estado 24
 
 
 estado 31
 
-   12 tipoDeclaracion: tipoDeclaracion ',' decla .
+    8 argumentos: tipoDeArgumento otroArgumentoOPC .
 
-    $default  reduce usando la regla 12 (tipoDeclaracion)
+    $default  reduce usando la regla 8 (argumentos)
 
 
 estado 32
 
-   21 parametro: declaradorDeTipo punteroOpcional . idOPC
+   20 tipoDeclaracion: IDENTIFICADOR '(' . listaDeParametros ')'
 
-    IDENTIFICADOR  desplazar e ir al estado 36
+    TIPO_DATO  desplazar e ir al estado 37
 
-    $default  reduce usando la regla 22 (idOPC)
+    $default  reduce usando la regla 24 (listaDeParametros)
 
-    idOPC  ir al estado 37
+    listaDeParametros      ir al estado 38
+    parametro              ir al estado 39
+    declaradorDeTipoParam  ir al estado 40
 
 
 estado 33
 
-   13 tipoDeclaracion: IDENTIFICADOR '(' listaDeParametros ')' .
+   23 asignacionOPC: '=' . valor
 
-    $default  reduce usando la regla 13 (tipoDeclaracion)
+    ENTERO         desplazar e ir al estado 17
+    REAL           desplazar e ir al estado 18
+    CHAR           desplazar e ir al estado 19
+    STRING         desplazar e ir al estado 20
+    IDENTIFICADOR  desplazar e ir al estado 21
+
+    valor  ir al estado 41
 
 
 estado 34
 
-   20 otrosParametros: ',' . parametro otrosParametros
+   21 decla: IDENTIFICADOR asignacionOPC .
 
-    TIPO_DATO  desplazar e ir al estado 3
-
-    declaradorDeTipo  ir al estado 27
-    parametro         ir al estado 38
+    $default  reduce usando la regla 21 (decla)
 
 
 estado 35
 
-   18 listaDeParametros: parametro otrosParametros .
+   19 tipoDeclaracion: tipoDeclaracion ',' . decla
 
-    $default  reduce usando la regla 18 (listaDeParametros)
+    IDENTIFICADOR  desplazar e ir al estado 42
+
+    decla  ir al estado 43
 
 
 estado 36
 
-   23 idOPC: IDENTIFICADOR .
+   12 otroArgumentoOPC: ',' argumentos .
 
-    $default  reduce usando la regla 23 (idOPC)
+    $default  reduce usando la regla 12 (otroArgumentoOPC)
 
 
 estado 37
 
-   21 parametro: declaradorDeTipo punteroOpcional idOPC .
+   29 declaradorDeTipoParam: TIPO_DATO .
 
-    $default  reduce usando la regla 21 (parametro)
+    $default  reduce usando la regla 29 (declaradorDeTipoParam)
 
 
 estado 38
 
-   20 otrosParametros: ',' parametro . otrosParametros
+   20 tipoDeclaracion: IDENTIFICADOR '(' listaDeParametros . ')'
 
-    ','  desplazar e ir al estado 34
-
-    $default  reduce usando la regla 19 (otrosParametros)
-
-    otrosParametros  ir al estado 39
+    ')'  desplazar e ir al estado 44
 
 
 estado 39
 
-   20 otrosParametros: ',' parametro otrosParametros .
+   25 listaDeParametros: parametro . otrosParametros
 
-    $default  reduce usando la regla 20 (otrosParametros)
+    ','  desplazar e ir al estado 45
+
+    $default  reduce usando la regla 26 (otrosParametros)
+
+    otrosParametros  ir al estado 46
+
+
+estado 40
+
+   28 parametro: declaradorDeTipoParam . punteroOpcionalParam idOPC
+
+    '*'  desplazar e ir al estado 47
+
+    $default  reduce usando la regla 30 (punteroOpcionalParam)
+
+    punteroOpcionalParam  ir al estado 48
+
+
+estado 41
+
+   23 asignacionOPC: '=' valor .
+
+    $default  reduce usando la regla 23 (asignacionOPC)
+
+
+estado 42
+
+   21 decla: IDENTIFICADOR . asignacionOPC
+
+    '='  desplazar e ir al estado 33
+
+    $default  reduce usando la regla 22 (asignacionOPC)
+
+    asignacionOPC  ir al estado 34
+
+
+estado 43
+
+   19 tipoDeclaracion: tipoDeclaracion ',' decla .
+
+    $default  reduce usando la regla 19 (tipoDeclaracion)
+
+
+estado 44
+
+   20 tipoDeclaracion: IDENTIFICADOR '(' listaDeParametros ')' .
+
+    $default  reduce usando la regla 20 (tipoDeclaracion)
+
+
+estado 45
+
+   27 otrosParametros: ',' . parametro otrosParametros
+
+    TIPO_DATO  desplazar e ir al estado 37
+
+    parametro              ir al estado 49
+    declaradorDeTipoParam  ir al estado 40
+
+
+estado 46
+
+   25 listaDeParametros: parametro otrosParametros .
+
+    $default  reduce usando la regla 25 (listaDeParametros)
+
+
+estado 47
+
+   31 punteroOpcionalParam: '*' .
+
+    $default  reduce usando la regla 31 (punteroOpcionalParam)
+
+
+estado 48
+
+   28 parametro: declaradorDeTipoParam punteroOpcionalParam . idOPC
+
+    IDENTIFICADOR  desplazar e ir al estado 50
+
+    $default  reduce usando la regla 32 (idOPC)
+
+    idOPC  ir al estado 51
+
+
+estado 49
+
+   27 otrosParametros: ',' parametro . otrosParametros
+
+    ','  desplazar e ir al estado 45
+
+    $default  reduce usando la regla 26 (otrosParametros)
+
+    otrosParametros  ir al estado 52
+
+
+estado 50
+
+   33 idOPC: IDENTIFICADOR .
+
+    $default  reduce usando la regla 33 (idOPC)
+
+
+estado 51
+
+   28 parametro: declaradorDeTipoParam punteroOpcionalParam idOPC .
+
+    $default  reduce usando la regla 28 (parametro)
+
+
+estado 52
+
+   27 otrosParametros: ',' parametro otrosParametros .
+
+    $default  reduce usando la regla 27 (otrosParametros)

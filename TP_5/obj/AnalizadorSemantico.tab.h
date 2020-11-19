@@ -55,11 +55,11 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 40 "../src/AnalizadorSemantico.y"
+#line 42 "../src/AnalizadorSemantico.y"
 
     int   entero;
     float real;
-    char  caracter;
+    char   caracter;
     char* string;
 
 
