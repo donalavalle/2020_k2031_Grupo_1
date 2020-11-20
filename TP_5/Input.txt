@@ -1,5 +1,3 @@
-char sumar;
 int sumar(int, int);
-int a = 5;
-char ad = 'a';
-sumar(a, ad, 20);
+
+sumar = 4;

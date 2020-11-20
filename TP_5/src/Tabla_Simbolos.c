@@ -248,5 +248,4 @@ void verificarParametros(Simbolo* unaFuncion, Funcion* unaListaDeParam, FILE* ar
             }   
             unaListaDeParam = unaListaDeParam -> sig;
         }
-    
 }

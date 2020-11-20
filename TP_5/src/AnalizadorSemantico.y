@@ -28,8 +28,6 @@ FILE* yyout;
 union TipoValor valorTemporal;
 Funcion* listaDeParametrosTemporal;
 
-unsigned contTempParametros = 0;
-
 %}
 
 %token <entero>   ENTERO 
@@ -53,10 +51,12 @@ input:   /* Vacío */
 ;
 
 line:   /* Vacío */
-      | asignacion  ';' {tipoDeDatoVar = NULL;}
+      | asignacion  ';' {
+                          tipoDeDatoVar = NULL;
+                        }
       | declaracion ';' {
-                          free(tipoDeDatoID); // [❗] Limpia la lista de parametros temporal para poder reutilizarla en un futuro
-                          listaDeParametrosTemporal = NULL;
+                          free(tipoDeDatoID); 
+                          listaDeParametrosTemporal = NULL; // [❗] Limpia la lista de parametros temporal para poder reutilizarla en un futuro
                         }
       | llamadoFuncion';'
 
@@ -65,27 +65,25 @@ line:   /* Vacío */
 llamadoFuncion: IDENTIFICADOR '(' argumentos ')'  {
                                                     Simbolo* aux = devolverSimbolo($1);
                                                     if(aux){
-                                                      if(aux -> tipoID != TIPO_FUNC)
+                                                      if(aux -> tipoID != TIPO_FUNC) // [❗] Pregunta si el identificador es una FUNCION
                                                         yyerror("El ID utilizado no corresponde con una funcion");
                                                       else
-                                                        verificarParametros(aux, listaDeParametrosTemporal, yyout);
+                                                        verificarParametros(aux, listaDeParametrosTemporal, yyout); // [❗] Si es una funcion, verifica que la cantidad y el tipo de los argumentos sea correcta.
                                                     }
                                                     else
                                                       mostrarErrorDeVariable($1);
 
-                                                    contTempParametros = 0;
-
-                                                    listaDeParametrosTemporal = NULL;
+                                                    listaDeParametrosTemporal = NULL; // [❗] Libera la lista temporal.
                                                   }
 ;
 
 argumentos: tipoDeArgumento otroArgumentoOPC
 ;
 
+
 tipoDeArgumento:   /* VACIO */
                  | valor       {
                                 insertarParametro(&listaDeParametrosTemporal, tipoDeDatoVar);
-                                contTempParametros++;
                                }
 ;
 
@@ -95,17 +93,21 @@ otroArgumentoOPC:  /* VACIO */
 ;
 
 
+
 asignacion: IDENTIFICADOR '=' valor   {
                                         Simbolo* aux = devolverSimbolo($1);
-                                        if(aux) {
-                                          if(! strcmp(aux->tipoDato, tipoDeDatoVar)) // [!] Si no hay error de tipo, cambia el valor correctamente.
-                                            cambiarValor(aux, valorTemporal);
-                                          else 
-                                            yyerror("No coinciden los tipos de datos");
+                                        if(aux) { // [❗] Si existe...
+                                          if(aux -> tipoID != TIPO_VAR) // [❗] Pregunta si el identificador no es una funcion. 
+                                            yyerror("El ID utilizado no corresponde con una variable");
+                                          else{
+                                            if(! strcmp(aux->tipoDato, tipoDeDatoVar)) // [❗] Si no hay error de tipo, cambia el valor correctamente.
+                                              cambiarValor(aux, valorTemporal);
+                                            else 
+                                              yyerror("No coinciden los tipos de datos");
+                                          }
                                         }
-                                        else{
+                                        else
                                           mostrarErrorDeVariable($1);
-                                        }
                                       }
 ;
 
@@ -127,16 +129,16 @@ tipoDeclaracion:     decla
                    | tipoDeclaracion ',' decla
                    | IDENTIFICADOR '(' listaDeParametros ')' {
                                                               Simbolo* aux = devolverSimbolo($1);
-                                                              if(! aux){
+                                                              if(! aux){ // [❗] Pregunta si el identificador no fue utilizado antes.
                                                                 aux = crearSimbolo(tipoDeDatoID, $1, TIPO_FUNC); // [❗] Crea un simbolo de tipo FUNCION
                                                                 insertarSimbolo(aux);
-                                                                aux -> valor . func = listaDeParametrosTemporal;
+                                                                aux -> valor . func = listaDeParametrosTemporal; // [❗] Asigna la lista de parametros de la funcion generada previamente.
                                                               } 
-                                                              else {
+                                                              else { // [❗] Si el identifidor ya fue utilizado, lanza error semantico.
                                                                 yyerror("Doble declaración de la variable");
                                                               };
 
-                                                              listaDeParametrosTemporal = NULL;
+                                                              listaDeParametrosTemporal = NULL; // [❗] Limpia la lista temporal para su reutilizacion.
                                                              }
 ;
 
@@ -228,6 +230,9 @@ valor:   ENTERO   {
                        }
 ;
 
+
+
+
 %%
 
 Simbolo* tablaSimbolos;
@@ -256,17 +261,30 @@ void main() {
     fclose(yyin);
     fclose(yyout);
 
-    /*📚 TO DO LIST 📚 
+    /* 📚 TO DO LIST 📚 
        ❌ Sentencias simples y compuestas (for, if, while, etc) -> Incluidas En TP4.
-       ✅ Declaracion variables y almacenamiento en TS: punteros y arreglos. (Casi: Faltan arrays)
-       ✅ Declaracion, llamada y almacenamiento en TS de funciones.
-       ❌ Expresiones (también incluidas dentro de sentencias).
+       ✅ Declaracion variables y almacenamiento en TS: punteros y arreglos. (Casi: Faltan arrays).
+       ✅ Declaracion, llamada y almacenamiento en TS de funciones. 
+       ❌ Expresiones (también incluidas dentro de sentencias)  
        ❌ Control de tipo de datos en alguna operacion binaria.
        ✅ Control doble declaracion de variables. 
        ✅ Control de cantidad y tipo de datos en declaracion de funciones.
        ◼◾ (❗❗) GENERAR REPORTE (❗❗): 
-              ✅ Lista variables declaradas con su tipo. (Casi: Modificar TS para adaptar a Reporte)
-              ❌ Lista de funciones declaradas con su tipo (retorno), cantidad y tipo de parametros. 
-              ❌ Errores lexicos (FLEX), sintacticos(TOKEN ERROR) y semanticos (RUTINAS) encontrados. 
+          ✅ Lista variables declaradas con su tipo. (Casi: Modificar TS para adaptar a Reporte)
+          ✅ Lista de funciones declaradas con su tipo (retorno), cantidad y tipo de parametros. (Casi: Modificar TS para adaptar a Reporte) 
+          ❌ Errores lexicos (FLEX), sintacticos(TOKEN ERROR) y semanticos (RUTINAS) encontrados. 
+    */
+
+    /*
+
+    valorTemporal1;
+    valorTemporal2;
+
+    valorTemporal = valorTemporal1 + valorTemporal2;
+
+    exp:   valor       {valorTemporal;}
+         | exp '+' exp {$$ = $1 + $3;}
+    ;
+    
     */
 }
