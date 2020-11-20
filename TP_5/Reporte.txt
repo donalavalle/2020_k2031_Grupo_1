@@ -1,8 +1,6 @@
+'l'
+╔═══════════════════╗ 
+║ Tabla de Simbolos ║ 
+╚═══════════════════╝ 
 
-Error en linea 3: El ID utilizado no corresponde con una variable.
-
- ╔═══════════════════╗ 
- ║ Tabla de Simbolos ║ 
- ╚═══════════════════╝ 
-
-- Tipo de Dato: 'int'  - ID: sumar  - Parametro/s: (int, int)
+La tabla de simbolos esta vacia.

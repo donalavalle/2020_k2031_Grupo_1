@@ -55,17 +55,28 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 40 "../src/AnalizadorSemantico.y"
+#line 46 "../src/AnalizadorSemantico.y"
 
     int   entero;
     float real;
     char   caracter;
     char* string;
+    
+    struct {
+      union {
+        int      valEnt; 
+        double   valReal;
+        char     valChar;
+        char*    valString;
+      } valor; // [❗] Declaramos este union 'TipoValor2' para que el NT 'exp' pueda almacenar el valor según qué regla siga
+    
+    char* tipoDato;
+  } tipo;
 
 
 
 /* Line 1676 of yacc.c  */
-#line 69 "AnalizadorSemantico.tab.h"
+#line 80 "AnalizadorSemantico.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

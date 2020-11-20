@@ -21,7 +21,7 @@ LITERAL_CADENA   \".+\"
 TIPO_DATO        "int"|"char"|"float"
 IDENTIFICADOR    ({LETRA}|_)({LETRA}|_|{DECIMAL})*
 ESPACIOS         " "|"\t"
-CARACTER_SIMPLE  "="|";"|","|"*"|"("|")"
+CARACTER_SIMPLE  "="|";"|","|"*"|"("|")"|"+"
 COM_SIMPLE       "//".*
 COM_BLOQUE       "/*"([^*]|\*+[^/])*\*+\/
 SALTO_LINEA      "\n" 
@@ -40,6 +40,7 @@ SALTO_LINEA      "\n"
 {CARACTER_SIMPLE} { return yytext[0]; }
 {COM_SIMPLE}      { }
 {COM_BLOQUE}      { }
-{SALTO_LINEA}     {sumarLinea();}   
+{SALTO_LINEA}     {sumarLinea();} 
+
 
 %%

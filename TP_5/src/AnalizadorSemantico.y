@@ -18,15 +18,19 @@ int yylex ();
 int yyerror (char*);
 void mostrarErrorDeVariable(char*);
 
-char* tipoDeDatoVar   = NULL;
-char* tipoDeDatoID    = NULL;
-char* tipoDeDatoParam = NULL;
+unsigned flagErrorExp = 0;
+
+char* tipoDeDatoVar   = NULL; // [❗] Variable global utilizada para almacenar el tipo de dato de variables.
+char* tipoDeDatoID    = NULL; // [❗] Variable global utilizada para almacenar el tipo de dato de los identificadores.
+char* tipoDeDatoParam = NULL; // [❗] Variable global utilizada para almacenar el tipo de dato de los parametros de una funcion.
 
 FILE* yyin;
 FILE* yyout;
 
-union TipoValor valorTemporal;
-Funcion* listaDeParametrosTemporal;
+union TipoValor valorTemporal;  // [❗] Variable global utilizada para almacenar el valor semantico de las constantes (UNION -> ya que cambia dependiendo del tipo de dato).
+Funcion* listaDeParametrosTemporal;  // [❗] Lista de paramatros global que se utiliza para realizar las rutinas semanticas de una funcion.
+
+char* tipoDeDatoExp = NULL;  // [❗] Variable global utilizada para asegurarse que todos los terminos de una expresion sean de un mismo tipo de dato.
 
 %}
 
@@ -37,11 +41,24 @@ Funcion* listaDeParametrosTemporal;
 %token <string>   TIPO_DATO
 %token <string>   IDENTIFICADOR
 
+%type <tipo> exp;
+
 %union {
     int   entero;
     float real;
     char   caracter;
     char* string;
+    
+    struct {
+      union {
+        int      valEnt; 
+        double   valReal;
+        char     valChar;
+        char*    valString;
+      } valor; // [❗] Declaramos este union 'TipoValor2' para que el NT 'exp' pueda almacenar el valor según qué regla siga
+    
+    char* tipoDato;
+  } tipo;
 }
 
 %%
@@ -53,12 +70,27 @@ input:   /* Vacío */
 line:   /* Vacío */
       | asignacion  ';' {
                           tipoDeDatoVar = NULL;
+                          tipoDeDatoExp = NULL;
                         }
       | declaracion ';' {
                           free(tipoDeDatoID); 
                           listaDeParametrosTemporal = NULL; // [❗] Limpia la lista de parametros temporal para poder reutilizarla en un futuro
                         }
       | llamadoFuncion';'
+      | exp             {
+                          if(! flagErrorExp){
+                            if(! strcmp($1 . tipoDato, "int"))
+                              fprintf(yyout, "%d", $1 . valor . valEnt);
+                            else if(! strcmp($1 . tipoDato, "char"))
+                              fprintf(yyout, "\'%c\'", $1 . valor . valChar);
+                            else if(! strcmp($1 . tipoDato, "float"))
+                              fprintf(yyout, "%f", $1 . valor . valReal);
+                            else if(! strcmp($1 . tipoDato, "char*"))
+                              fprintf(yyout, "%s", $1 . valor . valString);
+                          }
+
+                          flagErrorExp = 0;
+                        }
 
 ; 
 
@@ -94,21 +126,21 @@ otroArgumentoOPC:  /* VACIO */
 
 
 
-asignacion: IDENTIFICADOR '=' valor   {
-                                        Simbolo* aux = devolverSimbolo($1);
-                                        if(aux) { // [❗] Si existe...
-                                          if(aux -> tipoID != TIPO_VAR) // [❗] Pregunta si el identificador no es una funcion. 
-                                            yyerror("El ID utilizado no corresponde con una variable");
-                                          else{
-                                            if(! strcmp(aux->tipoDato, tipoDeDatoVar)) // [❗] Si no hay error de tipo, cambia el valor correctamente.
-                                              cambiarValor(aux, valorTemporal);
-                                            else 
-                                              yyerror("No coinciden los tipos de datos");
+asignacion: IDENTIFICADOR '=' valor  {
+                                          Simbolo* aux = devolverSimbolo($1); 
+                                          if(aux) { // [❗] Si existe...
+                                            if(aux -> tipoID != TIPO_VAR) // [❗] Pregunta si el identificador no es una funcion. 
+                                              yyerror("El ID utilizado no corresponde con una variable");
+                                            else{
+                                              if(! strcmp(aux->tipoDato, tipoDeDatoVar)) // [❗] Si no hay error de tipo, cambia el valor correctamente.
+                                                cambiarValor(aux, valorTemporal);
+                                              else 
+                                                yyerror("No coinciden los tipos de datos");
+                                            }
                                           }
+                                          else
+                                            mostrarErrorDeVariable($1);
                                         }
-                                        else
-                                          mostrarErrorDeVariable($1);
-                                      }
 ;
 
 declaracion: declaradorDeTipo punteroOpcional tipoDeclaracion
@@ -230,8 +262,30 @@ valor:   ENTERO   {
                        }
 ;
 
+exp:   valor       {
+                      $$ . valor . valEnt = valorTemporal . valEnt;
+                      $$ . valor . valChar = valorTemporal . valChar;
+                      $$ . valor . valReal = valorTemporal . valReal;
+                      /* if(valorTemporal. valString)
+                        $$ . valor . valString = strdup(valorTemporal . valString); */
 
+                      $$ . tipoDato = strdup(tipoDeDatoVar);
+                   }
+     | exp '+' exp {
+                      if(! strcmp($1 . tipoDato, $3 . tipoDato) && strcmp($1 . tipoDato, "char*")){
+                        $$ . valor . valEnt  = $1 . valor . valEnt  + $3 . valor . valEnt;
+                        $$ . valor . valChar = $1 . valor . valChar + $3 . valor . valChar;
+                        $$ . valor . valReal = $1 . valor . valReal + $3 . valor . valReal;
 
+                        $$ . tipoDato = strdup($1 . tipoDato); 
+                      }
+                      else{
+                        yyerror("Los valores no son compatibles");
+                        flagErrorExp = 1;
+                      }
+                        
+                   }
+;
 
 %%
 
