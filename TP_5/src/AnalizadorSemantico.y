@@ -317,15 +317,15 @@ void main() {
 
     /* 📚 TO DO LIST 📚 
        ❌ Sentencias simples y compuestas (for, if, while, etc) -> Incluidas En TP4.
-       ✅ Declaracion variables y almacenamiento en TS: punteros y arreglos. (Casi: Faltan arrays).
+       ❓  Declaracion variables y almacenamiento en TS: punteros y arreglos. (Casi: Faltan arrays).
        ✅ Declaracion, llamada y almacenamiento en TS de funciones. 
-       ❌ Expresiones (también incluidas dentro de sentencias)  
-       ❌ Control de tipo de datos en alguna operacion binaria.
+       ❓  Expresiones  (CASI)
+       ❓  Control de tipo de datos en alguna operacion binaria.(CASI)
        ✅ Control doble declaracion de variables. 
        ✅ Control de cantidad y tipo de datos en declaracion de funciones.
        ◼◾ (❗❗) GENERAR REPORTE (❗❗): 
-          ✅ Lista variables declaradas con su tipo. (Casi: Modificar TS para adaptar a Reporte)
-          ✅ Lista de funciones declaradas con su tipo (retorno), cantidad y tipo de parametros. (Casi: Modificar TS para adaptar a Reporte) 
+          ❓  Lista variables declaradas con su tipo. (Casi: Modificar TS para adaptar a Reporte)
+          ❓  Lista de funciones declaradas con su tipo (retorno), cantidad y tipo de parametros. (Casi: Modificar TS para adaptar a Reporte) 
           ❌ Errores lexicos (FLEX), sintacticos(TOKEN ERROR) y semanticos (RUTINAS) encontrados. 
     */
 
