@@ -23,14 +23,15 @@ unsigned flagErrorExp = 0;
 char* tipoDeDatoVar   = NULL; // [❗] Variable global utilizada para almacenar el tipo de dato de variables.
 char* tipoDeDatoID    = NULL; // [❗] Variable global utilizada para almacenar el tipo de dato de los identificadores.
 char* tipoDeDatoParam = NULL; // [❗] Variable global utilizada para almacenar el tipo de dato de los parametros de una funcion.
+char* tipoDatoExp     = NULL; // [❗] Variable global utilizada para almacenar el tipo de dato de expresiones.
 
 FILE* yyin;
 FILE* yyout;
 
-union TipoValor valorTemporal;  // [❗] Variable global utilizada para almacenar el valor semantico de las constantes (UNION -> ya que cambia dependiendo del tipo de dato).
-Funcion* listaDeParametrosTemporal;  // [❗] Lista de paramatros global que se utiliza para realizar las rutinas semanticas de una funcion.
+union TipoValor valorTemporal;        // [❗] Variable global utilizada para almacenar el valor semantico de las constantes (UNION -> ya que cambia dependiendo del tipo de dato).
+union TipoValor valorExp;             // [❗] Variable global utilizada para almacenar el valor semantico de las expresiones (UNION -> ya que cambia dependiendo del tipo de dato).
+Funcion* listaDeParametrosTemporal;   // [❗] Lista de paramatros global que se utiliza para realizar las rutinas semanticas de una funcion.
 
-char* tipoDeDatoExp = NULL;  // [❗] Variable global utilizada para asegurarse que todos los terminos de una expresion sean de un mismo tipo de dato.
 
 %}
 
@@ -49,16 +50,16 @@ char* tipoDeDatoExp = NULL;  // [❗] Variable global utilizada para asegurarse 
     char   caracter;
     char* string;
     
-    struct {
-      union {
+    struct {    // [❗] Declaramos este Struct 'tipo' para que el NT 'exp' pueda almacenar el valor y el tipo de dato según qué regla siga
+      union {   
         int      valEnt; 
         double   valReal;
         char     valChar;
         char*    valString;
-      } valor; // [❗] Declaramos este union 'TipoValor2' para que el NT 'exp' pueda almacenar el valor según qué regla siga
+      } valor; 
     
-    char* tipoDato;
-  } tipo;
+      char* tipoDato;
+    } tipo;
 }
 
 %%
@@ -70,28 +71,15 @@ input:   /* Vacío */
 line:   /* Vacío */
       | asignacion  ';' {
                           tipoDeDatoVar = NULL;
-                          tipoDeDatoExp = NULL;
                         }
       | declaracion ';' {
                           free(tipoDeDatoID); 
                           listaDeParametrosTemporal = NULL; // [❗] Limpia la lista de parametros temporal para poder reutilizarla en un futuro
+                          tipoDeDatoVar = NULL;
+                          tipoDatoExp = NULL;
                         }
       | llamadoFuncion';'
-      | exp             {
-                          if(! flagErrorExp){
-                            if(! strcmp($1 . tipoDato, "int"))
-                              fprintf(yyout, "%d", $1 . valor . valEnt);
-                            else if(! strcmp($1 . tipoDato, "char"))
-                              fprintf(yyout, "\'%c\'", $1 . valor . valChar);
-                            else if(! strcmp($1 . tipoDato, "float"))
-                              fprintf(yyout, "%f", $1 . valor . valReal);
-                            else if(! strcmp($1 . tipoDato, "char*"))
-                              fprintf(yyout, "%s", $1 . valor . valString);
-                          }
-
-                          flagErrorExp = 0;
-                        }
-
+      | exp           ';' 
 ; 
 
 llamadoFuncion: IDENTIFICADOR '(' argumentos ')'  {
@@ -126,14 +114,23 @@ otroArgumentoOPC:  /* VACIO */
 
 
 
-asignacion: IDENTIFICADOR '=' valor  {
+asignacion: IDENTIFICADOR '=' exp  {
                                           Simbolo* aux = devolverSimbolo($1); 
                                           if(aux) { // [❗] Si existe...
                                             if(aux -> tipoID != TIPO_VAR) // [❗] Pregunta si el identificador no es una funcion. 
                                               yyerror("El ID utilizado no corresponde con una variable");
                                             else{
-                                              if(! strcmp(aux->tipoDato, tipoDeDatoVar)) // [❗] Si no hay error de tipo, cambia el valor correctamente.
-                                                cambiarValor(aux, valorTemporal);
+                                              if(! strcmp(aux -> tipoDato, $3 . tipoDato)){ // [❗] Si no hay error de tipo, cambia el valor correctamente dependiendo del tipo de dato.
+                                                if(! strcmp(aux -> tipoDato, "int"))
+                                                  aux -> valor . valEnt = $3 . valor . valEnt;
+                                                else if(! strcmp(aux -> tipoDato, "float"))
+                                                  aux -> valor . valReal = $3 . valor . valReal;
+                                                else if(! strcmp(aux -> tipoDato, "char"))
+                                                  aux -> valor . valChar = $3 . valor . valChar;
+                                                else if(! strcmp(aux -> tipoDato, "char*"))
+                                                  aux -> valor . valString = strdup($3 . valor . valString);
+                                              }
+                                                //cambiarValor(aux, valorTemporal);
                                               else 
                                                 yyerror("No coinciden los tipos de datos");
                                             }
@@ -181,15 +178,15 @@ decla: IDENTIFICADOR asignacionOPC {
                                         aux = crearSimbolo(tipoDeDatoID, $1, TIPO_VAR);
                                         insertarSimbolo(aux);
 
-                                        if(tipoDeDatoVar){ // [❗] Pregunta si existe una inicializacion de la variable
+                                        if(tipoDatoExp){ // [❗] Pregunta si existe una inicializacion de la variable
                                           // [❗] Si es asi, verifica que los tipos coincidan. Si se cumple, modifica, si no, lanza un error
-                                          if(! strcmp(tipoDeDatoID, tipoDeDatoVar)) // [❗] Si existe, verifica que el valor de asignacion coincidad con el tipo del identificador.
-                                            cambiarValor(aux, valorTemporal);
+                                          if(! strcmp(tipoDeDatoID, tipoDatoExp)) // [❗] Si existe, verifica que el valor de asignacion coincidad con el tipo del identificador.
+                                            cambiarValor(aux, valorExp);
                                           else
                                             yyerror("El valor asignado no coincide con el tipo de dato declarado");
                                         }
-
-                                        valorTemporal = limpiarUnion(); // [❗] Limpio la variable que guarda el valor a asignar
+                                        
+                                        valorExp = limpiarUnion(); // [❗] Limpio la variable que guarda el valor a asignar
                                       }
                                       else
                                         yyerror("Doble declaración de la variable");
@@ -197,7 +194,14 @@ decla: IDENTIFICADOR asignacionOPC {
 ;
 
 asignacionOPC:  /* Vacio */
-              | '=' valor
+              | '=' exp            {  // [❗] Guardo el valor semantico y el tipo de dato de la expresion en variables temporales para realizar las resticciones semant. correspondientes. 
+                                      valorExp . valEnt     = $2 . valor . valEnt;
+                                      valorExp . valReal    = $2 . valor . valReal;
+                                      valorExp . valChar    = $2 . valor . valChar;
+                                      valorExp . valString  = $2 . valor . valString;
+
+                                      tipoDatoExp = strdup($2 . tipoDato);
+                                   }
 ;
 
 listaDeParametros:  /* Vacio */                 {
@@ -253,7 +257,7 @@ valor:   ENTERO   {
        | IDENTIFICADOR {
                         Simbolo* aux = devolverSimbolo($1);
 
-                        if(aux){
+                        if(aux){ // Verifica que el identificador exista para luego obtener su valor semantico.
                           valorTemporal = aux -> valor;
                           tipoDeDatoVar = strdup(aux -> tipoDato);
                         }
@@ -263,27 +267,30 @@ valor:   ENTERO   {
 ;
 
 exp:   valor       {
-                      $$ . valor . valEnt = valorTemporal . valEnt;
-                      $$ . valor . valChar = valorTemporal . valChar;
-                      $$ . valor . valReal = valorTemporal . valReal;
-                      /* if(valorTemporal. valString)
-                        $$ . valor . valString = strdup(valorTemporal . valString); */
+                      // [❗] Guarda el valor semantico y el tipo de dato dentro de la expresion sea cual sea. 
+                      $$ . valor . valEnt    = valorTemporal . valEnt;
+                      $$ . valor . valChar   = valorTemporal . valChar;
+                      $$ . valor . valReal   = valorTemporal . valReal;
+                      $$ . valor . valString = valorTemporal . valString;
 
                       $$ . tipoDato = strdup(tipoDeDatoVar);
                    }
      | exp '+' exp {
-                      if(! strcmp($1 . tipoDato, $3 . tipoDato) && strcmp($1 . tipoDato, "char*")){
+                      if(! strcmp($1 . tipoDato, $3 . tipoDato) && strcmp($1 . tipoDato, "char*")){ // [❗] Verifica que se pueda realizar la suma, es decir, que los valores a sumar sean un mismo tipo y que ninguno sea de tipo char*
+                        // [❗] Guarda el valor semantico y el tipo de dato dentro de la expresion "madre" luego de realizar la sumatoria de los valores semanticos
                         $$ . valor . valEnt  = $1 . valor . valEnt  + $3 . valor . valEnt;
                         $$ . valor . valChar = $1 . valor . valChar + $3 . valor . valChar;
                         $$ . valor . valReal = $1 . valor . valReal + $3 . valor . valReal;
 
                         $$ . tipoDato = strdup($1 . tipoDato); 
                       }
-                      else{
+                      else{ // [❗] Lanza un error e iguala todos los campos de la union a valores DEFAULT,.  
                         yyerror("Los valores no son compatibles");
-                        flagErrorExp = 1;
+                        $$ . valor . valEnt    = 0;  
+                        $$ . valor . valReal   = 0.0;  
+                        $$ . valor . valChar   = '\0';
+                        $$ . valor . valString = NULL; 
                       }
-                        
                    }
 ;
 
@@ -319,8 +326,8 @@ void main() {
        ❌ Sentencias simples y compuestas (for, if, while, etc) -> Incluidas En TP4.
        ❓  Declaracion variables y almacenamiento en TS: punteros y arreglos. (Casi: Faltan arrays).
        ✅ Declaracion, llamada y almacenamiento en TS de funciones. 
-       ❓  Expresiones  (CASI)
-       ❓  Control de tipo de datos en alguna operacion binaria.(CASI)
+       ✅ Expresiones  (CASI)
+       ✅ Control de tipo de datos en alguna operacion binaria.(CASI)
        ✅ Control doble declaracion de variables. 
        ✅ Control de cantidad y tipo de datos en declaracion de funciones.
        ◼◾ (❗❗) GENERAR REPORTE (❗❗): 

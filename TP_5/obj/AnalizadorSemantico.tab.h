@@ -55,23 +55,23 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 46 "../src/AnalizadorSemantico.y"
+#line 47 "../src/AnalizadorSemantico.y"
 
     int   entero;
     float real;
     char   caracter;
     char* string;
     
-    struct {
-      union {
+    struct {    // [❗] Declaramos este Struct 'tipo' para que el NT 'exp' pueda almacenar el valor y el tipo de dato según qué regla siga
+      union {   
         int      valEnt; 
         double   valReal;
         char     valChar;
         char*    valString;
-      } valor; // [❗] Declaramos este union 'TipoValor2' para que el NT 'exp' pueda almacenar el valor según qué regla siga
+      } valor; 
     
-    char* tipoDato;
-  } tipo;
+      char* tipoDato;
+    } tipo;
 
 
 

@@ -94,19 +94,20 @@ unsigned flagErrorExp = 0;
 char* tipoDeDatoVar   = NULL; // [❗] Variable global utilizada para almacenar el tipo de dato de variables.
 char* tipoDeDatoID    = NULL; // [❗] Variable global utilizada para almacenar el tipo de dato de los identificadores.
 char* tipoDeDatoParam = NULL; // [❗] Variable global utilizada para almacenar el tipo de dato de los parametros de una funcion.
+char* tipoDatoExp     = NULL; // [❗] Variable global utilizada para almacenar el tipo de dato de expresiones.
 
 FILE* yyin;
 FILE* yyout;
 
-union TipoValor valorTemporal;  // [❗] Variable global utilizada para almacenar el valor semantico de las constantes (UNION -> ya que cambia dependiendo del tipo de dato).
-Funcion* listaDeParametrosTemporal;  // [❗] Lista de paramatros global que se utiliza para realizar las rutinas semanticas de una funcion.
+union TipoValor valorTemporal;        // [❗] Variable global utilizada para almacenar el valor semantico de las constantes (UNION -> ya que cambia dependiendo del tipo de dato).
+union TipoValor valorExp;             // [❗] Variable global utilizada para almacenar el valor semantico de las expresiones (UNION -> ya que cambia dependiendo del tipo de dato).
+Funcion* listaDeParametrosTemporal;   // [❗] Lista de paramatros global que se utiliza para realizar las rutinas semanticas de una funcion.
 
-char* tipoDeDatoExp = NULL;  // [❗] Variable global utilizada para asegurarse que todos los terminos de una expresion sean de un mismo tipo de dato.
 
 
 
 /* Line 189 of yacc.c  */
-#line 110 "AnalizadorSemantico.tab.c"
+#line 111 "AnalizadorSemantico.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -149,28 +150,28 @@ typedef union YYSTYPE
 {
 
 /* Line 214 of yacc.c  */
-#line 46 "../src/AnalizadorSemantico.y"
+#line 47 "../src/AnalizadorSemantico.y"
 
     int   entero;
     float real;
     char   caracter;
     char* string;
     
-    struct {
-      union {
+    struct {    // [❗] Declaramos este Struct 'tipo' para que el NT 'exp' pueda almacenar el valor y el tipo de dato según qué regla siga
+      union {   
         int      valEnt; 
         double   valReal;
         char     valChar;
         char*    valString;
-      } valor; // [❗] Declaramos este union 'TipoValor2' para que el NT 'exp' pueda almacenar el valor según qué regla siga
+      } valor; 
     
-    char* tipoDato;
-  } tipo;
+      char* tipoDato;
+    } tipo;
 
 
 
 /* Line 214 of yacc.c  */
-#line 174 "AnalizadorSemantico.tab.c"
+#line 175 "AnalizadorSemantico.tab.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -182,7 +183,7 @@ typedef union YYSTYPE
 
 
 /* Line 264 of yacc.c  */
-#line 186 "AnalizadorSemantico.tab.c"
+#line 187 "AnalizadorSemantico.tab.c"
 
 #ifdef short
 # undef short
@@ -397,7 +398,7 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  2
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   41
+#define YYLAST   42
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  16
@@ -406,7 +407,7 @@ union yyalloc
 /* YYNRULES -- Number of rules.  */
 #define YYNRULES  42
 /* YYNRULES -- Number of states.  */
-#define YYNSTATES  57
+#define YYNSTATES  58
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
 #define YYUNDEFTOK  2
@@ -452,37 +453,37 @@ static const yytype_uint8 yytranslate[] =
    YYRHS.  */
 static const yytype_uint8 yyprhs[] =
 {
-       0,     0,     3,     4,     7,     8,    11,    14,    17,    19,
-      24,    27,    28,    30,    31,    34,    38,    42,    43,    45,
-      47,    49,    53,    58,    61,    62,    65,    66,    69,    70,
-      74,    78,    80,    81,    83,    84,    86,    88,    90,    92,
-      94,    96,    98
+       0,     0,     3,     4,     7,     8,    11,    14,    17,    20,
+      25,    28,    29,    31,    32,    35,    39,    43,    44,    46,
+      48,    50,    54,    59,    62,    63,    66,    67,    70,    71,
+      75,    79,    81,    82,    84,    85,    87,    89,    91,    93,
+      95,    97,    99
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
 static const yytype_int8 yyrhs[] =
 {
       17,     0,    -1,    -1,    17,    18,    -1,    -1,    23,     9,
-      -1,    24,     9,    -1,    19,     9,    -1,    37,    -1,     8,
-      10,    20,    11,    -1,    21,    22,    -1,    -1,    36,    -1,
-      -1,    12,    20,    -1,     8,    13,    36,    -1,    26,    25,
-      27,    -1,    -1,    14,    -1,     7,    -1,    28,    -1,    27,
-      12,    28,    -1,     8,    10,    30,    11,    -1,     8,    29,
-      -1,    -1,    13,    36,    -1,    -1,    32,    31,    -1,    -1,
-      12,    32,    31,    -1,    33,    34,    35,    -1,     7,    -1,
-      -1,    14,    -1,    -1,     8,    -1,     3,    -1,     4,    -1,
-       5,    -1,     6,    -1,     8,    -1,    36,    -1,    37,    15,
-      37,    -1
+      -1,    24,     9,    -1,    19,     9,    -1,    37,     9,    -1,
+       8,    10,    20,    11,    -1,    21,    22,    -1,    -1,    36,
+      -1,    -1,    12,    20,    -1,     8,    13,    37,    -1,    26,
+      25,    27,    -1,    -1,    14,    -1,     7,    -1,    28,    -1,
+      27,    12,    28,    -1,     8,    10,    30,    11,    -1,     8,
+      29,    -1,    -1,    13,    37,    -1,    -1,    32,    31,    -1,
+      -1,    12,    32,    31,    -1,    33,    34,    35,    -1,     7,
+      -1,    -1,    14,    -1,    -1,     8,    -1,     3,    -1,     4,
+      -1,     5,    -1,     6,    -1,     8,    -1,    36,    -1,    37,
+      15,    37,    -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    66,    66,    67,    70,    71,    75,    79,    80,    97,
-     112,   116,   117,   122,   123,   129,   146,   149,   150,   155,
-     160,   161,   162,   177,   199,   200,   203,   206,   209,   210,
-     213,   218,   223,   224,   229,   230,   233,   241,   245,   249,
-     253,   265,   274
+       0,    67,    67,    68,    71,    72,    75,    81,    82,   100,
+     115,   119,   120,   125,   126,   132,   158,   161,   162,   167,
+     172,   173,   174,   189,   211,   212,   222,   225,   228,   229,
+     232,   237,   242,   243,   248,   249,   252,   260,   264,   268,
+     272,   284,   293
 };
 #endif
 
@@ -524,7 +525,7 @@ static const yytype_uint8 yyr1[] =
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
-       0,     2,     0,     2,     0,     2,     2,     2,     1,     4,
+       0,     2,     0,     2,     0,     2,     2,     2,     2,     4,
        2,     0,     1,     0,     2,     3,     3,     0,     1,     1,
        1,     3,     4,     2,     0,     2,     0,     2,     0,     3,
        3,     1,     0,     1,     0,     1,     1,     1,     1,     1,
@@ -537,18 +538,18 @@ static const yytype_uint8 yyr2[] =
 static const yytype_uint8 yydefact[] =
 {
        2,     0,     1,    36,    37,    38,    39,    19,    40,     3,
-       0,     0,     0,    17,    41,     8,    11,     0,     7,     5,
-       6,    18,     0,     0,    40,     0,    13,    12,    15,    24,
-      16,    20,    42,     9,    11,    10,    26,     0,    23,     0,
-      14,    31,     0,    28,    32,    25,    24,    21,    22,     0,
-      27,    33,    34,    28,    35,    30,    29
+       0,     0,     0,    17,    41,     0,    11,     0,     7,     5,
+       6,    18,     0,     8,     0,    40,     0,    13,    12,    15,
+      24,    16,    20,    42,     9,    11,    10,    26,     0,    23,
+       0,    14,    31,     0,    28,    32,    25,    24,    21,    22,
+       0,    27,    33,    34,    28,    35,    30,    29
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     1,     9,    10,    25,    26,    35,    11,    12,    22,
-      13,    30,    31,    38,    42,    50,    43,    44,    52,    55,
+      -1,     1,     9,    10,    26,    27,    36,    11,    12,    22,
+      13,    31,    32,    39,    43,    51,    44,    45,    53,    56,
       14,    15
 };
 
@@ -557,20 +558,20 @@ static const yytype_int8 yydefgoto[] =
 #define YYPACT_NINF -18
 static const yytype_int8 yypact[] =
 {
-     -18,     2,   -18,   -18,   -18,   -18,   -18,   -18,     7,   -18,
-      -6,    -5,     6,    10,   -18,    11,     8,     8,   -18,   -18,
-     -18,   -18,    15,     8,   -18,    14,    16,   -18,   -18,     9,
-      17,   -18,    11,   -18,     8,   -18,    20,     8,   -18,    22,
-     -18,   -18,    21,    19,    23,   -18,    25,   -18,   -18,    20,
-     -18,   -18,    26,    19,   -18,   -18,   -18
+     -18,     5,   -18,   -18,   -18,   -18,   -18,   -18,    -7,   -18,
+      -5,     6,     9,   -12,   -18,     7,    20,    20,   -18,   -18,
+     -18,   -18,    11,   -18,    20,   -18,    16,    17,   -18,    15,
+       4,    19,   -18,    15,   -18,    20,   -18,    25,    20,   -18,
+      26,   -18,   -18,    22,    23,    24,    15,    27,   -18,   -18,
+      25,   -18,   -18,    28,    23,   -18,   -18,   -18
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -18,   -18,   -18,   -18,    -1,   -18,   -18,   -18,   -18,   -18,
-     -18,   -18,    -4,   -18,   -18,   -17,   -10,   -18,   -18,   -18,
-     -16,    18
+     -18,   -18,   -18,   -18,     2,   -18,   -18,   -18,   -18,   -18,
+     -18,   -18,    -1,   -18,   -18,   -13,    -8,   -18,   -18,   -18,
+     -15,   -17
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -580,20 +581,20 @@ static const yytype_int8 yypgoto[] =
 #define YYTABLE_NINF -1
 static const yytype_uint8 yytable[] =
 {
-      27,    28,     2,    18,    19,     3,     4,     5,     6,     7,
-       8,     3,     4,     5,     6,    20,    24,    16,    27,    36,
-      17,    45,    37,    29,    21,    33,    23,    41,    34,    39,
-      46,    49,    48,    40,    54,    47,    56,    51,    37,    53,
-       0,    32
+      29,    28,    21,    16,    18,     2,    17,    33,     3,     4,
+       5,     6,     7,     8,    37,    19,    23,    38,    20,    30,
+      28,    46,    24,     3,     4,     5,     6,    34,    25,    35,
+      24,    40,    42,    49,    47,    50,    55,    41,    52,    48,
+      38,    57,    54
 };
 
-static const yytype_int8 yycheck[] =
+static const yytype_uint8 yycheck[] =
 {
-      16,    17,     0,     9,     9,     3,     4,     5,     6,     7,
-       8,     3,     4,     5,     6,     9,     8,    10,    34,    10,
-      13,    37,    13,     8,    14,    11,    15,     7,    12,    12,
-       8,    12,    11,    34,     8,    39,    53,    14,    13,    49,
-      -1,    23
+      17,    16,    14,    10,     9,     0,    13,    24,     3,     4,
+       5,     6,     7,     8,    10,     9,     9,    13,     9,     8,
+      35,    38,    15,     3,     4,     5,     6,    11,     8,    12,
+      15,    12,     7,    11,     8,    12,     8,    35,    14,    40,
+      13,    54,    50
 };
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
@@ -602,10 +603,10 @@ static const yytype_uint8 yystos[] =
 {
        0,    17,     0,     3,     4,     5,     6,     7,     8,    18,
       19,    23,    24,    26,    36,    37,    10,    13,     9,     9,
-       9,    14,    25,    15,     8,    20,    21,    36,    36,     8,
-      27,    28,    37,    11,    12,    22,    10,    13,    29,    12,
-      20,     7,    30,    32,    33,    36,     8,    28,    11,    12,
-      31,    14,    34,    32,     8,    35,    31
+       9,    14,    25,     9,    15,     8,    20,    21,    36,    37,
+       8,    27,    28,    37,    11,    12,    22,    10,    13,    29,
+      12,    20,     7,    30,    32,    33,    37,     8,    28,    11,
+      12,    31,    14,    34,    32,     8,    35,    31
 };
 
 #define yyerrok		(yyerrstatus = 0)
@@ -1419,10 +1420,9 @@ yyreduce:
         case 5:
 
 /* Line 1455 of yacc.c  */
-#line 71 "../src/AnalizadorSemantico.y"
+#line 72 "../src/AnalizadorSemantico.y"
     {
                           tipoDeDatoVar = NULL;
-                          tipoDeDatoExp = NULL;
                         ;}
     break;
 
@@ -1433,25 +1433,28 @@ yyreduce:
     {
                           free(tipoDeDatoID); 
                           listaDeParametrosTemporal = NULL; // [❗] Limpia la lista de parametros temporal para poder reutilizarla en un futuro
+                          tipoDeDatoVar = NULL;
+                          tipoDatoExp = NULL;
                         ;}
     break;
 
   case 8:
 
 /* Line 1455 of yacc.c  */
-#line 80 "../src/AnalizadorSemantico.y"
+#line 82 "../src/AnalizadorSemantico.y"
     {
                           if(! flagErrorExp){
-                            if(! strcmp((yyvsp[(1) - (1)].tipo) . tipoDato, "int"))
-                              fprintf(yyout, "%d", (yyvsp[(1) - (1)].tipo) . valor . valEnt);
-                            else if(! strcmp((yyvsp[(1) - (1)].tipo) . tipoDato, "char"))
-                              fprintf(yyout, "\'%c\'", (yyvsp[(1) - (1)].tipo) . valor . valChar);
-                            else if(! strcmp((yyvsp[(1) - (1)].tipo) . tipoDato, "float"))
-                              fprintf(yyout, "%f", (yyvsp[(1) - (1)].tipo) . valor . valReal);
-                            else if(! strcmp((yyvsp[(1) - (1)].tipo) . tipoDato, "char*"))
-                              fprintf(yyout, "%s", (yyvsp[(1) - (1)].tipo) . valor . valString);
+                            fprintf(yyout, "Expresion: ");
+                            if(! strcmp((yyvsp[(1) - (2)].tipo) . tipoDato, "int"))
+                              fprintf(yyout, "%d", (yyvsp[(1) - (2)].tipo) . valor . valEnt);
+                            else if(! strcmp((yyvsp[(1) - (2)].tipo) . tipoDato, "char"))
+                              fprintf(yyout, "\'%c\'", (yyvsp[(1) - (2)].tipo) . valor . valChar);
+                            else if(! strcmp((yyvsp[(1) - (2)].tipo) . tipoDato, "float"))
+                              fprintf(yyout, "%f", (yyvsp[(1) - (2)].tipo) . valor . valReal);
+                            else if(! strcmp((yyvsp[(1) - (2)].tipo) . tipoDato, "char*"))
+                              fprintf(yyout, "%s", (yyvsp[(1) - (2)].tipo) . valor . valString);
                           }
-
+                          fprintf(yyout, "\n");
                           flagErrorExp = 0;
                         ;}
     break;
@@ -1459,7 +1462,7 @@ yyreduce:
   case 9:
 
 /* Line 1455 of yacc.c  */
-#line 97 "../src/AnalizadorSemantico.y"
+#line 100 "../src/AnalizadorSemantico.y"
     {
                                                     Simbolo* aux = devolverSimbolo((yyvsp[(1) - (4)].string));
                                                     if(aux){
@@ -1478,7 +1481,7 @@ yyreduce:
   case 12:
 
 /* Line 1455 of yacc.c  */
-#line 117 "../src/AnalizadorSemantico.y"
+#line 120 "../src/AnalizadorSemantico.y"
     {
                                 insertarParametro(&listaDeParametrosTemporal, tipoDeDatoVar);
                                ;}
@@ -1487,15 +1490,24 @@ yyreduce:
   case 15:
 
 /* Line 1455 of yacc.c  */
-#line 129 "../src/AnalizadorSemantico.y"
+#line 132 "../src/AnalizadorSemantico.y"
     {
                                           Simbolo* aux = devolverSimbolo((yyvsp[(1) - (3)].string)); 
                                           if(aux) { // [❗] Si existe...
                                             if(aux -> tipoID != TIPO_VAR) // [❗] Pregunta si el identificador no es una funcion. 
                                               yyerror("El ID utilizado no corresponde con una variable");
                                             else{
-                                              if(! strcmp(aux->tipoDato, tipoDeDatoVar)) // [❗] Si no hay error de tipo, cambia el valor correctamente.
-                                                cambiarValor(aux, valorTemporal);
+                                              if(! strcmp(aux -> tipoDato, (yyvsp[(3) - (3)].tipo) . tipoDato)){ // [❗] Si no hay error de tipo, cambia el valor correctamente dependiendo del tipo de dato.
+                                                if(! strcmp(aux -> tipoDato, "int"))
+                                                  aux -> valor . valEnt = (yyvsp[(3) - (3)].tipo) . valor . valEnt;
+                                                else if(! strcmp(aux -> tipoDato, "float"))
+                                                  aux -> valor . valReal = (yyvsp[(3) - (3)].tipo) . valor . valReal;
+                                                else if(! strcmp(aux -> tipoDato, "char"))
+                                                  aux -> valor . valChar = (yyvsp[(3) - (3)].tipo) . valor . valChar;
+                                                else if(! strcmp(aux -> tipoDato, "char*"))
+                                                  aux -> valor . valString = strdup((yyvsp[(3) - (3)].tipo) . valor . valString);
+                                              }
+                                                //cambiarValor(aux, valorTemporal);
                                               else 
                                                 yyerror("No coinciden los tipos de datos");
                                             }
@@ -1508,7 +1520,7 @@ yyreduce:
   case 18:
 
 /* Line 1455 of yacc.c  */
-#line 150 "../src/AnalizadorSemantico.y"
+#line 162 "../src/AnalizadorSemantico.y"
     {
                                   strcat(tipoDeDatoID, "*");    // [❗] Concatenación de string, para agregar * al tipo de dato.
                                 ;}
@@ -1517,7 +1529,7 @@ yyreduce:
   case 19:
 
 /* Line 1455 of yacc.c  */
-#line 155 "../src/AnalizadorSemantico.y"
+#line 167 "../src/AnalizadorSemantico.y"
     { 
                                 tipoDeDatoID = strdup((yyvsp[(1) - (1)].string));
                               ;}
@@ -1526,7 +1538,7 @@ yyreduce:
   case 22:
 
 /* Line 1455 of yacc.c  */
-#line 162 "../src/AnalizadorSemantico.y"
+#line 174 "../src/AnalizadorSemantico.y"
     {
                                                               Simbolo* aux = devolverSimbolo((yyvsp[(1) - (4)].string));
                                                               if(! aux){ // [❗] Pregunta si el identificador no fue utilizado antes.
@@ -1545,7 +1557,7 @@ yyreduce:
   case 23:
 
 /* Line 1455 of yacc.c  */
-#line 177 "../src/AnalizadorSemantico.y"
+#line 189 "../src/AnalizadorSemantico.y"
     {
                                       Simbolo* aux = devolverSimbolo((yyvsp[(1) - (2)].string));
                                       if(! aux){ // [❗] Pregunta si el valor no fue declarado anteriormente
@@ -1553,25 +1565,39 @@ yyreduce:
                                         aux = crearSimbolo(tipoDeDatoID, (yyvsp[(1) - (2)].string), TIPO_VAR);
                                         insertarSimbolo(aux);
 
-                                        if(tipoDeDatoVar){ // [❗] Pregunta si existe una inicializacion de la variable
+                                        if(tipoDatoExp){ // [❗] Pregunta si existe una inicializacion de la variable
                                           // [❗] Si es asi, verifica que los tipos coincidan. Si se cumple, modifica, si no, lanza un error
-                                          if(! strcmp(tipoDeDatoID, tipoDeDatoVar)) // [❗] Si existe, verifica que el valor de asignacion coincidad con el tipo del identificador.
-                                            cambiarValor(aux, valorTemporal);
+                                          if(! strcmp(tipoDeDatoID, tipoDatoExp)) // [❗] Si existe, verifica que el valor de asignacion coincidad con el tipo del identificador.
+                                            cambiarValor(aux, valorExp);
                                           else
                                             yyerror("El valor asignado no coincide con el tipo de dato declarado");
                                         }
-
-                                        valorTemporal = limpiarUnion(); // [❗] Limpio la variable que guarda el valor a asignar
+                                        
+                                        valorExp = limpiarUnion(); // [❗] Limpio la variable que guarda el valor a asignar
                                       }
                                       else
                                         yyerror("Doble declaración de la variable");
                                    ;}
     break;
 
+  case 25:
+
+/* Line 1455 of yacc.c  */
+#line 212 "../src/AnalizadorSemantico.y"
+    {  // [❗] Guardo el valor semantico y el tipo de dato de la expresion en variables temporales para realizar las resticciones semant. correspondientes. 
+                                      valorExp . valEnt     = (yyvsp[(2) - (2)].tipo) . valor . valEnt;
+                                      valorExp . valReal    = (yyvsp[(2) - (2)].tipo) . valor . valReal;
+                                      valorExp . valChar    = (yyvsp[(2) - (2)].tipo) . valor . valChar;
+                                      valorExp . valString  = (yyvsp[(2) - (2)].tipo) . valor . valString;
+
+                                      tipoDatoExp = strdup((yyvsp[(2) - (2)].tipo) . tipoDato);
+                                   ;}
+    break;
+
   case 26:
 
 /* Line 1455 of yacc.c  */
-#line 203 "../src/AnalizadorSemantico.y"
+#line 222 "../src/AnalizadorSemantico.y"
     {
                                                   insertarParametro(&listaDeParametrosTemporal, "void");
                                                 ;}
@@ -1580,7 +1606,7 @@ yyreduce:
   case 30:
 
 /* Line 1455 of yacc.c  */
-#line 213 "../src/AnalizadorSemantico.y"
+#line 232 "../src/AnalizadorSemantico.y"
     {
                                                               insertarParametro(&listaDeParametrosTemporal, tipoDeDatoParam);
                                                             ;}
@@ -1589,7 +1615,7 @@ yyreduce:
   case 31:
 
 /* Line 1455 of yacc.c  */
-#line 218 "../src/AnalizadorSemantico.y"
+#line 237 "../src/AnalizadorSemantico.y"
     { 
                                      tipoDeDatoParam = strdup((yyvsp[(1) - (1)].string));
                                    ;}
@@ -1598,7 +1624,7 @@ yyreduce:
   case 33:
 
 /* Line 1455 of yacc.c  */
-#line 224 "../src/AnalizadorSemantico.y"
+#line 243 "../src/AnalizadorSemantico.y"
     {
                                       strcat(tipoDeDatoParam, "*"); // [❗] Concatenación de string, para agregar * al tipo de dato.
                                     ;}
@@ -1607,7 +1633,7 @@ yyreduce:
   case 36:
 
 /* Line 1455 of yacc.c  */
-#line 233 "../src/AnalizadorSemantico.y"
+#line 252 "../src/AnalizadorSemantico.y"
     {
                         // [!] Asigna el tipo de dato del VALOR en la variable global para que posteriormente 
                         //     sea utilizado en la verificacion de tipos :)
@@ -1621,7 +1647,7 @@ yyreduce:
   case 37:
 
 /* Line 1455 of yacc.c  */
-#line 241 "../src/AnalizadorSemantico.y"
+#line 260 "../src/AnalizadorSemantico.y"
     {
                         tipoDeDatoVar = strdup(tipoDeDato((yyvsp[(1) - (1)].real)));
                         valorTemporal . valReal = (yyvsp[(1) - (1)].real);
@@ -1631,7 +1657,7 @@ yyreduce:
   case 38:
 
 /* Line 1455 of yacc.c  */
-#line 245 "../src/AnalizadorSemantico.y"
+#line 264 "../src/AnalizadorSemantico.y"
     {
                         tipoDeDatoVar = strdup(tipoDeDato((yyvsp[(1) - (1)].caracter)));
                         valorTemporal . valChar = (yyvsp[(1) - (1)].caracter);
@@ -1641,7 +1667,7 @@ yyreduce:
   case 39:
 
 /* Line 1455 of yacc.c  */
-#line 249 "../src/AnalizadorSemantico.y"
+#line 268 "../src/AnalizadorSemantico.y"
     {
                         tipoDeDatoVar = strdup(tipoDeDato((yyvsp[(1) - (1)].string)));
                         valorTemporal . valString = strdup((yyvsp[(1) - (1)].string));
@@ -1651,11 +1677,11 @@ yyreduce:
   case 40:
 
 /* Line 1455 of yacc.c  */
-#line 253 "../src/AnalizadorSemantico.y"
+#line 272 "../src/AnalizadorSemantico.y"
     {
                         Simbolo* aux = devolverSimbolo((yyvsp[(1) - (1)].string));
 
-                        if(aux){
+                        if(aux){ // Verifica que el identificador exista para luego obtener su valor semantico.
                           valorTemporal = aux -> valor;
                           tipoDeDatoVar = strdup(aux -> tipoDato);
                         }
@@ -1667,13 +1693,13 @@ yyreduce:
   case 41:
 
 /* Line 1455 of yacc.c  */
-#line 265 "../src/AnalizadorSemantico.y"
+#line 284 "../src/AnalizadorSemantico.y"
     {
-                      (yyval.tipo) . valor . valEnt = valorTemporal . valEnt;
-                      (yyval.tipo) . valor . valChar = valorTemporal . valChar;
-                      (yyval.tipo) . valor . valReal = valorTemporal . valReal;
-                      /* if(valorTemporal. valString)
-                        $$ . valor . valString = strdup(valorTemporal . valString); */
+                      // [❗] Guarda el valor semantico y el tipo de dato dentro de la expresion sea cual sea. 
+                      (yyval.tipo) . valor . valEnt    = valorTemporal . valEnt;
+                      (yyval.tipo) . valor . valChar   = valorTemporal . valChar;
+                      (yyval.tipo) . valor . valReal   = valorTemporal . valReal;
+                      (yyval.tipo) . valor . valString = valorTemporal . valString;
 
                       (yyval.tipo) . tipoDato = strdup(tipoDeDatoVar);
                    ;}
@@ -1682,27 +1708,32 @@ yyreduce:
   case 42:
 
 /* Line 1455 of yacc.c  */
-#line 274 "../src/AnalizadorSemantico.y"
+#line 293 "../src/AnalizadorSemantico.y"
     {
-                      if(! strcmp((yyvsp[(1) - (3)].tipo) . tipoDato, (yyvsp[(3) - (3)].tipo) . tipoDato) && strcmp((yyvsp[(1) - (3)].tipo) . tipoDato, "char*")){
+                      if(! strcmp((yyvsp[(1) - (3)].tipo) . tipoDato, (yyvsp[(3) - (3)].tipo) . tipoDato) && strcmp((yyvsp[(1) - (3)].tipo) . tipoDato, "char*")){ // [❗] Verifica que se pueda realizar la suma, es decir, que los valores a sumar sean un mismo tipo y que ninguno sea de tipo char*
+                        // [❗] Guarda el valor semantico y el tipo de dato dentro de la expresion "madre" luego de realizar la sumatoria de los valores semanticos
                         (yyval.tipo) . valor . valEnt  = (yyvsp[(1) - (3)].tipo) . valor . valEnt  + (yyvsp[(3) - (3)].tipo) . valor . valEnt;
                         (yyval.tipo) . valor . valChar = (yyvsp[(1) - (3)].tipo) . valor . valChar + (yyvsp[(3) - (3)].tipo) . valor . valChar;
                         (yyval.tipo) . valor . valReal = (yyvsp[(1) - (3)].tipo) . valor . valReal + (yyvsp[(3) - (3)].tipo) . valor . valReal;
 
                         (yyval.tipo) . tipoDato = strdup((yyvsp[(1) - (3)].tipo) . tipoDato); 
                       }
-                      else{
+                      else{ // [❗] Lanza un error si no se puede realizar la suma.  
                         yyerror("Los valores no son compatibles");
-                        flagErrorExp = 1;
+                        (yyval.tipo) . valor . valEnt    = 0;  
+                        (yyval.tipo) . valor . valReal   = 0.0;  
+                        (yyval.tipo) . valor . valChar   = '\0';
+                        (yyval.tipo) . valor . valString = NULL;
+
+                        // flagErrorExp = 1; // [❗] Flag que sirve para saber si la sumatoria se realizo con exito. 
                       }
-                        
                    ;}
     break;
 
 
 
 /* Line 1455 of yacc.c  */
-#line 1706 "AnalizadorSemantico.tab.c"
+#line 1737 "AnalizadorSemantico.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1914,7 +1945,7 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 290 "../src/AnalizadorSemantico.y"
+#line 314 "../src/AnalizadorSemantico.y"
 
 
 Simbolo* tablaSimbolos;
@@ -1945,15 +1976,15 @@ void main() {
 
     /* 📚 TO DO LIST 📚 
        ❌ Sentencias simples y compuestas (for, if, while, etc) -> Incluidas En TP4.
-       ✅ Declaracion variables y almacenamiento en TS: punteros y arreglos. (Casi: Faltan arrays).
+       ❓  Declaracion variables y almacenamiento en TS: punteros y arreglos. (Casi: Faltan arrays).
        ✅ Declaracion, llamada y almacenamiento en TS de funciones. 
-       ❌ Expresiones (también incluidas dentro de sentencias)  
-       ❌ Control de tipo de datos en alguna operacion binaria.
+       ✅ Expresiones  (CASI)
+       ✅ Control de tipo de datos en alguna operacion binaria.(CASI)
        ✅ Control doble declaracion de variables. 
        ✅ Control de cantidad y tipo de datos en declaracion de funciones.
        ◼◾ (❗❗) GENERAR REPORTE (❗❗): 
-          ✅ Lista variables declaradas con su tipo. (Casi: Modificar TS para adaptar a Reporte)
-          ✅ Lista de funciones declaradas con su tipo (retorno), cantidad y tipo de parametros. (Casi: Modificar TS para adaptar a Reporte) 
+          ❓  Lista variables declaradas con su tipo. (Casi: Modificar TS para adaptar a Reporte)
+          ❓  Lista de funciones declaradas con su tipo (retorno), cantidad y tipo de parametros. (Casi: Modificar TS para adaptar a Reporte) 
           ❌ Errores lexicos (FLEX), sintacticos(TOKEN ERROR) y semanticos (RUTINAS) encontrados. 
     */
 

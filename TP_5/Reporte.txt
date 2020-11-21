@@ -1,6 +1,8 @@
-'l'
-╔═══════════════════╗ 
-║ Tabla de Simbolos ║ 
-╚═══════════════════╝ 
 
-La tabla de simbolos esta vacia.
+Error en linea 2: Los valores no son compatibles.
+
+ ╔═══════════════════╗ 
+ ║ Tabla de Simbolos ║ 
+ ╚═══════════════════╝ 
+
+- Tipo de Dato: 'int'  - ID: a  - Valor: 0
