@@ -112,8 +112,6 @@ otroArgumentoOPC:  /* VACIO */
 
 ;
 
-
-
 asignacion: IDENTIFICADOR '=' exp  {
                                           Simbolo* aux = devolverSimbolo($1); 
                                           if(aux) { // [❗] Si existe...
@@ -121,14 +119,19 @@ asignacion: IDENTIFICADOR '=' exp  {
                                               yyerror("El ID utilizado no corresponde con una variable");
                                             else{
                                               if(! strcmp(aux -> tipoDato, $3 . tipoDato)){ // [❗] Si no hay error de tipo, cambia el valor correctamente dependiendo del tipo de dato.
-                                                if(! strcmp(aux -> tipoDato, "int"))
+                                                aux -> valor . valEnt    = $3 . valor . valEnt;
+                                                aux -> valor . valReal   = $3 . valor . valReal; 
+                                                aux -> valor . valChar   = $3 . valor . valChar;
+                                                aux -> valor . valString = strdup($3 . valor . valString);
+                                                
+                                                /*if(! strcmp(aux -> tipoDato, "int"))
                                                   aux -> valor . valEnt = $3 . valor . valEnt;
                                                 else if(! strcmp(aux -> tipoDato, "float"))
                                                   aux -> valor . valReal = $3 . valor . valReal;
                                                 else if(! strcmp(aux -> tipoDato, "char"))
                                                   aux -> valor . valChar = $3 . valor . valChar;
                                                 else if(! strcmp(aux -> tipoDato, "char*"))
-                                                  aux -> valor . valString = strdup($3 . valor . valString);
+                                                  aux -> valor . valString = strdup($3 . valor . valString);*/
                                               }
                                                 //cambiarValor(aux, valorTemporal);
                                               else 
@@ -266,6 +269,7 @@ valor:   ENTERO   {
                        }
 ;
 
+
 exp:   valor       {
                       // [❗] Guarda el valor semantico y el tipo de dato dentro de la expresion sea cual sea. 
                       $$ . valor . valEnt    = valorTemporal . valEnt;
@@ -275,7 +279,7 @@ exp:   valor       {
 
                       $$ . tipoDato = strdup(tipoDeDatoVar);
                    }
-     | exp '+' exp {
+     | exp '+' exp {  
                       if(! strcmp($1 . tipoDato, $3 . tipoDato) && strcmp($1 . tipoDato, "char*")){ // [❗] Verifica que se pueda realizar la suma, es decir, que los valores a sumar sean un mismo tipo y que ninguno sea de tipo char*
                         // [❗] Guarda el valor semantico y el tipo de dato dentro de la expresion "madre" luego de realizar la sumatoria de los valores semanticos
                         $$ . valor . valEnt  = $1 . valor . valEnt  + $3 . valor . valEnt;
