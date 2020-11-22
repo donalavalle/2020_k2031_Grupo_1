@@ -1,3 +1,6 @@
-int a; 
-a = 5;
+int a;
+int a;
+a = 10;
+int b$ = 500;
 
+// TIRA ERROR DE DOBLE DECLARACION!!!!! (REVISAR)

@@ -112,33 +112,35 @@ void mostrarTabla(FILE* archivoSalida){
         fprintf(archivoSalida, "║ Tabla de Simbolos ║ \n");
         fprintf(archivoSalida, "╚═══════════════════╝ \n");
         fprintf(archivoSalida, "\n");
-        fprintf(archivoSalida, "La tabla de simbolos esta vacia.\n");
     }
 
+    fprintf(archivoSalida,"• Lista de Variables: \n");
     for(Simbolo* aux = tablaSimbolos; aux != NULL; aux = aux -> sig){
-        fprintf(archivoSalida, "- Tipo de Dato: \'%s\' ", aux -> tipoDato);
-
         char* espacios = strdup(cantidadDeEspacios(masLargo - strlen(aux -> nombre)));
-        fprintf(archivoSalida, " - ID: %s %s", aux -> nombre, espacios);
-        
-        switch(aux -> tipoID){
-            case TIPO_VAR: 
-                if(! strcmp(aux -> tipoDato, "int")) // [!] 
-                    fprintf(archivoSalida, " - Valor: %d\n", aux->valor.valEnt);
-                else if(! strcmp(aux -> tipoDato, "float"))
-                    fprintf(archivoSalida, " - Valor: %f\n", aux -> valor.valReal);
-                else if(! strcmp(aux -> tipoDato, "char"))
-                    fprintf(archivoSalida, " - Valor: \'%c\'\n", aux -> valor.valChar); // le agregamos las comillas para no confundir después con algún identificador 
-                else if(! strcmp(aux -> tipoDato, "char*"))
-                    fprintf(archivoSalida, " - Valor: %s\n", aux -> valor.valString); //Hicimos la separación entre char y string
-                else
-                    fprintf(archivoSalida, " - Valor: No corresponde a ningun tipo de valor que se toma en cuenta, Octi.\n");
-                break;
-            case TIPO_FUNC:
-                    mostrarParametros(archivoSalida, aux -> valor.func);
-                break;
+        if (aux -> tipoID == TIPO_VAR){
+            fprintf(archivoSalida, " - Tipo de Dato: \'%s\' ", aux -> tipoDato);
+            fprintf(archivoSalida, " - Nombre de Variable: %s %s", aux -> nombre, espacios);
+            if(! strcmp(aux -> tipoDato, "int")) // [!] 
+                fprintf(archivoSalida, " - Valor: %d\n", aux->valor.valEnt);
+            else if(! strcmp(aux -> tipoDato, "float"))
+                fprintf(archivoSalida, " - Valor: %f\n", aux -> valor.valReal);
+            else if(! strcmp(aux -> tipoDato, "char"))
+                fprintf(archivoSalida, " - Valor: \'%c\'\n", aux -> valor.valChar); // le agregamos las comillas para no confundir después con algún identificador 
+            else if(! strcmp(aux -> tipoDato, "char*"))
+                fprintf(archivoSalida, " - Valor: %s\n", aux -> valor.valString); //Hicimos la separación entre char y string
+            else
+                fprintf(archivoSalida, " - Valor: No corresponde a ningun tipo de valor que se toma en cuenta, Octi.\n");                
         }
     }
+    fprintf(archivoSalida,"\n• Lista de Funciones: \n");
+    for(Simbolo* aux = tablaSimbolos; aux != NULL; aux = aux -> sig){
+        if (aux -> tipoID == TIPO_FUNC){
+        fprintf(archivoSalida, " - Retorno : %s", aux -> tipoDato);
+        fprintf(archivoSalida, " - Nombre de Funcion: %s", aux -> nombre);
+        mostrarParametros(archivoSalida, aux -> valor.func);
+        }
+    }
+
 }
 
 void mostrarParametros(FILE* archivoSalida, Funcion* listaParametros){
@@ -226,7 +228,7 @@ void sumarLinea() {
     cantidadDeLineas++;
 }
 
-unsigned cantidadDeParametros(Funcion* parametros){
+unsigned cantidadDeParametros(Funcion* parametros) {
     unsigned cantidad = 0;
 
     for(Funcion* aux = parametros; aux != NULL; aux = aux -> sig)
@@ -235,7 +237,7 @@ unsigned cantidadDeParametros(Funcion* parametros){
     return cantidad;
 }
 
-void verificarParametros(Simbolo* unaFuncion, Funcion* unaListaDeParam, FILE* archivoSalida){
+void verificarParametros(Simbolo* unaFuncion, Funcion* unaListaDeParam, FILE* archivoSalida) {
     Funcion* parametros = unaFuncion -> valor . func;
 
     if(cantidadDeParametros(parametros) != cantidadDeParametros(unaListaDeParam))
@@ -248,4 +250,40 @@ void verificarParametros(Simbolo* unaFuncion, Funcion* unaListaDeParam, FILE* ar
             }   
             unaListaDeParam = unaListaDeParam -> sig;
         }
+}
+
+void generarReporte(FILE* reporteGeneral) {
+    mostrarTabla(reporteGeneral);
+    fprintf(reporteGeneral,"• Errores Lexicos: \n");
+    mostrarError(erroresLexicos, reporteGeneral);
+}
+
+Error* crearError(char* mensajeDeError) {
+    Error* nuevoError = (Error*) malloc (sizeof(Error));
+    nuevoError -> mensajeError = strdup(mensajeDeError);
+    nuevoError -> numeroDeLinea = cantidadDeLineas;
+    nuevoError -> sig = NULL;  
+    return nuevoError;
+}
+
+void insertarError(Error** listaDeErrores, char* mensajeDeError) {
+    Error* aux = crearError(mensajeDeError);
+
+    if(*listaDeErrores == NULL)
+        *listaDeErrores = aux;
+    else
+    {
+        Error* temp = *listaDeErrores;
+        while(temp->sig != NULL)
+            temp = temp->sig;
+        
+        aux->sig = temp->sig;
+        temp->sig = aux;
+    }
+}
+
+void mostrarError(Error* listaError, FILE* archivoSalida) {
+    for(Error* aux = listaError; aux != NULL; aux = aux -> sig){
+        fprintf(archivoSalida, " - Error en linea %d: %s.\n", aux -> numeroDeLinea, aux -> mensajeError);
+    }
 }

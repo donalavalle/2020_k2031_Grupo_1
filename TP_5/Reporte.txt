@@ -1,8 +1,14 @@
 
-Error en linea 2: Los valores no son compatibles.
+Error en linea 2: Doble declaración de la variable.
 
  ╔═══════════════════╗ 
  ║ Tabla de Simbolos ║ 
  ╚═══════════════════╝ 
 
-- Tipo de Dato: 'int'  - ID: a  - Valor: 0
+• Lista de Variables: 
+ - Tipo de Dato: 'int'  - Nombre de Variable: a  - Valor: 10
+ - Tipo de Dato: 'int'  - Nombre de Variable: b  - Valor: 500
+
+• Lista de Funciones: 
+• Errores Lexicos: 
+ - Error en linea 4: $.

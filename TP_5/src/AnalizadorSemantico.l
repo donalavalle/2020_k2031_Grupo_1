@@ -6,6 +6,35 @@
     #include <stdlib.h>
     #include "AnalizadorSemantico.tab.h"
     #include "Tabla_Simbolos.h"
+
+    
+    char* cadenaErronea = NULL; 
+    short errorFlag = 0; 
+    Error* erroresLexicos = NULL;
+
+    void esError(char* charErroneo){
+        if(cadenaErronea == NULL)
+            cadenaErronea = strdup(charErroneo);
+        else
+        {
+            char * ptr = malloc(strlen(charErroneo) + strlen(cadenaErronea) + 1);
+            strcpy(ptr, cadenaErronea);
+            strcat(ptr, charErroneo);
+            cadenaErronea = strdup(ptr);
+        }
+        errorFlag = 1;
+    }
+
+    void finalDeError(){
+        if (errorFlag)
+        {
+            /*char* mensaje = strdup("Se encontro el error lexico: ");
+            strcat(mensaje, cadenaErronea); */
+            insertarError(&erroresLexicos, cadenaErronea);
+            cadenaErronea = NULL;
+        }
+        errorFlag = 0;
+    }
 %}
 
 DECIMAL         [0-9]
@@ -28,19 +57,20 @@ SALTO_LINEA      "\n"
 
 %%
 
-{CONST_DECIMAL}   { yylval.entero    = atoi(yytext); return ENTERO; }
-{CONST_OCTAL}     { yylval.entero    = strtoll(yytext, NULL, 8); return ENTERO; }
-{CONST_HEXA}      { yylval.entero    = strtoll(yytext, NULL, 16); return ENTERO; } 
-{CONST_REAL}      { yylval.real      = atof(yytext); return REAL; }
-{CONST_CHAR}      { yylval.caracter  = yytext[1]; return CHAR; /* [!] Accedemos a la posicion 1 del yytext para obtener unicamente el caracter deseado y no las comillas simples */}
-{LITERAL_CADENA}  { yylval.string    = strdup(yytext); return STRING; }
-{TIPO_DATO}       { yylval.string    = strdup(yytext); return TIPO_DATO; }
-{IDENTIFICADOR}   { yylval.string    = strdup(yytext); return IDENTIFICADOR; }
-{ESPACIOS}+       { }
-{CARACTER_SIMPLE} { return yytext[0]; }
-{COM_SIMPLE}      { }
-{COM_BLOQUE}      { }
-{SALTO_LINEA}     {sumarLinea();} 
+{CONST_DECIMAL}   { yylval.entero    = atoi(yytext); finalDeError(); return ENTERO; }
+{CONST_OCTAL}     { yylval.entero    = strtoll(yytext, NULL, 8); finalDeError(); return ENTERO; }
+{CONST_HEXA}      { yylval.entero    = strtoll(yytext, NULL, 16); finalDeError(); return ENTERO; } 
+{CONST_REAL}      { yylval.real      = atof(yytext); finalDeError(); return REAL; }
+{CONST_CHAR}      { yylval.caracter  = yytext[1]; finalDeError(); return CHAR; /* [!] Accedemos a la posicion 1 del yytext para obtener unicamente el caracter deseado y no las comillas simples */}
+{LITERAL_CADENA}  { yylval.string    = strdup(yytext); finalDeError(); return STRING; }
+{TIPO_DATO}       { yylval.string    = strdup(yytext); finalDeError(); return TIPO_DATO; }
+{IDENTIFICADOR}   { yylval.string    = strdup(yytext); finalDeError(); return IDENTIFICADOR; }
+{ESPACIOS}+       { finalDeError(); }
+{CARACTER_SIMPLE} { finalDeError(); return yytext[0]; }
+{COM_SIMPLE}      { finalDeError(); }  
+{COM_BLOQUE}      { finalDeError(); }
+{SALTO_LINEA}     { sumarLinea(); finalDeError(); } 
+.                 { esError(yytext); }
 
 
 %%

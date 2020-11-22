@@ -122,7 +122,7 @@ asignacion: IDENTIFICADOR '=' exp  {
                                                 aux -> valor . valEnt    = $3 . valor . valEnt;
                                                 aux -> valor . valReal   = $3 . valor . valReal; 
                                                 aux -> valor . valChar   = $3 . valor . valChar;
-                                                aux -> valor . valString = strdup($3 . valor . valString);
+                                                aux -> valor . valString = $3 . valor . valString;
                                                 
                                                 /*if(! strcmp(aux -> tipoDato, "int"))
                                                   aux -> valor . valEnt = $3 . valor . valEnt;
@@ -189,7 +189,7 @@ decla: IDENTIFICADOR asignacionOPC {
                                             yyerror("El valor asignado no coincide con el tipo de dato declarado");
                                         }
                                         
-                                        valorExp = limpiarUnion(); // [❗] Limpio la variable que guarda el valor a asignar
+                                        valorExp = limpiarUnion(); // [❗] Limpio la variable que guarda el valor a asignar para su posterior reutilizacion.
                                       }
                                       else
                                         yyerror("Doble declaración de la variable");
@@ -321,14 +321,15 @@ void main() {
 
     yyparse();
 
-    mostrarTabla(yyout);
+    //mostrarTabla(yyout);
+    generarReporte(yyout);
 
     fclose(yyin);
     fclose(yyout);
 
     /* 📚 TO DO LIST 📚 
-       ❌ Sentencias simples y compuestas (for, if, while, etc) -> Incluidas En TP4.
-       ❓  Declaracion variables y almacenamiento en TS: punteros y arreglos. (Casi: Faltan arrays).
+       ❌ Sentencias simples y compuestas (for, if, while, etc) -> Incluidas En TP4. 
+       ❓  Declaracion variables y almacenamiento en TS: punteros y arreglos. (Casi: Faltan arrays). 
        ✅ Declaracion, llamada y almacenamiento en TS de funciones. 
        ✅ Expresiones  (CASI)
        ✅ Control de tipo de datos en alguna operacion binaria.(CASI)

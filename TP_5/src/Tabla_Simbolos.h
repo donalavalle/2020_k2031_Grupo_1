@@ -10,6 +10,12 @@ typedef struct Funcion{
     struct Funcion* sig;
 } Funcion;
 
+typedef struct Error{
+    char*  mensajeError;
+    short  numeroDeLinea;
+    struct Error* sig;
+
+} Error;
 typedef union TipoValor {
     int      valEnt; 
     double   valReal;
@@ -42,8 +48,12 @@ TipoValor limpiarUnion();
 void      sumarLinea();
 unsigned  cantidadDeParametros(Funcion*);
 void      verificarParametros(Simbolo*, Funcion*, FILE*);
+void      insertarError(Error**, char*);
+void      mostrarError(Error*, FILE*);
+void      generarReporte(FILE*);
 
 extern Simbolo* tablaSimbolos;
-extern unsigned cantidadDeLineas;
+extern unsigned cantidadDeLineas; // [❗] Especificas que estas variables van a poder ser utilizadas tanto en Tabla_Simbolos.c como tambien en un archivo externo 
+extern Error* erroresLexicos;
 
 #endif
