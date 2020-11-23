@@ -8,11 +8,11 @@
     #include "Tabla_Simbolos.h"
 
     
-    char* cadenaErronea = NULL; 
-    short errorFlag = 0; 
-    Error* erroresLexicos = NULL;
+    char* cadenaErronea = NULL;    // [❗] Variable que almacena la cadena erronea  
+    short errorFlag = 0;           // [❗] Flag que permite o no ingresar la cadena de errores lexicos
+    Error* erroresLexicos = NULL;  // [❗] Lista de errrores lexicos.
 
-    void esError(char* charErroneo){
+    void esError(char* charErroneo){  // [❗] Almacena el caracter no reconocido en la cadena erronea.
         if(cadenaErronea == NULL)
             cadenaErronea = strdup(charErroneo);
         else
@@ -25,15 +25,16 @@
         errorFlag = 1;
     }
 
-    void finalDeError(){
-        if (errorFlag)
+    void finalDeError(){  // [❗] Dependiendo del flagError, inserta o no la cadena erronea en la lista de errores LEXICOS. 
+        if (errorFlag) // [❗] Pregunta si se reconoció un error previamente
         {
             /*char* mensaje = strdup("Se encontro el error lexico: ");
-            strcat(mensaje, cadenaErronea); */
+            strcat(mensaje, cadenaErronea);*/
             insertarError(&erroresLexicos, cadenaErronea);
-            cadenaErronea = NULL;
+            //insertarError(&erroresLexicos, mensaje);
+            cadenaErronea = NULL; // [❗] Se reinicia la variable para reutilizarla.
         }
-        errorFlag = 0;
+        errorFlag = 0; // [❗] Reinicia el flag.
     }
 %}
 
@@ -57,20 +58,20 @@ SALTO_LINEA      "\n"
 
 %%
 
-{CONST_DECIMAL}   { yylval.entero    = atoi(yytext); finalDeError(); return ENTERO; }
-{CONST_OCTAL}     { yylval.entero    = strtoll(yytext, NULL, 8); finalDeError(); return ENTERO; }
-{CONST_HEXA}      { yylval.entero    = strtoll(yytext, NULL, 16); finalDeError(); return ENTERO; } 
-{CONST_REAL}      { yylval.real      = atof(yytext); finalDeError(); return REAL; }
-{CONST_CHAR}      { yylval.caracter  = yytext[1]; finalDeError(); return CHAR; /* [!] Accedemos a la posicion 1 del yytext para obtener unicamente el caracter deseado y no las comillas simples */}
-{LITERAL_CADENA}  { yylval.string    = strdup(yytext); finalDeError(); return STRING; }
-{TIPO_DATO}       { yylval.string    = strdup(yytext); finalDeError(); return TIPO_DATO; }
-{IDENTIFICADOR}   { yylval.string    = strdup(yytext); finalDeError(); return IDENTIFICADOR; }
+{CONST_DECIMAL}   { finalDeError(); yylval.entero    = atoi(yytext); return ENTERO; }
+{CONST_OCTAL}     { finalDeError(); yylval.entero    = strtoll(yytext, NULL, 8); return ENTERO; }
+{CONST_HEXA}      { finalDeError(); yylval.entero    = strtoll(yytext, NULL, 16); return ENTERO; } 
+{CONST_REAL}      { finalDeError(); yylval.real      = atof(yytext); return REAL; }
+{CONST_CHAR}      { finalDeError(); yylval.caracter  = yytext[1]; return CHAR; /* [❗] Accedemos a la posicion 1 del yytext para obtener unicamente el caracter deseado y no las comillas simples */}
+{LITERAL_CADENA}  { finalDeError(); yylval.string    = strdup(yytext); return STRING; }
+{TIPO_DATO}       { finalDeError(); yylval.string    = strdup(yytext); return TIPO_DATO; }
+{IDENTIFICADOR}   { finalDeError(); yylval.string    = strdup(yytext); return IDENTIFICADOR; }
 {ESPACIOS}+       { finalDeError(); }
 {CARACTER_SIMPLE} { finalDeError(); return yytext[0]; }
 {COM_SIMPLE}      { finalDeError(); }  
 {COM_BLOQUE}      { finalDeError(); }
-{SALTO_LINEA}     { sumarLinea(); finalDeError(); } 
+{SALTO_LINEA}     { finalDeError(); sumarLinea(); } 
+<<EOF>>           { finalDeError(); yyterminate(); /*[!] Regla que sirve para detectar el Fin de Archivo*/} 
 .                 { esError(yytext); }
-
 
 %%

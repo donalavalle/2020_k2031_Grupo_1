@@ -16,6 +16,7 @@
 
 int yylex ();
 int yyerror (char*);
+void ingresarErrorSemantico(char*);
 void mostrarErrorDeVariable(char*);
 
 unsigned flagErrorExp = 0;
@@ -86,12 +87,13 @@ llamadoFuncion: IDENTIFICADOR '(' argumentos ')'  {
                                                     Simbolo* aux = devolverSimbolo($1);
                                                     if(aux){
                                                       if(aux -> tipoID != TIPO_FUNC) // [❗] Pregunta si el identificador es una FUNCION
-                                                        yyerror("El ID utilizado no corresponde con una funcion");
+                                                        ingresarErrorSemantico("El ID utilizado no corresponde con una funcion");
                                                       else
                                                         verificarParametros(aux, listaDeParametrosTemporal, yyout); // [❗] Si es una funcion, verifica que la cantidad y el tipo de los argumentos sea correcta.
                                                     }
                                                     else
                                                       mostrarErrorDeVariable($1);
+                                                      //ingresarErrorSemantico("La variable no fue declarada"); // [❗] Ingresa el mensaje indicado en la lista de errores SEMANTICOS. (No indicamos el nombre de la variable no decalarada) 
 
                                                     listaDeParametrosTemporal = NULL; // [❗] Libera la lista temporal.
                                                   }
@@ -116,7 +118,7 @@ asignacion: IDENTIFICADOR '=' exp  {
                                           Simbolo* aux = devolverSimbolo($1); 
                                           if(aux) { // [❗] Si existe...
                                             if(aux -> tipoID != TIPO_VAR) // [❗] Pregunta si el identificador no es una funcion. 
-                                              yyerror("El ID utilizado no corresponde con una variable");
+                                              ingresarErrorSemantico("El ID utilizado no corresponde con una variable");
                                             else{
                                               if(! strcmp(aux -> tipoDato, $3 . tipoDato)){ // [❗] Si no hay error de tipo, cambia el valor correctamente dependiendo del tipo de dato.
                                                 aux -> valor . valEnt    = $3 . valor . valEnt;
@@ -135,11 +137,12 @@ asignacion: IDENTIFICADOR '=' exp  {
                                               }
                                                 //cambiarValor(aux, valorTemporal);
                                               else 
-                                                yyerror("No coinciden los tipos de datos");
+                                                ingresarErrorSemantico("No coinciden los tipos de datos");
                                             }
                                           }
                                           else
                                             mostrarErrorDeVariable($1);
+                                            //ingresarErrorSemantico("La variable no fue declarada");
                                         }
 ;
 
@@ -167,7 +170,7 @@ tipoDeclaracion:     decla
                                                                 aux -> valor . func = listaDeParametrosTemporal; // [❗] Asigna la lista de parametros de la funcion generada previamente.
                                                               } 
                                                               else { // [❗] Si el identifidor ya fue utilizado, lanza error semantico.
-                                                                yyerror("Doble declaración de la variable");
+                                                                ingresarErrorSemantico("Doble declaración de la variable");
                                                               };
 
                                                               listaDeParametrosTemporal = NULL; // [❗] Limpia la lista temporal para su reutilizacion.
@@ -186,13 +189,13 @@ decla: IDENTIFICADOR asignacionOPC {
                                           if(! strcmp(tipoDeDatoID, tipoDatoExp)) // [❗] Si existe, verifica que el valor de asignacion coincidad con el tipo del identificador.
                                             cambiarValor(aux, valorExp);
                                           else
-                                            yyerror("El valor asignado no coincide con el tipo de dato declarado");
+                                            ingresarErrorSemantico("El valor asignado no coincide con el tipo de dato declarado");
                                         }
                                         
                                         valorExp = limpiarUnion(); // [❗] Limpio la variable que guarda el valor a asignar para su posterior reutilizacion.
                                       }
                                       else
-                                        yyerror("Doble declaración de la variable");
+                                        ingresarErrorSemantico("Doble declaración de la variable");
                                    }
 ;
 
@@ -266,6 +269,7 @@ valor:   ENTERO   {
                         }
                         else
                           mostrarErrorDeVariable($1);
+                          //ingresarErrorSemantico("La variable no fue declarada");
                        }
 ;
 
@@ -289,7 +293,7 @@ exp:   valor       {
                         $$ . tipoDato = strdup($1 . tipoDato); 
                       }
                       else{ // [❗] Lanza un error e iguala todos los campos de la union a valores DEFAULT,.  
-                        yyerror("Los valores no son compatibles");
+                        ingresarErrorSemantico("Los valores no son compatibles");
                         $$ . valor . valEnt    = 0;  
                         $$ . valor . valReal   = 0.0;  
                         $$ . valor . valChar   = '\0';
@@ -301,14 +305,28 @@ exp:   valor       {
 %%
 
 Simbolo* tablaSimbolos;
+
+Error* erroresSemanticos;
+
 unsigned cantidadDeLineas = 1;
+
+void ingresarErrorSemantico(char* mensaje) {
+  insertarError(&erroresSemanticos, mensaje);
+}
 
 int yyerror (char *mensaje) {  /* Función de error */
   fprintf(yyout, "\nError en linea %d: %s.\n", cantidadDeLineas, mensaje);
 }
 
 void mostrarErrorDeVariable(char* nombreVariable) {
-  fprintf(yyout, "\nError en linea %d: La variable \'%s\' no fue declarada\n", cantidadDeLineas, nombreVariable);
+  char* mensaje = strdup("La variable '");
+  strcat(mensaje, strdup(nombreVariable));
+  strcat(mensaje, "' no fue declarada");
+  
+
+  ingresarErrorSemantico(mensaje);
+  //fprintf(yyout, "\nError en linea %d: La variable \'%s\' no fue declarada\n", cantidadDeLineas, nombreVariable);
+  
 }
 
 void main() {
@@ -322,7 +340,7 @@ void main() {
     yyparse();
 
     //mostrarTabla(yyout);
-    generarReporte(yyout);
+    generarReporte(yyout); // [❗] Muestra todos los errores ocurridos junto con las funciones y variables declaradas. 
 
     fclose(yyin);
     fclose(yyout);

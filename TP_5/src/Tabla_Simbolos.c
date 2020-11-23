@@ -240,12 +240,19 @@ unsigned cantidadDeParametros(Funcion* parametros) {
 void verificarParametros(Simbolo* unaFuncion, Funcion* unaListaDeParam, FILE* archivoSalida) {
     Funcion* parametros = unaFuncion -> valor . func;
 
-    if(cantidadDeParametros(parametros) != cantidadDeParametros(unaListaDeParam))
-        fprintf(archivoSalida, "Error en linea %d: La cantidad de parametros ingresados no coinciden en la funcion \'%s\'.\n", cantidadDeLineas, unaFuncion -> nombre);
+    if(cantidadDeParametros(parametros) != cantidadDeParametros(unaListaDeParam)){
+        char* mensaje =  strdup("La cantidad de parametros ingresados no coinciden en la funcion '");
+        strcat(mensaje, unaFuncion -> nombre);
+        strcat(mensaje, "'");
+        insertarError(&erroresSemanticos, mensaje);
+        // insertarError(&erroresSemanticos, "La cantidad de parametros ingresados no coinciden en la funcion");
+        //fprintf(archivoSalida, "Error en linea %d: La cantidad de parametros ingresados no coinciden en la funcion \'%s\'.\n", cantidadDeLineas, unaFuncion -> nombre);
+    } 
     else
         for(Funcion* aux = parametros; aux != NULL; aux = aux -> sig){
             if(strcmp(unaListaDeParam -> tipoDatoParam, aux -> tipoDatoParam)){
-                fprintf(archivoSalida, "Error en linea %d: El tipo de dato de los argumentos ingresados no coinciden con los esperados por la funcion \'%s\'.\n", cantidadDeLineas, unaFuncion -> nombre);
+                insertarError(&erroresSemanticos, "El tipo de dato de los argumentos ingresados no coinciden con los esperados por la funcion");
+                //fprintf(archivoSalida, "Error en linea %d: El tipo de dato de los argumentos ingresados no coinciden con los esperados por la funcion \'%s\'.\n", cantidadDeLineas, unaFuncion -> nombre);
                 break;
             }   
             unaListaDeParam = unaListaDeParam -> sig;
@@ -255,7 +262,9 @@ void verificarParametros(Simbolo* unaFuncion, Funcion* unaListaDeParam, FILE* ar
 void generarReporte(FILE* reporteGeneral) {
     mostrarTabla(reporteGeneral);
     fprintf(reporteGeneral,"• Errores Lexicos: \n");
-    mostrarError(erroresLexicos, reporteGeneral);
+    mostrarError(erroresLexicos, reporteGeneral); // [❗] Muestro los errores LEXICOS
+    fprintf(reporteGeneral,"• Errores Semanticos: \n");
+    mostrarError(erroresSemanticos, reporteGeneral); // [❗] Muestro los errores SEMÁNTICOS
 }
 
 Error* crearError(char* mensajeDeError) {

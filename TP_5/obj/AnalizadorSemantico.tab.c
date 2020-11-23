@@ -87,6 +87,7 @@
 
 int yylex ();
 int yyerror (char*);
+void ingresarErrorSemantico(char*);
 void mostrarErrorDeVariable(char*);
 
 unsigned flagErrorExp = 0;
@@ -107,7 +108,7 @@ Funcion* listaDeParametrosTemporal;   // [❗] Lista de paramatros global que se
 
 
 /* Line 189 of yacc.c  */
-#line 111 "AnalizadorSemantico.tab.c"
+#line 112 "AnalizadorSemantico.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -150,7 +151,7 @@ typedef union YYSTYPE
 {
 
 /* Line 214 of yacc.c  */
-#line 47 "../src/AnalizadorSemantico.y"
+#line 48 "../src/AnalizadorSemantico.y"
 
     int   entero;
     float real;
@@ -171,7 +172,7 @@ typedef union YYSTYPE
 
 
 /* Line 214 of yacc.c  */
-#line 175 "AnalizadorSemantico.tab.c"
+#line 176 "AnalizadorSemantico.tab.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -183,7 +184,7 @@ typedef union YYSTYPE
 
 
 /* Line 264 of yacc.c  */
-#line 187 "AnalizadorSemantico.tab.c"
+#line 188 "AnalizadorSemantico.tab.c"
 
 #ifdef short
 # undef short
@@ -479,11 +480,11 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    67,    67,    68,    71,    72,    75,    81,    82,    85,
-     100,   104,   105,   110,   111,   115,   146,   149,   150,   155,
-     160,   161,   162,   177,   199,   200,   210,   213,   216,   217,
-     220,   225,   230,   231,   236,   237,   240,   248,   252,   256,
-     260,   273,   282
+       0,    68,    68,    69,    72,    73,    76,    82,    83,    86,
+     102,   106,   107,   112,   113,   117,   149,   152,   153,   158,
+     163,   164,   165,   180,   202,   203,   213,   216,   219,   220,
+     223,   228,   233,   234,   239,   240,   243,   251,   255,   259,
+     263,   277,   286
 };
 #endif
 
@@ -1420,7 +1421,7 @@ yyreduce:
         case 5:
 
 /* Line 1455 of yacc.c  */
-#line 72 "../src/AnalizadorSemantico.y"
+#line 73 "../src/AnalizadorSemantico.y"
     {
                           tipoDeDatoVar = NULL;
                         ;}
@@ -1429,7 +1430,7 @@ yyreduce:
   case 6:
 
 /* Line 1455 of yacc.c  */
-#line 75 "../src/AnalizadorSemantico.y"
+#line 76 "../src/AnalizadorSemantico.y"
     {
                           free(tipoDeDatoID); 
                           listaDeParametrosTemporal = NULL; // [❗] Limpia la lista de parametros temporal para poder reutilizarla en un futuro
@@ -1441,17 +1442,18 @@ yyreduce:
   case 9:
 
 /* Line 1455 of yacc.c  */
-#line 85 "../src/AnalizadorSemantico.y"
+#line 86 "../src/AnalizadorSemantico.y"
     {
                                                     Simbolo* aux = devolverSimbolo((yyvsp[(1) - (4)].string));
                                                     if(aux){
                                                       if(aux -> tipoID != TIPO_FUNC) // [❗] Pregunta si el identificador es una FUNCION
-                                                        yyerror("El ID utilizado no corresponde con una funcion");
+                                                        ingresarErrorSemantico("El ID utilizado no corresponde con una funcion");
                                                       else
                                                         verificarParametros(aux, listaDeParametrosTemporal, yyout); // [❗] Si es una funcion, verifica que la cantidad y el tipo de los argumentos sea correcta.
                                                     }
                                                     else
                                                       mostrarErrorDeVariable((yyvsp[(1) - (4)].string));
+                                                      //ingresarErrorSemantico("La variable no fue declarada"); // [❗] Ingresa el mensaje indicado en la lista de errores SEMANTICOS. (No indicamos el nombre de la variable no decalarada) 
 
                                                     listaDeParametrosTemporal = NULL; // [❗] Libera la lista temporal.
                                                   ;}
@@ -1460,7 +1462,7 @@ yyreduce:
   case 12:
 
 /* Line 1455 of yacc.c  */
-#line 105 "../src/AnalizadorSemantico.y"
+#line 107 "../src/AnalizadorSemantico.y"
     {
                                 insertarParametro(&listaDeParametrosTemporal, tipoDeDatoVar);
                                ;}
@@ -1469,12 +1471,12 @@ yyreduce:
   case 15:
 
 /* Line 1455 of yacc.c  */
-#line 115 "../src/AnalizadorSemantico.y"
+#line 117 "../src/AnalizadorSemantico.y"
     {
                                           Simbolo* aux = devolverSimbolo((yyvsp[(1) - (3)].string)); 
                                           if(aux) { // [❗] Si existe...
                                             if(aux -> tipoID != TIPO_VAR) // [❗] Pregunta si el identificador no es una funcion. 
-                                              yyerror("El ID utilizado no corresponde con una variable");
+                                              ingresarErrorSemantico("El ID utilizado no corresponde con una variable");
                                             else{
                                               if(! strcmp(aux -> tipoDato, (yyvsp[(3) - (3)].tipo) . tipoDato)){ // [❗] Si no hay error de tipo, cambia el valor correctamente dependiendo del tipo de dato.
                                                 aux -> valor . valEnt    = (yyvsp[(3) - (3)].tipo) . valor . valEnt;
@@ -1493,18 +1495,19 @@ yyreduce:
                                               }
                                                 //cambiarValor(aux, valorTemporal);
                                               else 
-                                                yyerror("No coinciden los tipos de datos");
+                                                ingresarErrorSemantico("No coinciden los tipos de datos");
                                             }
                                           }
                                           else
                                             mostrarErrorDeVariable((yyvsp[(1) - (3)].string));
+                                            //ingresarErrorSemantico("La variable no fue declarada");
                                         ;}
     break;
 
   case 18:
 
 /* Line 1455 of yacc.c  */
-#line 150 "../src/AnalizadorSemantico.y"
+#line 153 "../src/AnalizadorSemantico.y"
     {
                                   strcat(tipoDeDatoID, "*");    // [❗] Concatenación de string, para agregar * al tipo de dato.
                                 ;}
@@ -1513,7 +1516,7 @@ yyreduce:
   case 19:
 
 /* Line 1455 of yacc.c  */
-#line 155 "../src/AnalizadorSemantico.y"
+#line 158 "../src/AnalizadorSemantico.y"
     { 
                                 tipoDeDatoID = strdup((yyvsp[(1) - (1)].string));
                               ;}
@@ -1522,7 +1525,7 @@ yyreduce:
   case 22:
 
 /* Line 1455 of yacc.c  */
-#line 162 "../src/AnalizadorSemantico.y"
+#line 165 "../src/AnalizadorSemantico.y"
     {
                                                               Simbolo* aux = devolverSimbolo((yyvsp[(1) - (4)].string));
                                                               if(! aux){ // [❗] Pregunta si el identificador no fue utilizado antes.
@@ -1531,7 +1534,7 @@ yyreduce:
                                                                 aux -> valor . func = listaDeParametrosTemporal; // [❗] Asigna la lista de parametros de la funcion generada previamente.
                                                               } 
                                                               else { // [❗] Si el identifidor ya fue utilizado, lanza error semantico.
-                                                                yyerror("Doble declaración de la variable");
+                                                                ingresarErrorSemantico("Doble declaración de la variable");
                                                               };
 
                                                               listaDeParametrosTemporal = NULL; // [❗] Limpia la lista temporal para su reutilizacion.
@@ -1541,7 +1544,7 @@ yyreduce:
   case 23:
 
 /* Line 1455 of yacc.c  */
-#line 177 "../src/AnalizadorSemantico.y"
+#line 180 "../src/AnalizadorSemantico.y"
     {
                                       Simbolo* aux = devolverSimbolo((yyvsp[(1) - (2)].string));
                                       if(! aux){ // [❗] Pregunta si el valor no fue declarado anteriormente
@@ -1554,20 +1557,20 @@ yyreduce:
                                           if(! strcmp(tipoDeDatoID, tipoDatoExp)) // [❗] Si existe, verifica que el valor de asignacion coincidad con el tipo del identificador.
                                             cambiarValor(aux, valorExp);
                                           else
-                                            yyerror("El valor asignado no coincide con el tipo de dato declarado");
+                                            ingresarErrorSemantico("El valor asignado no coincide con el tipo de dato declarado");
                                         }
                                         
                                         valorExp = limpiarUnion(); // [❗] Limpio la variable que guarda el valor a asignar para su posterior reutilizacion.
                                       }
                                       else
-                                        yyerror("Doble declaración de la variable");
+                                        ingresarErrorSemantico("Doble declaración de la variable");
                                    ;}
     break;
 
   case 25:
 
 /* Line 1455 of yacc.c  */
-#line 200 "../src/AnalizadorSemantico.y"
+#line 203 "../src/AnalizadorSemantico.y"
     {  // [❗] Guardo el valor semantico y el tipo de dato de la expresion en variables temporales para realizar las resticciones semant. correspondientes. 
                                       valorExp . valEnt     = (yyvsp[(2) - (2)].tipo) . valor . valEnt;
                                       valorExp . valReal    = (yyvsp[(2) - (2)].tipo) . valor . valReal;
@@ -1581,7 +1584,7 @@ yyreduce:
   case 26:
 
 /* Line 1455 of yacc.c  */
-#line 210 "../src/AnalizadorSemantico.y"
+#line 213 "../src/AnalizadorSemantico.y"
     {
                                                   insertarParametro(&listaDeParametrosTemporal, "void");
                                                 ;}
@@ -1590,7 +1593,7 @@ yyreduce:
   case 30:
 
 /* Line 1455 of yacc.c  */
-#line 220 "../src/AnalizadorSemantico.y"
+#line 223 "../src/AnalizadorSemantico.y"
     {
                                                               insertarParametro(&listaDeParametrosTemporal, tipoDeDatoParam);
                                                             ;}
@@ -1599,7 +1602,7 @@ yyreduce:
   case 31:
 
 /* Line 1455 of yacc.c  */
-#line 225 "../src/AnalizadorSemantico.y"
+#line 228 "../src/AnalizadorSemantico.y"
     { 
                                      tipoDeDatoParam = strdup((yyvsp[(1) - (1)].string));
                                    ;}
@@ -1608,7 +1611,7 @@ yyreduce:
   case 33:
 
 /* Line 1455 of yacc.c  */
-#line 231 "../src/AnalizadorSemantico.y"
+#line 234 "../src/AnalizadorSemantico.y"
     {
                                       strcat(tipoDeDatoParam, "*"); // [❗] Concatenación de string, para agregar * al tipo de dato.
                                     ;}
@@ -1617,7 +1620,7 @@ yyreduce:
   case 36:
 
 /* Line 1455 of yacc.c  */
-#line 240 "../src/AnalizadorSemantico.y"
+#line 243 "../src/AnalizadorSemantico.y"
     {
                         // [!] Asigna el tipo de dato del VALOR en la variable global para que posteriormente 
                         //     sea utilizado en la verificacion de tipos :)
@@ -1631,7 +1634,7 @@ yyreduce:
   case 37:
 
 /* Line 1455 of yacc.c  */
-#line 248 "../src/AnalizadorSemantico.y"
+#line 251 "../src/AnalizadorSemantico.y"
     {
                         tipoDeDatoVar = strdup(tipoDeDato((yyvsp[(1) - (1)].real)));
                         valorTemporal . valReal = (yyvsp[(1) - (1)].real);
@@ -1641,7 +1644,7 @@ yyreduce:
   case 38:
 
 /* Line 1455 of yacc.c  */
-#line 252 "../src/AnalizadorSemantico.y"
+#line 255 "../src/AnalizadorSemantico.y"
     {
                         tipoDeDatoVar = strdup(tipoDeDato((yyvsp[(1) - (1)].caracter)));
                         valorTemporal . valChar = (yyvsp[(1) - (1)].caracter);
@@ -1651,7 +1654,7 @@ yyreduce:
   case 39:
 
 /* Line 1455 of yacc.c  */
-#line 256 "../src/AnalizadorSemantico.y"
+#line 259 "../src/AnalizadorSemantico.y"
     {
                         tipoDeDatoVar = strdup(tipoDeDato((yyvsp[(1) - (1)].string)));
                         valorTemporal . valString = strdup((yyvsp[(1) - (1)].string));
@@ -1661,7 +1664,7 @@ yyreduce:
   case 40:
 
 /* Line 1455 of yacc.c  */
-#line 260 "../src/AnalizadorSemantico.y"
+#line 263 "../src/AnalizadorSemantico.y"
     {
                         Simbolo* aux = devolverSimbolo((yyvsp[(1) - (1)].string));
 
@@ -1671,13 +1674,14 @@ yyreduce:
                         }
                         else
                           mostrarErrorDeVariable((yyvsp[(1) - (1)].string));
+                          //ingresarErrorSemantico("La variable no fue declarada");
                        ;}
     break;
 
   case 41:
 
 /* Line 1455 of yacc.c  */
-#line 273 "../src/AnalizadorSemantico.y"
+#line 277 "../src/AnalizadorSemantico.y"
     {
                       // [❗] Guarda el valor semantico y el tipo de dato dentro de la expresion sea cual sea. 
                       (yyval.tipo) . valor . valEnt    = valorTemporal . valEnt;
@@ -1692,7 +1696,7 @@ yyreduce:
   case 42:
 
 /* Line 1455 of yacc.c  */
-#line 282 "../src/AnalizadorSemantico.y"
+#line 286 "../src/AnalizadorSemantico.y"
     {  
                       if(! strcmp((yyvsp[(1) - (3)].tipo) . tipoDato, (yyvsp[(3) - (3)].tipo) . tipoDato) && strcmp((yyvsp[(1) - (3)].tipo) . tipoDato, "char*")){ // [❗] Verifica que se pueda realizar la suma, es decir, que los valores a sumar sean un mismo tipo y que ninguno sea de tipo char*
                         // [❗] Guarda el valor semantico y el tipo de dato dentro de la expresion "madre" luego de realizar la sumatoria de los valores semanticos
@@ -1703,7 +1707,7 @@ yyreduce:
                         (yyval.tipo) . tipoDato = strdup((yyvsp[(1) - (3)].tipo) . tipoDato); 
                       }
                       else{ // [❗] Lanza un error e iguala todos los campos de la union a valores DEFAULT,.  
-                        yyerror("Los valores no son compatibles");
+                        ingresarErrorSemantico("Los valores no son compatibles");
                         (yyval.tipo) . valor . valEnt    = 0;  
                         (yyval.tipo) . valor . valReal   = 0.0;  
                         (yyval.tipo) . valor . valChar   = '\0';
@@ -1715,7 +1719,7 @@ yyreduce:
 
 
 /* Line 1455 of yacc.c  */
-#line 1719 "AnalizadorSemantico.tab.c"
+#line 1723 "AnalizadorSemantico.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1927,18 +1931,32 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 301 "../src/AnalizadorSemantico.y"
+#line 305 "../src/AnalizadorSemantico.y"
 
 
 Simbolo* tablaSimbolos;
+
+Error* erroresSemanticos;
+
 unsigned cantidadDeLineas = 1;
+
+void ingresarErrorSemantico(char* mensaje) {
+  insertarError(&erroresSemanticos, mensaje);
+}
 
 int yyerror (char *mensaje) {  /* Función de error */
   fprintf(yyout, "\nError en linea %d: %s.\n", cantidadDeLineas, mensaje);
 }
 
 void mostrarErrorDeVariable(char* nombreVariable) {
-  fprintf(yyout, "\nError en linea %d: La variable \'%s\' no fue declarada\n", cantidadDeLineas, nombreVariable);
+  char* mensaje = strdup("La variable '");
+  strcat(mensaje, strdup(nombreVariable));
+  strcat(mensaje, "' no fue declarada");
+  
+
+  ingresarErrorSemantico(mensaje);
+  //fprintf(yyout, "\nError en linea %d: La variable \'%s\' no fue declarada\n", cantidadDeLineas, nombreVariable);
+  
 }
 
 void main() {
@@ -1952,7 +1970,7 @@ void main() {
     yyparse();
 
     //mostrarTabla(yyout);
-    generarReporte(yyout);
+    generarReporte(yyout); // [❗] Muestra todos los errores ocurridos junto con las funciones y variables declaradas. 
 
     fclose(yyin);
     fclose(yyout);

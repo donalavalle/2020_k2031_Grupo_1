@@ -415,11 +415,11 @@ char *yytext;
     #include "Tabla_Simbolos.h"
 
     
-    char* cadenaErronea = NULL; 
-    short errorFlag = 0; 
-    Error* erroresLexicos = NULL;
+    char* cadenaErronea = NULL;    // [❗] Variable que almacena la cadena erronea  
+    short errorFlag = 0;           // [❗] Flag que permite o no ingresar la cadena de errores lexicos
+    Error* erroresLexicos = NULL;  // [❗] Lista de errrores lexicos.
 
-    void esError(char* charErroneo){
+    void esError(char* charErroneo){  // [❗] Almacena el caracter no reconocido en la cadena erronea.
         if(cadenaErronea == NULL)
             cadenaErronea = strdup(charErroneo);
         else
@@ -432,17 +432,18 @@ char *yytext;
         errorFlag = 1;
     }
 
-    void finalDeError(){
-        if (errorFlag)
+    void finalDeError(){  // [❗] Dependiendo del flagError, inserta o no la cadena erronea en la lista de errores LEXICOS. 
+        if (errorFlag) // [❗] Pregunta si se reconoció un error previamente
         {
             /*char* mensaje = strdup("Se encontro el error lexico: ");
-            strcat(mensaje, cadenaErronea); */
+            strcat(mensaje, cadenaErronea);*/
             insertarError(&erroresLexicos, cadenaErronea);
-            cadenaErronea = NULL;
+            //insertarError(&erroresLexicos, mensaje);
+            cadenaErronea = NULL; // [❗] Se reinicia la variable para reutilizarla.
         }
-        errorFlag = 0;
+        errorFlag = 0; // [❗] Reinicia el flag.
     }
-#line 446 "lex.yy.c"
+#line 447 "lex.yy.c"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -593,10 +594,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
 
-#line 58 "../src/AnalizadorSemantico.l"
+#line 59 "../src/AnalizadorSemantico.l"
 
 
-#line 600 "lex.yy.c"
+#line 601 "lex.yy.c"
 
 	if ( yy_init )
 		{
@@ -681,82 +682,84 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 60 "../src/AnalizadorSemantico.l"
-{ yylval.entero    = atoi(yytext); finalDeError(); return ENTERO; }
+#line 61 "../src/AnalizadorSemantico.l"
+{ finalDeError(); yylval.entero    = atoi(yytext); return ENTERO; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 61 "../src/AnalizadorSemantico.l"
-{ yylval.entero    = strtoll(yytext, NULL, 8); finalDeError(); return ENTERO; }
+#line 62 "../src/AnalizadorSemantico.l"
+{ finalDeError(); yylval.entero    = strtoll(yytext, NULL, 8); return ENTERO; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 62 "../src/AnalizadorSemantico.l"
-{ yylval.entero    = strtoll(yytext, NULL, 16); finalDeError(); return ENTERO; } 
+#line 63 "../src/AnalizadorSemantico.l"
+{ finalDeError(); yylval.entero    = strtoll(yytext, NULL, 16); return ENTERO; } 
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 63 "../src/AnalizadorSemantico.l"
-{ yylval.real      = atof(yytext); finalDeError(); return REAL; }
+#line 64 "../src/AnalizadorSemantico.l"
+{ finalDeError(); yylval.real      = atof(yytext); return REAL; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 64 "../src/AnalizadorSemantico.l"
-{ yylval.caracter  = yytext[1]; finalDeError(); return CHAR; /* [!] Accedemos a la posicion 1 del yytext para obtener unicamente el caracter deseado y no las comillas simples */}
+#line 65 "../src/AnalizadorSemantico.l"
+{ finalDeError(); yylval.caracter  = yytext[1]; return CHAR; /* [❗] Accedemos a la posicion 1 del yytext para obtener unicamente el caracter deseado y no las comillas simples */}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 65 "../src/AnalizadorSemantico.l"
-{ yylval.string    = strdup(yytext); finalDeError(); return STRING; }
+#line 66 "../src/AnalizadorSemantico.l"
+{ finalDeError(); yylval.string    = strdup(yytext); return STRING; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 66 "../src/AnalizadorSemantico.l"
-{ yylval.string    = strdup(yytext); finalDeError(); return TIPO_DATO; }
+#line 67 "../src/AnalizadorSemantico.l"
+{ finalDeError(); yylval.string    = strdup(yytext); return TIPO_DATO; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 67 "../src/AnalizadorSemantico.l"
-{ yylval.string    = strdup(yytext); finalDeError(); return IDENTIFICADOR; }
+#line 68 "../src/AnalizadorSemantico.l"
+{ finalDeError(); yylval.string    = strdup(yytext); return IDENTIFICADOR; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 68 "../src/AnalizadorSemantico.l"
+#line 69 "../src/AnalizadorSemantico.l"
 { finalDeError(); }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 69 "../src/AnalizadorSemantico.l"
+#line 70 "../src/AnalizadorSemantico.l"
 { finalDeError(); return yytext[0]; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 70 "../src/AnalizadorSemantico.l"
+#line 71 "../src/AnalizadorSemantico.l"
 { finalDeError(); }  
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 71 "../src/AnalizadorSemantico.l"
+#line 72 "../src/AnalizadorSemantico.l"
 { finalDeError(); }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 72 "../src/AnalizadorSemantico.l"
-{ sumarLinea(); finalDeError(); } 
+#line 73 "../src/AnalizadorSemantico.l"
+{ finalDeError(); sumarLinea(); } 
+	YY_BREAK
+case YY_STATE_EOF(INITIAL):
+#line 74 "../src/AnalizadorSemantico.l"
+{ finalDeError(); yyterminate(); /*[!] Regla que sirve para detectar el Fin de Archivo*/} 
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 73 "../src/AnalizadorSemantico.l"
+#line 75 "../src/AnalizadorSemantico.l"
 { esError(yytext); }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 76 "../src/AnalizadorSemantico.l"
+#line 77 "../src/AnalizadorSemantico.l"
 ECHO;
 	YY_BREAK
-#line 758 "lex.yy.c"
-case YY_STATE_EOF(INITIAL):
-	yyterminate();
+#line 763 "lex.yy.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -1640,4 +1643,4 @@ int main()
 	return 0;
 	}
 #endif
-#line 76 "../src/AnalizadorSemantico.l"
+#line 77 "../src/AnalizadorSemantico.l"
