@@ -79,6 +79,7 @@ line:   /* Vacío */
                           tipoDeDatoVar = NULL;
                           tipoDatoExp = NULL;
                         }
+      | declaracionFuncion ';'
       | llamadoFuncion';'
       | exp           ';' 
 ; 
@@ -162,19 +163,21 @@ declaradorDeTipo: TIPO_DATO   {
 
 tipoDeclaracion:     decla
                    | tipoDeclaracion ',' decla
-                   | IDENTIFICADOR '(' listaDeParametros ')' {
-                                                              Simbolo* aux = devolverSimbolo($1);
-                                                              if(! aux){ // [❗] Pregunta si el identificador no fue utilizado antes.
-                                                                aux = crearSimbolo(tipoDeDatoID, $1, TIPO_FUNC); // [❗] Crea un simbolo de tipo FUNCION
-                                                                insertarSimbolo(aux);
-                                                                aux -> valor . func = listaDeParametrosTemporal; // [❗] Asigna la lista de parametros de la funcion generada previamente.
-                                                              } 
-                                                              else { // [❗] Si el identifidor ya fue utilizado, lanza error semantico.
-                                                                ingresarErrorSemantico("Doble declaración de la variable");
-                                                              };
+;
 
-                                                              listaDeParametrosTemporal = NULL; // [❗] Limpia la lista temporal para su reutilizacion.
-                                                             }
+declaracionFuncion: declaradorDeTipo punteroOpcional IDENTIFICADOR '(' listaDeParametros ')' {
+                                                                                               Simbolo* aux = devolverSimbolo($3);
+                                                                                               if(! aux){ // [❗] Pregunta si el identificador no fue utilizado antes.
+                                                                                                 aux = crearSimbolo(tipoDeDatoID, $3, TIPO_FUNC); // [❗] Crea un simbolo de tipo FUNCION
+                                                                                                 insertarSimbolo(aux);
+                                                                                                 aux -> valor . func = listaDeParametrosTemporal; // [❗] Asigna la lista de parametros de la funcion generada previamente.
+                                                                                               } 
+                                                                                               else { // [❗] Si el identifidor ya fue utilizado, lanza error semantico.
+                                                                                                 ingresarErrorSemantico("Doble declaración de la variable");
+                                                                                               };                                 
+
+                                                                                               listaDeParametrosTemporal = NULL; // [❗] Limpia la lista temporal para su reutilizacion.
+                                                                                              }
 ;
 
 decla: IDENTIFICADOR asignacionOPC {
@@ -315,7 +318,8 @@ void ingresarErrorSemantico(char* mensaje) {
 }
 
 int yyerror (char *mensaje) {  /* Función de error */
-  fprintf(yyout, "\nError en linea %d: %s.\n", cantidadDeLineas, mensaje);
+  //[❗] COMENTADO para que no haga nada al momento de encontrar un 'syntax error' ya que nos vamos a ocupar de ese error de otra manera (mensaje personalizado).
+  //fprintf(yyout, "\nError en linea %d: %s.\n", cantidadDeLineas, mensaje); 
 }
 
 void mostrarErrorDeVariable(char* nombreVariable) {

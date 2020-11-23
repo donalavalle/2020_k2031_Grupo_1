@@ -261,9 +261,9 @@ void verificarParametros(Simbolo* unaFuncion, Funcion* unaListaDeParam, FILE* ar
 
 void generarReporte(FILE* reporteGeneral) {
     mostrarTabla(reporteGeneral);
-    fprintf(reporteGeneral,"• Errores Lexicos: \n");
+    fprintf(reporteGeneral,"\n• Errores Lexicos: \n");
     mostrarError(erroresLexicos, reporteGeneral); // [❗] Muestro los errores LEXICOS
-    fprintf(reporteGeneral,"• Errores Semanticos: \n");
+    fprintf(reporteGeneral,"\n• Errores Semanticos: \n");
     mostrarError(erroresSemanticos, reporteGeneral); // [❗] Muestro los errores SEMÁNTICOS
 }
 
@@ -283,11 +283,11 @@ void insertarError(Error** listaDeErrores, char* mensajeDeError) {
     else
     {
         Error* temp = *listaDeErrores;
-        while(temp->sig != NULL)
-            temp = temp->sig;
+        while(temp -> sig != NULL)
+            temp = temp -> sig;
         
-        aux->sig = temp->sig;
-        temp->sig = aux;
+        aux  -> sig = temp -> sig;
+        temp -> sig = aux;
     }
 }
 

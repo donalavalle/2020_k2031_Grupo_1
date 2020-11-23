@@ -1,3 +1,6 @@
-int a = b;
-
-// REVISAR 
+int sumar();
+int c = d;
+char sumar;
+//int hola = 210;
+int asd = hola; // REVISAR: por que hay segmentation fault despues de un segundo error de 'varialbe no declarada' 
+//char* hola;
