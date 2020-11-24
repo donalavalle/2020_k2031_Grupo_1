@@ -50,9 +50,10 @@ void      verificarParametros(Simbolo*, Funcion*, FILE*);
 void      insertarError(Error**, char*);
 void      mostrarError(Error*, FILE*);
 void      generarReporte(FILE*);
+void      agregarSaltosDeBloque(char*);
 
 // [❗] EXTERN: Especifica que estas variables van a poder ser utilizadas tanto en Tabla_Simbolos.c como tambien en un archivo externo
-extern Simbolo* tablaSimbolos;        // [❗] Declaracion de la TS
+extern Simbolo* tablaSimbolos;       // [❗] Declaracion de la TS
 extern unsigned cantidadDeLineas;  
 extern Error* erroresLexicos;        // [❗] Declaracion de la lista de errores LEXICOS.
 extern Error* erroresSemanticos;     // [❗] Declaracion de la lista de errores SEMANTICOS.

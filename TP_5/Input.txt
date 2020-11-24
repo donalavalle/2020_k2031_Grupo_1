@@ -1,11 +1,62 @@
-int a;
-int c;
-int sumar(int, int);
 
-if(12){
-    int b = 12;    
-}
-else{
-    a = 180;
-    int unaFuncion(char*);
+//char a = 'c';
+
+int unNumero = 'c';
+
+int unaVariable = 1;
+int otraVariable = 12;
+char unaLetra = '1';
+char otraLetra = '2';
+
+char letraResultante = unaLetra + otraLetra;
+
+int sumar(int, int);
+char* toUpper(char*);
+
+sumar = 3;
+sumar(unaLetra , otraLetra);
+
+unNumero();
+
+char* hola = "Hola", mundo;
+mundo = "Mundo";
+
+otraVariable = unaVariable + unaVariable + otraVariable;
+
+hola = unaVariable + mundo;
+
+mundo = "Otro Mundo"
+
+sumar(unaVariable, otraVariable);
+
+/*
+
+    Esto es un comentario para comprobar,
+    que el cálculo de la cantidad de líneas
+    funciona. Y espero que sí...
+
+*/
+
+char unaVariable;
+
+toUpper(hola);
+
+sumar(3);
+
+toUpper("hola", "mundo");
+
+float laUltimaVariable$$ = 2 + b;
+
+%%
+
+laUltimaVariable = laUltimaVariable + 5.5;
+laUltimaVariable = laUltimaVariable + 5.5
+
+sumar(5, zzz);
+
+unaFuncion();
+
+
+if(unNumero){
+    int variableIf = 0;
 }

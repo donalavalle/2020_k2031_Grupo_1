@@ -8,9 +8,9 @@ Estado 16 conflictos: 2 desplazamiento(s)/reducción(ones)
 Estado 44 conflictos: 3 desplazamiento(s)/reducción(ones)
 Estado 45 conflictos: 13 desplazamiento/reducción, 2 reducción/reducción
 Estado 46 conflictos: 2 desplazamiento(s)/reducción(ones)
-Estado 71 conflictos: 13 desplazamiento/reducción, 2 reducción/reducción
-Estado 74 conflictos: 13 desplazamiento/reducción, 2 reducción/reducción
-Estado 80 conflictos: 1 desplazamiento(s)/reducción(ones)
+Estado 72 conflictos: 13 desplazamiento/reducción, 2 reducción/reducción
+Estado 75 conflictos: 13 desplazamiento/reducción, 2 reducción/reducción
+Estado 81 conflictos: 1 desplazamiento(s)/reducción(ones)
 Estado 98 conflictos: 1 desplazamiento(s)/reducción(ones)
 
 
@@ -87,13 +87,13 @@ Gramática
    47 puntoComaError: ';'
    48               | error
 
-   49 argumentos: tipoDeArgumento otroArgumentoOPC
+   49 argumentos: /* vacío */
+   50           | args
 
-   50 tipoDeArgumento: /* vacío */
-   51                | valor
+   51 args: tipoDeArgumento
+   52     | args ',' tipoDeArgumento
 
-   52 otroArgumentoOPC: /* vacío */
-   53                 | ',' argumentos
+   53 tipoDeArgumento: expresion
 
    54 asignacion: IDENTIFICADOR '=' expresion puntoComaError
 
@@ -149,7 +149,7 @@ $end (0) 0
 ')' (41) 33 36 37 38 46 61
 '*' (42) 57 72
 '+' (43) 82
-',' (44) 53 60 68
+',' (44) 52 60 68
 ';' (59) 37 38 47
 '=' (61) 54 64
 '{' (123) 19
@@ -219,11 +219,11 @@ llamadoFuncion (46)
 puntoComaError (47)
     en la izquierda: 47 48, en la derecha: 15 16 46 54 59 61
 argumentos (48)
-    en la izquierda: 49, en la derecha: 46 53
-tipoDeArgumento (49)
-    en la izquierda: 50 51, en la derecha: 49
-otroArgumentoOPC (50)
-    en la izquierda: 52 53, en la derecha: 49
+    en la izquierda: 49 50, en la derecha: 46
+args (49)
+    en la izquierda: 51 52, en la derecha: 50 52
+tipoDeArgumento (50)
+    en la izquierda: 53, en la derecha: 51 52
 asignacion (51)
     en la izquierda: 54, en la derecha: 7 28 41
 declaracion (52)
@@ -253,9 +253,9 @@ punteroOpcionalParam (63)
 idOPC (64)
     en la izquierda: 73 74, en la derecha: 69
 valor (65)
-    en la izquierda: 75 76 77 78 79, en la derecha: 51 81
+    en la izquierda: 75 76 77 78 79, en la derecha: 81
 expresion (66)
-    en la izquierda: 80, en la derecha: 45 54 64
+    en la izquierda: 80, en la derecha: 45 53 54 64
 exp (67)
     en la izquierda: 81 82, en la derecha: 80 82
 
@@ -660,11 +660,14 @@ estado 35
     STRING         desplazar e ir al estado 6
     IDENTIFICADOR  desplazar e ir al estado 38
 
-    $default  reduce usando la regla 50 (tipoDeArgumento)
+    $default  reduce usando la regla 49 (argumentos)
 
     argumentos       ir al estado 59
-    tipoDeArgumento  ir al estado 60
-    valor            ir al estado 61
+    args             ir al estado 60
+    tipoDeArgumento  ir al estado 61
+    valor            ir al estado 32
+    expresion        ir al estado 62
+    exp              ir al estado 34
 
 
 estado 36
@@ -678,7 +681,7 @@ estado 36
     IDENTIFICADOR  desplazar e ir al estado 38
 
     valor      ir al estado 32
-    expresion  ir al estado 62
+    expresion  ir al estado 63
     exp        ir al estado 34
 
 
@@ -692,7 +695,7 @@ estado 37
     STRING         desplazar e ir al estado 6
     IDENTIFICADOR  desplazar e ir al estado 38
 
-    expDeSentencia  ir al estado 63
+    expDeSentencia  ir al estado 64
     valor           ir al estado 32
     expresion       ir al estado 33
     exp             ir al estado 34
@@ -709,7 +712,7 @@ estado 39
 
    37 sentenciaIter: DO sentencia . WHILE '(' expDeSentencia ')' ';'
 
-    WHILE  desplazar e ir al estado 64
+    WHILE  desplazar e ir al estado 65
 
 
 estado 40
@@ -717,13 +720,13 @@ estado 40
    38 sentenciaIter: FOR '(' . forOpc ';' expOpc ';' expOpc ')' sentencia
 
     TIPO_DATO      desplazar e ir al estado 7
-    IDENTIFICADOR  desplazar e ir al estado 65
+    IDENTIFICADOR  desplazar e ir al estado 66
 
     $default  reduce usando la regla 39 (forOpc)
 
-    forOpc            ir al estado 66
-    asignacion        ir al estado 67
-    declaracion       ir al estado 68
+    forOpc            ir al estado 67
+    asignacion        ir al estado 68
+    declaracion       ir al estado 69
     declaradorDeTipo  ir al estado 51
 
 
@@ -737,7 +740,7 @@ estado 41
     STRING         desplazar e ir al estado 6
     IDENTIFICADOR  desplazar e ir al estado 38
 
-    expDeSentencia  ir al estado 69
+    expDeSentencia  ir al estado 70
     valor           ir al estado 32
     expresion       ir al estado 33
     exp             ir al estado 34
@@ -766,14 +769,14 @@ estado 44
 
     TIPO_DATO      desplazar e ir al estado 7
     IDENTIFICADOR  desplazar e ir al estado 43
-    '}'            desplazar e ir al estado 70
+    '}'            desplazar e ir al estado 71
 
     TIPO_DATO      [reduce usando la regla 22 (listaDeclaracionesOpc)]
     IDENTIFICADOR  [reduce usando la regla 22 (listaDeclaracionesOpc)]
     '}'            [reduce usando la regla 22 (listaDeclaracionesOpc)]
     $default       reduce usando la regla 22 (listaDeclaracionesOpc)
 
-    listaDeclaracionesOpc  ir al estado 71
+    listaDeclaracionesOpc  ir al estado 72
     listaDeclaraciones     ir al estado 46
     declaraciones          ir al estado 47
     llamadoFuncion         ir al estado 48
@@ -821,12 +824,12 @@ estado 45
     ';'            [reduce usando la regla 29 (listaSentenciasOpc)]
     $default       reduce usando la regla 17 (expOpc)
 
-    sentencia           ir al estado 72
+    sentencia           ir al estado 73
     sentenciaExp        ir al estado 20
     expOpc              ir al estado 21
     sentenciaComp       ir al estado 22
-    listaSentenciasOpc  ir al estado 73
-    listaSentencias     ir al estado 74
+    listaSentenciasOpc  ir al estado 74
+    listaSentencias     ir al estado 75
     sentenciaSel        ir al estado 23
     sentenciaIter       ir al estado 24
     sentenciaSalto      ir al estado 25
@@ -848,7 +851,7 @@ estado 46
     IDENTIFICADOR  [reduce usando la regla 23 (listaDeclaracionesOpc)]
     $default       reduce usando la regla 23 (listaDeclaracionesOpc)
 
-    declaraciones     ir al estado 75
+    declaraciones     ir al estado 76
     llamadoFuncion    ir al estado 48
     asignacion        ir al estado 49
     declaracion       ir al estado 50
@@ -891,7 +894,7 @@ estado 51
 
     $default  reduce usando la regla 56 (punteroOpcional)
 
-    punteroOpcional  ir al estado 76
+    punteroOpcional  ir al estado 77
 
 
 estado 52
@@ -934,10 +937,10 @@ estado 57
    55 declaracion: declaradorDeTipo punteroOpcional . tipoDeclaracion
    61 declaracionFuncion: declaradorDeTipo punteroOpcional . IDENTIFICADOR '(' listaDeParametros ')' puntoComaError
 
-    IDENTIFICADOR  desplazar e ir al estado 77
+    IDENTIFICADOR  desplazar e ir al estado 78
 
-    tipoDeclaracion  ir al estado 78
-    decla            ir al estado 79
+    tipoDeclaracion  ir al estado 79
+    decla            ir al estado 80
 
 
 estado 58
@@ -951,35 +954,41 @@ estado 58
     IDENTIFICADOR  desplazar e ir al estado 38
 
     valor  ir al estado 32
-    exp    ir al estado 80
+    exp    ir al estado 81
 
 
 estado 59
 
    46 llamadoFuncion: IDENTIFICADOR '(' argumentos . ')' puntoComaError
 
-    ')'  desplazar e ir al estado 81
+    ')'  desplazar e ir al estado 82
 
 
 estado 60
 
-   49 argumentos: tipoDeArgumento . otroArgumentoOPC
+   50 argumentos: args .
+   52 args: args . ',' tipoDeArgumento
 
-    ','  desplazar e ir al estado 82
+    ','  desplazar e ir al estado 83
 
-    $default  reduce usando la regla 52 (otroArgumentoOPC)
-
-    otroArgumentoOPC  ir al estado 83
+    $default  reduce usando la regla 50 (argumentos)
 
 
 estado 61
 
-   51 tipoDeArgumento: valor .
+   51 args: tipoDeArgumento .
 
-    $default  reduce usando la regla 51 (tipoDeArgumento)
+    $default  reduce usando la regla 51 (args)
 
 
 estado 62
+
+   53 tipoDeArgumento: expresion .
+
+    $default  reduce usando la regla 53 (tipoDeArgumento)
+
+
+estado 63
 
    54 asignacion: IDENTIFICADOR '=' expresion . puntoComaError
 
@@ -989,63 +998,63 @@ estado 62
     puntoComaError  ir al estado 84
 
 
-estado 63
+estado 64
 
    33 sentenciaSel: IF '(' expDeSentencia . ')' sentencia elseOpc
 
     ')'  desplazar e ir al estado 85
 
 
-estado 64
+estado 65
 
    37 sentenciaIter: DO sentencia WHILE . '(' expDeSentencia ')' ';'
 
     '('  desplazar e ir al estado 86
 
 
-estado 65
+estado 66
 
    54 asignacion: IDENTIFICADOR . '=' expresion puntoComaError
 
     '='  desplazar e ir al estado 36
 
 
-estado 66
+estado 67
 
    38 sentenciaIter: FOR '(' forOpc . ';' expOpc ';' expOpc ')' sentencia
 
     ';'  desplazar e ir al estado 87
 
 
-estado 67
+estado 68
 
    41 forOpc: asignacion .
 
     $default  reduce usando la regla 41 (forOpc)
 
 
-estado 68
+estado 69
 
    40 forOpc: declaracion .
 
     $default  reduce usando la regla 40 (forOpc)
 
 
-estado 69
+estado 70
 
    36 sentenciaIter: WHILE '(' expDeSentencia . ')' sentencia
 
     ')'  desplazar e ir al estado 88
 
 
-estado 70
+estado 71
 
    19 sentenciaComp: '{' listaComp '}' .
 
     $default  reduce usando la regla 19 (sentenciaComp)
 
 
-estado 71
+estado 72
 
    21 listaComp: listaComp listaDeclaracionesOpc . listaSentenciasOpc
 
@@ -1084,12 +1093,12 @@ estado 71
     ';'            [reduce usando la regla 29 (listaSentenciasOpc)]
     $default       reduce usando la regla 17 (expOpc)
 
-    sentencia           ir al estado 72
+    sentencia           ir al estado 73
     sentenciaExp        ir al estado 20
     expOpc              ir al estado 21
     sentenciaComp       ir al estado 22
     listaSentenciasOpc  ir al estado 89
-    listaSentencias     ir al estado 74
+    listaSentencias     ir al estado 75
     sentenciaSel        ir al estado 23
     sentenciaIter       ir al estado 24
     sentenciaSalto      ir al estado 25
@@ -1099,21 +1108,21 @@ estado 71
     exp                 ir al estado 34
 
 
-estado 72
+estado 73
 
    31 listaSentencias: sentencia .
 
     $default  reduce usando la regla 31 (listaSentencias)
 
 
-estado 73
+estado 74
 
    20 listaComp: listaDeclaracionesOpc listaSentenciasOpc .
 
     $default  reduce usando la regla 20 (listaComp)
 
 
-estado 74
+estado 75
 
    30 listaSentenciasOpc: listaSentencias .
    32 listaSentencias: listaSentencias . sentencia
@@ -1166,24 +1175,24 @@ estado 74
     exp             ir al estado 34
 
 
-estado 75
+estado 76
 
    25 listaDeclaraciones: listaDeclaraciones declaraciones .
 
     $default  reduce usando la regla 25 (listaDeclaraciones)
 
 
-estado 76
+estado 77
 
    55 declaracion: declaradorDeTipo punteroOpcional . tipoDeclaracion
 
     IDENTIFICADOR  desplazar e ir al estado 91
 
-    tipoDeclaracion  ir al estado 78
-    decla            ir al estado 79
+    tipoDeclaracion  ir al estado 79
+    decla            ir al estado 80
 
 
-estado 77
+estado 78
 
    59 tipoDeclaracion: IDENTIFICADOR . asignacionOPC puntoComaError
    61 declaracionFuncion: declaradorDeTipo punteroOpcional IDENTIFICADOR . '(' listaDeParametros ')' puntoComaError
@@ -1197,21 +1206,21 @@ estado 77
     asignacionOPC  ir al estado 94
 
 
-estado 78
+estado 79
 
    55 declaracion: declaradorDeTipo punteroOpcional tipoDeclaracion .
 
     $default  reduce usando la regla 55 (declaracion)
 
 
-estado 79
+estado 80
 
    60 tipoDeclaracion: decla . ',' tipoDeclaracion
 
     ','  desplazar e ir al estado 95
 
 
-estado 80
+estado 81
 
    82 exp: exp . '+' exp
    82    | exp '+' exp .
@@ -1222,7 +1231,7 @@ estado 80
     $default  reduce usando la regla 82 (exp)
 
 
-estado 81
+estado 82
 
    46 llamadoFuncion: IDENTIFICADOR '(' argumentos ')' . puntoComaError
 
@@ -1232,9 +1241,9 @@ estado 81
     puntoComaError  ir al estado 96
 
 
-estado 82
+estado 83
 
-   53 otroArgumentoOPC: ',' . argumentos
+   52 args: args ',' . tipoDeArgumento
 
     ENTERO         desplazar e ir al estado 3
     REAL           desplazar e ir al estado 4
@@ -1242,18 +1251,10 @@ estado 82
     STRING         desplazar e ir al estado 6
     IDENTIFICADOR  desplazar e ir al estado 38
 
-    $default  reduce usando la regla 50 (tipoDeArgumento)
-
-    argumentos       ir al estado 97
-    tipoDeArgumento  ir al estado 60
-    valor            ir al estado 61
-
-
-estado 83
-
-   49 argumentos: tipoDeArgumento otroArgumentoOPC .
-
-    $default  reduce usando la regla 49 (argumentos)
+    tipoDeArgumento  ir al estado 97
+    valor            ir al estado 32
+    expresion        ir al estado 62
+    exp              ir al estado 34
 
 
 estado 84
@@ -1438,7 +1439,7 @@ estado 95
     IDENTIFICADOR  desplazar e ir al estado 91
 
     tipoDeclaracion  ir al estado 108
-    decla            ir al estado 79
+    decla            ir al estado 80
 
 
 estado 96
@@ -1450,9 +1451,9 @@ estado 96
 
 estado 97
 
-   53 otroArgumentoOPC: ',' argumentos .
+   52 args: args ',' tipoDeArgumento .
 
-    $default  reduce usando la regla 53 (otroArgumentoOPC)
+    $default  reduce usando la regla 52 (args)
 
 
 estado 98

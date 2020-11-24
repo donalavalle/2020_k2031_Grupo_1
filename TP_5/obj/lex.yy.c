@@ -798,7 +798,7 @@ YY_RULE_SETUP
 case 20:
 YY_RULE_SETUP
 #line 80 "../src/AnalizadorSemantico.l"
-{ finalDeError(); }
+{ finalDeError(); agregarSaltosDeBloque(yytext); }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP

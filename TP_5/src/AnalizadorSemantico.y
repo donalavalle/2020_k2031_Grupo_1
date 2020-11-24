@@ -167,15 +167,17 @@ sentenciaSalto:   CONTINUE
 ;
 
 expDeSentencia: expresion {
-                          tipoDatoExp = NULL;
-                          valorExp = limpiarUnion()
-                        }
+                            tipoDatoExp = NULL;
+                            valorExp = limpiarUnion();
+                          }
 ;
 
 
 llamadoFuncion: IDENTIFICADOR '(' argumentos ')' puntoComaError  {
                                                                   if(flagHayPyC){ // [❗] Si hay punto y coma, realiza la accion asociada correspondiente.
+
                                                                     Simbolo* aux = devolverSimbolo($1);
+
                                                                     if(aux){
                                                                       if(aux -> tipoID != TIPO_FUNC) // [❗] Pregunta si el identificador es una FUNCION
                                                                         ingresarErrorSemantico("El ID utilizado no corresponde con una funcion");
@@ -183,8 +185,8 @@ llamadoFuncion: IDENTIFICADOR '(' argumentos ')' puntoComaError  {
                                                                         verificarParametros(aux, listaDeParametrosTemporal, yyout); // [❗] Si es una funcion, verifica que la cantidad y el tipo de los argumentos sea correcta.
                                                                     }
                                                                     else
-                                                                      mostrarErrorDeVariable($1);
-                                                                      //ingresarErrorSemantico("La variable no fue declarada"); // [❗] Ingresa el mensaje indicado en la lista de errores SEMANTICOS. (No indicamos el nombre de la variable no decalarada) 
+                                                                      ingresarErrorSemantico("La variable no fue declarada"); // [❗] Ingresa el mensaje indicado en la lista de errores SEMANTICOS. (No indicamos el nombre de la variable no decalarada) 
+                                                                      //mostrarErrorDeVariable($1);
                                                                   }
 
                                                                   flagHayPyC = 1;
@@ -200,19 +202,21 @@ puntoComaError:   ';'
                         }
 ;
 
-argumentos: tipoDeArgumento otroArgumentoOPC
+argumentos:  /* VACIO */
+           | args 
 ;
 
-
-tipoDeArgumento:   /* VACIO */
-                 | valor       {
-                                insertarParametro(&listaDeParametrosTemporal, tipoDeDatoVar);
-                               }
+args:  tipoDeArgumento
+     | args ',' tipoDeArgumento
 ;
 
-otroArgumentoOPC:  /* VACIO */
-                | ',' argumentos
-
+tipoDeArgumento: expresion  { 
+                              //puts("Entra");
+                              if(tipoDatoExp)
+                                insertarParametro(&listaDeParametrosTemporal, tipoDatoExp);
+                              /* valorExp = limpiarUnion(); */
+                              tipoDatoExp = NULL;
+                            }
 ;
 
 asignacion: IDENTIFICADOR '=' expresion puntoComaError {
@@ -222,11 +226,12 @@ asignacion: IDENTIFICADOR '=' expresion puntoComaError {
                                                               if(aux -> tipoID != TIPO_VAR) // [❗] Pregunta si el identificador es una funcion. 
                                                                 ingresarErrorSemantico("El ID utilizado no corresponde con una variable");
                                                               else{
-                                                                if(! strcmp(aux -> tipoDato, tipoDatoExp)) // [❗] Si no hay error de tipo, cambia el valor correctamente dependiendo del tipo de dato.
-                                                                    cambiarValor(aux, valorExp);
-                                                                  else 
-                                                                    ingresarErrorSemantico("No coinciden los tipos de datos");
-                                                                }
+                                                                if(tipoDatoExp){
+                                                                  if(! strcmp(aux -> tipoDato, tipoDatoExp)) // [❗] Si no hay error de tipo, cambia el valor correctamente dependiendo del tipo de dato.
+                                                                      cambiarValor(aux, valorExp);
+                                                                    else 
+                                                                      ingresarErrorSemantico("No coinciden los tipos de datos");
+                                                                }}
                                                               }
                                                               else
                                                                 mostrarErrorDeVariable($1);
@@ -382,15 +387,19 @@ valor:   ENTERO   {
                         valorTemporal . valString = strdup($1);
                        }
        | IDENTIFICADOR {
-                        Simbolo* aux = devolverSimbolo($1);
+                          Simbolo* aux = devolverSimbolo($1);
+                          
+                          if(aux){ // Verifica que el identificador exista para luego obtener su valor semantico.
+                            valorTemporal = aux -> valor;
+                            tipoDeDatoVar = strdup(aux -> tipoDato);
+                          }
 
-                        if(aux){ // Verifica que el identificador exista para luego obtener su valor semantico.
-                          valorTemporal = aux -> valor;
-                          tipoDeDatoVar = strdup(aux -> tipoDato);
-                        }
-                        else
-                          mostrarErrorDeVariable($1);
-                          //ingresarErrorSemantico("La variable no fue declarada");
+                          else{
+                            
+                            ingresarErrorSemantico("La variable no fue declarada");
+                            //mostrarErrorDeVariable($1);
+                            tipoDeDatoVar = NULL;
+                          }
                        }
 ;
 
@@ -403,8 +412,6 @@ expresion: exp {
                     valorExp.valString = NULL;
 
                     tipoDatoExp = NULL;
-
-                    flagErrorExp = 0;
                   }
                   else{ // [❗] Si es valida, asigna los valores correspondientes.
                     valorExp.valEnt    = $1.valor.valEnt;
@@ -414,6 +421,7 @@ expresion: exp {
                     
                     tipoDatoExp = strdup($1.tipoDato);
                   }
+                    flagErrorExp = 0;
                }
 ;
 
@@ -427,6 +435,7 @@ exp:   valor       {
                         $$ . valor . valReal   = valorTemporal . valReal;
                         $$ . valor . valString = valorTemporal . valString;
                       }
+                    
                    }
      | exp '+' exp {  
                       if($1.tipoDato && $3.tipoDato){
@@ -462,14 +471,13 @@ void ingresarErrorSemantico(char* mensaje) {
 }
 
 int yyerror (char *mensaje) {  /* Función de error */
-  //[❗] COMENTADO para que no haga nada al momento de encontrar un 'syntax error' ya que nos vamos a ocupar de ese error de otra manera (mensaje personalizado). 
+ // insertarError(&erroresSintacticos, mensaje);  [❗] COMENTADO para que no haga nada al momento de encontrar un 'syntax error' ya que nos vamos a ocupar de ese error de otra manera (mensaje personalizado). 
 }
 
 void mostrarErrorDeVariable(char* nombreVariable) {
   char* mensaje = strdup("La variable '");
   strcat(mensaje, strdup(nombreVariable));
   strcat(mensaje, "' no fue declarada");
-  
 
   ingresarErrorSemantico(mensaje);
   //fprintf(yyout, "\nError en linea %d: La variable \'%s\' no fue declarada\n", cantidadDeLineas, nombreVariable);
@@ -493,7 +501,7 @@ void main() {
     fclose(yyout);
 
     /* 📚 TO DO LIST 📚 
-       ❌ Sentencias simples y compuestas (for, if, while, etc) -> Incluidas En TP4. 
+       ✅ Sentencias simples y compuestas (for, if, while, etc) -> Incluidas En TP4. 
        ❓  Declaracion variables y almacenamiento en TS: punteros y arreglos. (Casi: Faltan arrays). 
        ✅ Declaracion, llamada y almacenamiento en TS de funciones. 
        ✅ Expresiones  (CASI)

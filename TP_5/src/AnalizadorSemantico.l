@@ -77,7 +77,7 @@ SALTO_LINEA      "\n"
 {ESPACIOS}+       { finalDeError(); }
 {CARACTER_SIMPLE} { finalDeError(); return yytext[0]; }
 {COM_SIMPLE}      { finalDeError(); }  
-{COM_BLOQUE}      { finalDeError(); }
+{COM_BLOQUE}      { finalDeError(); agregarSaltosDeBloque(yytext); }
 {SALTO_LINEA}     { finalDeError(); sumarLinea(); } 
 <<EOF>>           { finalDeError(); yyterminate(); /*[!] Regla que sirve para detectar el Fin de Archivo*/} 
 .                 { esError(yytext); }

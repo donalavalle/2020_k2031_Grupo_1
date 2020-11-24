@@ -1,20 +1,45 @@
 
- ╔═══════════════════╗ 
- ║ Tabla de Simbolos ║ 
- ╚═══════════════════╝ 
+╔═══════════════════╗ 
+║ Tabla de Simbolos ║ 
+╚═══════════════════╝ 
 
 • Lista de Variables: 
- - Tipo de Dato: 'int'  - Nombre de Variable: a      - Valor: 180
- - Tipo de Dato: 'int'  - Nombre de Variable: b      - Valor: 12
- - Tipo de Dato: 'int'  - Nombre de Variable: c      - Valor: 0
+ - Tipo de Dato: 'char*'  - Nombre de Variable: hola              - Valor: "Hola"
+ - Tipo de Dato: 'float'  - Nombre de Variable: laUltimaVariable  - Valor: 5.500000
+ - Tipo de Dato: 'char'  - Nombre de Variable: letraResultante   - Valor: 'c'
+ - Tipo de Dato: 'char*'  - Nombre de Variable: mundo             - Valor: "Mundo"
+ - Tipo de Dato: 'char'  - Nombre de Variable: otraLetra         - Valor: '2'
+ - Tipo de Dato: 'int'  - Nombre de Variable: otraVariable      - Valor: 14
+ - Tipo de Dato: 'char'  - Nombre de Variable: unaLetra          - Valor: '1'
+ - Tipo de Dato: 'int'  - Nombre de Variable: unaVariable       - Valor: 1
+ - Tipo de Dato: 'int'  - Nombre de Variable: unNumero          - Valor: 0
+ - Tipo de Dato: 'int'  - Nombre de Variable: variableIf        - Valor: 0
 
 • Lista de Funciones: 
  - Retorno : int - Nombre de Funcion: sumar - Parametro/s: (int, int)
+ - Retorno : char* - Nombre de Funcion: toUpper - Parametro/s: (char*)
+
+╔═════════╗ 
+║ Errores ║ 
+╚═════════╝ 
 
 • Errores Lexicos: 
+ - Error en linea 48: $$.
+ - Error en linea 50: %%.
 
 • Errores Sintacticos: 
- - Error en linea 10: Se esperaba ';' al final de la linea.
- - Error en linea 10: Se esperaba ';' al final de la linea.
+ - Error en linea 30: Se esperaba ';' al final de la linea.
+ - Error en linea 55: Se esperaba ';' al final de la linea.
 
 • Errores Semanticos: 
+ - Error en linea 4: El valor asignado no coincide con el tipo de dato declarado.
+ - Error en linea 16: El ID utilizado no corresponde con una variable.
+ - Error en linea 17: El tipo de dato de los argumentos ingresados no coinciden con los esperados por la funcion.
+ - Error en linea 19: El ID utilizado no corresponde con una funcion.
+ - Error en linea 26: Los valores no son compatibles.
+ - Error en linea 40: Doble declaración de la variable.
+ - Error en linea 44: La cantidad de parametros ingresados no coinciden en la funcion 'sumar'.
+ - Error en linea 48: La variable no fue declarada.
+ - Error en linea 55: La variable no fue declarada.
+ - Error en linea 55: La cantidad de parametros ingresados no coinciden en la funcion 'sumar'.
+ - Error en linea 57: La variable no fue declarada.

@@ -87,32 +87,13 @@ Simbolo* devolverSimbolo(char* nombreID){
 
 void mostrarTabla(FILE* archivoSalida){
 
-    unsigned masLargo;
+    unsigned masLargo = encontrarMasLargo();
 
-    if(tablaSimbolos) {
-        masLargo = encontrarMasLargo();
-        char* centrado;
-        if(masLargo == 1)
-            centrado = strdup(" ");
-        else if(! masLargo % 2)
-            centrado = strdup(cantidadDeEspacios(masLargo / 2));
-        else
-            centrado = strdup(cantidadDeEspacios(masLargo / 2 - 1));
-            
-        fprintf(archivoSalida, "\n");
-        fprintf(archivoSalida, "%s╔═══════════════════╗ \n", centrado);
-        fprintf(archivoSalida, "%s║ Tabla de Simbolos ║ \n", centrado);
-        fprintf(archivoSalida, "%s╚═══════════════════╝ \n", centrado);
-        fprintf(archivoSalida, "\n");
-    }
-
-    else {
-        fprintf(archivoSalida, "\n");
-        fprintf(archivoSalida, "╔═══════════════════╗ \n");
-        fprintf(archivoSalida, "║ Tabla de Simbolos ║ \n");
-        fprintf(archivoSalida, "╚═══════════════════╝ \n");
-        fprintf(archivoSalida, "\n");
-    }
+    fprintf(archivoSalida, "\n");
+    fprintf(archivoSalida, "╔═══════════════════╗ \n");
+    fprintf(archivoSalida, "║ Tabla de Simbolos ║ \n");
+    fprintf(archivoSalida, "╚═══════════════════╝ \n");
+    fprintf(archivoSalida, "\n");
 
     fprintf(archivoSalida,"• Lista de Variables: \n");
     for(Simbolo* aux = tablaSimbolos; aux != NULL; aux = aux -> sig){
@@ -261,6 +242,11 @@ void verificarParametros(Simbolo* unaFuncion, Funcion* unaListaDeParam, FILE* ar
 
 void generarReporte(FILE* reporteGeneral) {
     mostrarTabla(reporteGeneral);
+    fprintf(reporteGeneral, "\n");
+    fprintf(reporteGeneral, "╔═════════╗ \n");
+    fprintf(reporteGeneral, "║ Errores ║ \n");
+    fprintf(reporteGeneral, "╚═════════╝ \n");
+
     fprintf(reporteGeneral,"\n• Errores Lexicos: \n");
     mostrarError(erroresLexicos, reporteGeneral); // [❗] Muestro los errores LEXICOS
     fprintf(reporteGeneral,"\n• Errores Sintacticos: \n");
@@ -299,4 +285,17 @@ void mostrarError(Error* listaError, FILE* archivoSalida) {
     for(Error* aux = listaError; aux != NULL; aux = aux -> sig){
         fprintf(archivoSalida, " - Error en linea %d: %s.\n", aux -> numeroDeLinea, aux -> mensajeError);
     }
+}
+
+void agregarSaltosDeBloque(char* dato) {
+        int cantidad = 0;
+        int i = 0;
+        while(dato[i] != '\0')
+        {
+            if(dato[i] == '\n')
+                cantidad++;
+            i++;
+        }
+
+        cantidadDeLineas += cantidad;
 }
