@@ -80,7 +80,7 @@
 #include <stdint.h> 
 
 //[!] Definir funciones con DEFINE, permite no estandarizar el tipo de dato de los parametros. 
-#define tipoDeDato(x) _Generic((x), char: "char", int: "int", float: "float", char *: "char*", default: "other") 
+#define tipoDeDato(x) _Generic((x), char: "char", int: "int", float: "float", char *: "char*", default: "other")
 #define sonIguales(var1, var2) (! strcmp(tipoDeDato(var1), tipoDeDato(var2))) 
 
 #define YYDEBUG 1
@@ -88,9 +88,11 @@
 int yylex ();
 int yyerror (char*);
 void ingresarErrorSemantico(char*);
+void ingresarErrorSintactico();
 void mostrarErrorDeVariable(char*);
 
 unsigned flagErrorExp = 0;
+unsigned flagHayPyC = 1;  
 
 char* tipoDeDatoVar   = NULL; // [❗] Variable global utilizada para almacenar el tipo de dato de variables.
 char* tipoDeDatoID    = NULL; // [❗] Variable global utilizada para almacenar el tipo de dato de los identificadores.
@@ -108,7 +110,7 @@ Funcion* listaDeParametrosTemporal;   // [❗] Lista de paramatros global que se
 
 
 /* Line 189 of yacc.c  */
-#line 112 "AnalizadorSemantico.tab.c"
+#line 114 "AnalizadorSemantico.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -140,7 +142,15 @@ Funcion* listaDeParametrosTemporal;   // [❗] Lista de paramatros global que se
      CHAR = 260,
      STRING = 261,
      TIPO_DATO = 262,
-     IDENTIFICADOR = 263
+     IDENTIFICADOR = 263,
+     IF = 264,
+     ELSE = 265,
+     DO = 266,
+     FOR = 267,
+     WHILE = 268,
+     CONTINUE = 269,
+     BREAK = 270,
+     RETURN = 271
    };
 #endif
 
@@ -151,7 +161,7 @@ typedef union YYSTYPE
 {
 
 /* Line 214 of yacc.c  */
-#line 48 "../src/AnalizadorSemantico.y"
+#line 59 "../src/AnalizadorSemantico.y"
 
     int   entero;
     float real;
@@ -172,7 +182,7 @@ typedef union YYSTYPE
 
 
 /* Line 214 of yacc.c  */
-#line 176 "AnalizadorSemantico.tab.c"
+#line 186 "AnalizadorSemantico.tab.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -184,7 +194,7 @@ typedef union YYSTYPE
 
 
 /* Line 264 of yacc.c  */
-#line 188 "AnalizadorSemantico.tab.c"
+#line 198 "AnalizadorSemantico.tab.c"
 
 #ifdef short
 # undef short
@@ -399,20 +409,20 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  2
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   43
+#define YYLAST   147
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  16
+#define YYNTOKENS  26
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  23
+#define YYNNTS  42
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  43
+#define YYNRULES  83
 /* YYNRULES -- Number of states.  */
-#define YYNSTATES  60
+#define YYNSTATES  128
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   263
+#define YYMAXUTOK   271
 
 #define YYTRANSLATE(YYX)						\
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
@@ -424,15 +434,15 @@ static const yytype_uint8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-      10,    11,    14,    15,    12,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     9,
-       2,    13,     2,     2,     2,     2,     2,     2,     2,     2,
+      19,    20,    24,    25,    22,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,    21,
+       2,    23,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,    17,     2,    18,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -446,7 +456,8 @@ static const yytype_uint8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
-       5,     6,     7,     8
+       5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
+      15,    16
 };
 
 #if YYDEBUG
@@ -454,37 +465,56 @@ static const yytype_uint8 yytranslate[] =
    YYRHS.  */
 static const yytype_uint8 yyprhs[] =
 {
-       0,     0,     3,     4,     7,     8,    11,    14,    17,    20,
-      23,    28,    31,    32,    34,    35,    38,    42,    46,    47,
-      49,    51,    53,    57,    64,    67,    68,    71,    72,    75,
-      76,    80,    84,    86,    87,    89,    90,    92,    94,    96,
-      98,   100,   102,   104
+       0,     0,     3,     4,     7,     8,    10,    12,    13,    15,
+      17,    19,    21,    23,    25,    27,    29,    32,    35,    36,
+      38,    42,    45,    49,    50,    52,    54,    57,    59,    61,
+      63,    64,    66,    68,    71,    78,    79,    82,    88,    96,
+     106,   107,   109,   111,   113,   115,   118,   120,   126,   128,
+     130,   133,   134,   136,   137,   140,   145,   149,   150,   152,
+     154,   158,   162,   170,   173,   174,   177,   178,   181,   182,
+     186,   190,   192,   193,   195,   196,   198,   200,   202,   204,
+     206,   208,   210,   212
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
 static const yytype_int8 yyrhs[] =
 {
-      17,     0,    -1,    -1,    17,    18,    -1,    -1,    23,     9,
-      -1,    24,     9,    -1,    28,     9,    -1,    19,     9,    -1,
-      38,     9,    -1,     8,    10,    20,    11,    -1,    21,    22,
-      -1,    -1,    37,    -1,    -1,    12,    20,    -1,     8,    13,
-      38,    -1,    26,    25,    27,    -1,    -1,    14,    -1,     7,
-      -1,    29,    -1,    27,    12,    29,    -1,    26,    25,     8,
-      10,    31,    11,    -1,     8,    30,    -1,    -1,    13,    38,
-      -1,    -1,    33,    32,    -1,    -1,    12,    33,    32,    -1,
-      34,    35,    36,    -1,     7,    -1,    -1,    14,    -1,    -1,
-       8,    -1,     3,    -1,     4,    -1,     5,    -1,     6,    -1,
-       8,    -1,    37,    -1,    38,    15,    38,    -1
+      27,     0,    -1,    -1,    27,    28,    -1,    -1,    29,    -1,
+      30,    -1,    -1,    51,    -1,    52,    -1,    56,    -1,    46,
+      -1,    31,    -1,    33,    -1,    40,    -1,    42,    -1,    44,
+      47,    -1,    32,    47,    -1,    -1,    45,    -1,    17,    34,
+      18,    -1,    35,    38,    -1,    34,    35,    38,    -1,    -1,
+      36,    -1,    37,    -1,    36,    37,    -1,    52,    -1,    46,
+      -1,    51,    -1,    -1,    39,    -1,    30,    -1,    39,    30,
+      -1,     9,    19,    45,    20,    30,    41,    -1,    -1,    10,
+      30,    -1,    13,    19,    45,    20,    30,    -1,    11,    30,
+      13,    19,    45,    20,    21,    -1,    12,    19,    43,    21,
+      32,    21,    32,    20,    30,    -1,    -1,    52,    -1,    51,
+      -1,    14,    -1,    15,    -1,    16,    32,    -1,    66,    -1,
+       8,    19,    48,    20,    47,    -1,    21,    -1,     1,    -1,
+      49,    50,    -1,    -1,    65,    -1,    -1,    22,    48,    -1,
+       8,    23,    66,    47,    -1,    54,    53,    55,    -1,    -1,
+      24,    -1,     7,    -1,     8,    58,    47,    -1,    57,    22,
+      55,    -1,    54,    53,     8,    19,    59,    20,    47,    -1,
+       8,    58,    -1,    -1,    23,    66,    -1,    -1,    61,    60,
+      -1,    -1,    22,    61,    60,    -1,    62,    63,    64,    -1,
+       7,    -1,    -1,    24,    -1,    -1,     8,    -1,     3,    -1,
+       4,    -1,     5,    -1,     6,    -1,     8,    -1,    67,    -1,
+      65,    -1,    67,    25,    67,    -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    68,    68,    69,    72,    73,    76,    82,    83,    84,
-      87,   103,   107,   108,   113,   114,   118,   150,   153,   154,
-     159,   164,   165,   168,   183,   205,   206,   216,   219,   222,
-     223,   226,   231,   236,   237,   242,   243,   246,   254,   258,
-     262,   266,   280,   289
+       0,    79,    79,    80,    83,    84,    85,    88,    88,    91,
+      97,    98,   101,   102,   103,   104,   105,   110,   115,   116,
+     119,   122,   123,   126,   127,   130,   131,   134,   135,   136,
+     139,   140,   143,   144,   147,   150,   151,   154,   155,   156,
+     159,   160,   161,   164,   165,   166,   169,   176,   196,   197,
+     203,   207,   208,   213,   214,   218,   242,   245,   246,   251,
+     256,   280,   282,   301,   323,   324,   334,   337,   340,   341,
+     344,   349,   354,   355,   360,   361,   364,   372,   376,   380,
+     384,   398,   420,   431
 };
 #endif
 
@@ -494,13 +524,19 @@ static const yytype_uint16 yyrline[] =
 static const char *const yytname[] =
 {
   "$end", "error", "$undefined", "ENTERO", "REAL", "CHAR", "STRING",
-  "TIPO_DATO", "IDENTIFICADOR", "';'", "'('", "')'", "','", "'='", "'*'",
-  "'+'", "$accept", "input", "line", "llamadoFuncion", "argumentos",
-  "tipoDeArgumento", "otroArgumentoOPC", "asignacion", "declaracion",
-  "punteroOpcional", "declaradorDeTipo", "tipoDeclaracion",
-  "declaracionFuncion", "decla", "asignacionOPC", "listaDeParametros",
-  "otrosParametros", "parametro", "declaradorDeTipoParam",
-  "punteroOpcionalParam", "idOPC", "valor", "exp", 0
+  "TIPO_DATO", "IDENTIFICADOR", "IF", "ELSE", "DO", "FOR", "WHILE",
+  "CONTINUE", "BREAK", "RETURN", "'{'", "'}'", "'('", "')'", "';'", "','",
+  "'='", "'*'", "'+'", "$accept", "input", "line", "declaAsig",
+  "sentencia", "sentenciaExp", "expOpc", "sentenciaComp", "listaComp",
+  "listaDeclaracionesOpc", "listaDeclaraciones", "declaraciones",
+  "listaSentenciasOpc", "listaSentencias", "sentenciaSel", "elseOpc",
+  "sentenciaIter", "forOpc", "sentenciaSalto", "expDeSentencia",
+  "llamadoFuncion", "puntoComaError", "argumentos", "tipoDeArgumento",
+  "otroArgumentoOPC", "asignacion", "declaracion", "punteroOpcional",
+  "declaradorDeTipo", "tipoDeclaracion", "declaracionFuncion", "decla",
+  "asignacionOPC", "listaDeParametros", "otrosParametros", "parametro",
+  "declaradorDeTipoParam", "punteroOpcionalParam", "idOPC", "valor",
+  "expresion", "exp", 0
 };
 #endif
 
@@ -509,28 +545,37 @@ static const char *const yytname[] =
    token YYLEX-NUM.  */
 static const yytype_uint16 yytoknum[] =
 {
-       0,   256,   257,   258,   259,   260,   261,   262,   263,    59,
-      40,    41,    44,    61,    42,    43
+       0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
+     265,   266,   267,   268,   269,   270,   271,   123,   125,    40,
+      41,    59,    44,    61,    42,    43
 };
 # endif
 
 /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    16,    17,    17,    18,    18,    18,    18,    18,    18,
-      19,    20,    21,    21,    22,    22,    23,    24,    25,    25,
-      26,    27,    27,    28,    29,    30,    30,    31,    31,    32,
-      32,    33,    34,    35,    35,    36,    36,    37,    37,    37,
-      37,    37,    38,    38
+       0,    26,    27,    27,    28,    28,    28,    29,    29,    29,
+      29,    29,    30,    30,    30,    30,    30,    31,    32,    32,
+      33,    34,    34,    35,    35,    36,    36,    37,    37,    37,
+      38,    38,    39,    39,    40,    41,    41,    42,    42,    42,
+      43,    43,    43,    44,    44,    44,    45,    46,    47,    47,
+      48,    49,    49,    50,    50,    51,    52,    53,    53,    54,
+      55,    55,    56,    57,    58,    58,    59,    59,    60,    60,
+      61,    62,    63,    63,    64,    64,    65,    65,    65,    65,
+      65,    66,    67,    67
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
-       0,     2,     0,     2,     0,     2,     2,     2,     2,     2,
-       4,     2,     0,     1,     0,     2,     3,     3,     0,     1,
-       1,     1,     3,     6,     2,     0,     2,     0,     2,     0,
-       3,     3,     1,     0,     1,     0,     1,     1,     1,     1,
+       0,     2,     0,     2,     0,     1,     1,     0,     1,     1,
+       1,     1,     1,     1,     1,     1,     2,     2,     0,     1,
+       3,     2,     3,     0,     1,     1,     2,     1,     1,     1,
+       0,     1,     1,     2,     6,     0,     2,     5,     7,     9,
+       0,     1,     1,     1,     1,     2,     1,     5,     1,     1,
+       2,     0,     1,     0,     2,     4,     3,     0,     1,     1,
+       3,     3,     7,     2,     0,     2,     0,     2,     0,     3,
+       3,     1,     0,     1,     0,     1,     1,     1,     1,     1,
        1,     1,     1,     3
 };
 
@@ -539,76 +584,121 @@ static const yytype_uint8 yyr2[] =
    means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       2,     0,     1,    37,    38,    39,    40,    20,    41,     3,
-       0,     0,     0,    18,     0,    42,     0,    12,     0,     8,
-       5,     6,    19,     0,     7,     9,     0,    41,     0,    14,
-      13,    16,    25,    17,    21,    43,    10,    12,    11,    27,
-       0,    24,     0,    15,    32,     0,    29,    33,    26,    25,
-      22,    23,     0,    28,    34,    35,    29,    36,    31,    30
+       2,     4,     1,    76,    77,    78,    79,    59,    80,     0,
+      18,     0,     0,    43,    44,    18,    23,     3,     5,     6,
+      12,     0,    13,    14,    15,     0,    19,    11,     8,     9,
+      57,    10,    82,    46,    81,    51,     0,     0,    80,     0,
+      40,     0,    45,     0,    23,    18,    24,    25,    28,    29,
+      27,    57,    49,    48,    17,    16,    58,     0,     0,     0,
+      53,    52,     0,     0,     0,     0,     0,    42,    41,     0,
+      20,    18,    32,    21,    18,    26,     0,    64,    56,     0,
+      83,     0,    51,    50,    55,    18,     0,    18,    18,    22,
+      33,    64,    66,     0,     0,     0,    47,    54,    35,     0,
+       0,    37,    71,     0,    68,    72,    65,    60,    61,    18,
+      34,     0,    18,     0,     0,    67,    73,    74,    36,    38,
+       0,    62,    68,    75,    70,    18,    69,    39
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     1,     9,    10,    28,    29,    38,    11,    12,    23,
-      13,    33,    14,    34,    41,    45,    53,    46,    47,    55,
-      58,    15,    16
+      -1,     1,    17,    18,    72,    20,    21,    22,    44,    45,
+      46,    47,    73,    74,    23,   110,    24,    66,    25,    26,
+      48,    54,    59,    60,    83,    49,    50,    57,    51,    78,
+      31,    79,    94,   103,   115,   104,   105,   117,   124,    32,
+      33,    34
 };
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
-#define YYPACT_NINF -19
-static const yytype_int8 yypact[] =
+#define YYPACT_NINF -34
+static const yytype_int16 yypact[] =
 {
-     -19,     6,   -19,   -19,   -19,   -19,   -19,   -19,     5,   -19,
-       7,    10,    11,    12,    16,   -19,     8,    -1,    -1,   -19,
-     -19,   -19,   -19,    20,   -19,   -19,    -1,   -19,    18,    19,
-     -19,    15,    14,    21,   -19,    15,   -19,    -1,   -19,    25,
-      -1,   -19,    26,   -19,   -19,    24,    27,    22,    15,    28,
-     -19,   -19,    25,   -19,   -19,    29,    27,   -19,   -19,   -19
+     -34,    98,   -34,   -34,   -34,   -34,   -34,   -34,    13,     0,
+     130,    11,    18,   -34,   -34,    45,    33,   -34,   -34,   -34,
+     -34,    10,   -34,   -34,   -34,    10,   -34,   -34,   -34,   -34,
+      21,   -34,   -34,   -34,    17,    45,    45,    45,   -34,    34,
+      51,    45,   -34,    13,    26,     9,    33,   -34,   -34,   -34,
+     -34,    21,   -34,   -34,   -34,   -34,   -34,    46,    45,    36,
+      39,   -34,    10,    42,    44,    41,    47,   -34,   -34,    49,
+     -34,     9,   -34,   -34,   114,   -34,    57,    16,   -34,    50,
+      17,    10,    45,   -34,   -34,   130,    45,    45,   130,   -34,
+     -34,    43,    60,    45,     7,    57,   -34,   -34,    61,    55,
+      56,   -34,   -34,    58,    54,    59,   -34,   -34,   -34,   130,
+     -34,    64,    45,    10,    60,   -34,   -34,    71,   -34,   -34,
+      62,   -34,    54,   -34,   -34,   130,   -34,   -34
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -19,   -19,   -19,   -19,     1,   -19,   -19,   -19,   -19,   -19,
-     -19,   -19,   -19,    -2,   -19,   -19,   -14,    -9,   -19,   -19,
-     -19,   -16,   -18
+     -34,   -34,   -34,   -34,    -1,   -34,   -13,   -34,   -34,    37,
+     -34,    40,    19,   -34,   -34,   -34,   -34,   -34,   -34,   -31,
+      79,   -24,    12,   -34,   -34,     3,     6,    65,    87,    -4,
+     -34,   -34,   -34,   -34,   -29,   -22,   -34,   -34,   -34,   -30,
+     -33,    38
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
    positive, shift that token.  If negative, reduce the rule which
    number is the opposite.  If zero, do what YYDEFACT says.
    If YYTABLE_NINF, syntax error.  */
-#define YYTABLE_NINF -1
-static const yytype_uint8 yytable[] =
+#define YYTABLE_NINF -64
+static const yytype_int8 yytable[] =
 {
-      31,    30,     3,     4,     5,     6,     2,    27,    35,     3,
-       4,     5,     6,     7,     8,    17,    19,    25,    18,    20,
-      21,    30,    48,    26,    39,    24,    22,    40,    32,    36,
-      26,    37,    44,    42,    49,    51,    54,    57,    43,    52,
-      50,    40,    59,    56
+      19,    55,    42,    62,    28,    61,    63,    29,    52,    39,
+      69,    52,     3,     4,     5,     6,   -30,    38,     9,    37,
+      10,    11,    12,    13,    14,    15,    16,   -30,    53,   -63,
+      40,    53,    35,     7,    43,    92,    36,    41,    84,    93,
+       7,    43,    58,    67,    70,    56,    68,    64,     3,     4,
+       5,     6,    61,    38,    77,    99,    81,    96,     7,    65,
+     106,    82,    85,    86,    36,    91,    93,   102,    87,    88,
+     107,   109,    95,    90,   100,   111,   114,   112,   113,   123,
+      27,    71,   125,   116,    98,   119,    75,   101,    30,   121,
+      89,   108,   122,   126,    97,     0,    80,     0,     2,   120,
+       0,     3,     4,     5,     6,     7,     8,     9,   118,    10,
+      11,    12,    13,    14,    15,    16,    76,     3,     4,     5,
+       6,   -31,    38,     9,   127,    10,    11,    12,    13,    14,
+      15,    16,   -31,     3,     4,     5,     6,     0,    38,     9,
+       0,    10,    11,    12,    13,    14,    15,    16
 };
 
-static const yytype_uint8 yycheck[] =
+static const yytype_int8 yycheck[] =
 {
-      18,    17,     3,     4,     5,     6,     0,     8,    26,     3,
-       4,     5,     6,     7,     8,    10,     9,     9,    13,     9,
-       9,    37,    40,    15,    10,     9,    14,    13,     8,    11,
-      15,    12,     7,    12,     8,    11,    14,     8,    37,    12,
-      42,    13,    56,    52
+       1,    25,    15,    36,     1,    35,    37,     1,     1,    10,
+      41,     1,     3,     4,     5,     6,     7,     8,     9,    19,
+      11,    12,    13,    14,    15,    16,    17,    18,    21,    22,
+      19,    21,    19,     7,     8,    19,    23,    19,    62,    23,
+       7,     8,    25,    40,    18,    24,    40,    13,     3,     4,
+       5,     6,    82,     8,     8,    86,    20,    81,     7,     8,
+      93,    22,    20,    19,    23,     8,    23,     7,    21,    20,
+      94,    10,    22,    74,    87,    20,    22,    21,    20,     8,
+       1,    44,    20,    24,    85,    21,    46,    88,     1,   113,
+      71,    95,   114,   122,    82,    -1,    58,    -1,     0,   112,
+      -1,     3,     4,     5,     6,     7,     8,     9,   109,    11,
+      12,    13,    14,    15,    16,    17,    51,     3,     4,     5,
+       6,     7,     8,     9,   125,    11,    12,    13,    14,    15,
+      16,    17,    18,     3,     4,     5,     6,    -1,     8,     9,
+      -1,    11,    12,    13,    14,    15,    16,    17
 };
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
    symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,    17,     0,     3,     4,     5,     6,     7,     8,    18,
-      19,    23,    24,    26,    28,    37,    38,    10,    13,     9,
-       9,     9,    14,    25,     9,     9,    15,     8,    20,    21,
-      37,    38,     8,    27,    29,    38,    11,    12,    22,    10,
-      13,    30,    12,    20,     7,    31,    33,    34,    38,     8,
-      29,    11,    12,    32,    14,    35,    33,     8,    36,    32
+       0,    27,     0,     3,     4,     5,     6,     7,     8,     9,
+      11,    12,    13,    14,    15,    16,    17,    28,    29,    30,
+      31,    32,    33,    40,    42,    44,    45,    46,    51,    52,
+      54,    56,    65,    66,    67,    19,    23,    19,     8,    30,
+      19,    19,    32,     8,    34,    35,    36,    37,    46,    51,
+      52,    54,     1,    21,    47,    47,    24,    53,    25,    48,
+      49,    65,    66,    45,    13,     8,    43,    51,    52,    45,
+      18,    35,    30,    38,    39,    37,    53,     8,    55,    57,
+      67,    20,    22,    50,    47,    20,    19,    21,    20,    38,
+      30,     8,    19,    23,    58,    22,    47,    48,    30,    45,
+      32,    30,     7,    59,    61,    62,    66,    47,    55,    10,
+      41,    20,    21,    20,    22,    60,    24,    63,    30,    21,
+      32,    47,    61,     8,    64,    20,    60,    30
 };
 
 #define yyerrok		(yyerrstatus = 0)
@@ -1419,19 +1509,19 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-        case 5:
+        case 8:
 
 /* Line 1455 of yacc.c  */
-#line 73 "../src/AnalizadorSemantico.y"
+#line 88 "../src/AnalizadorSemantico.y"
     {
                           tipoDeDatoVar = NULL;
                         ;}
     break;
 
-  case 6:
+  case 9:
 
 /* Line 1455 of yacc.c  */
-#line 76 "../src/AnalizadorSemantico.y"
+#line 91 "../src/AnalizadorSemantico.y"
     {
                           free(tipoDeDatoID); 
                           listaDeParametrosTemporal = NULL; // [❗] Limpia la lista de parametros temporal para poder reutilizarla en un futuro
@@ -1440,112 +1530,180 @@ yyreduce:
                         ;}
     break;
 
-  case 10:
+  case 16:
 
 /* Line 1455 of yacc.c  */
-#line 87 "../src/AnalizadorSemantico.y"
+#line 105 "../src/AnalizadorSemantico.y"
     {
-                                                    Simbolo* aux = devolverSimbolo((yyvsp[(1) - (4)].string));
-                                                    if(aux){
-                                                      if(aux -> tipoID != TIPO_FUNC) // [❗] Pregunta si el identificador es una FUNCION
-                                                        ingresarErrorSemantico("El ID utilizado no corresponde con una funcion");
-                                                      else
-                                                        verificarParametros(aux, listaDeParametrosTemporal, yyout); // [❗] Si es una funcion, verifica que la cantidad y el tipo de los argumentos sea correcta.
-                                                    }
-                                                    else
-                                                      mostrarErrorDeVariable((yyvsp[(1) - (4)].string));
-                                                      //ingresarErrorSemantico("La variable no fue declarada"); // [❗] Ingresa el mensaje indicado en la lista de errores SEMANTICOS. (No indicamos el nombre de la variable no decalarada) 
-
-                                                    listaDeParametrosTemporal = NULL; // [❗] Libera la lista temporal.
-                                                  ;}
+                                            flagHayPyC = 1;
+                                          ;}
     break;
 
-  case 13:
+  case 17:
 
 /* Line 1455 of yacc.c  */
-#line 108 "../src/AnalizadorSemantico.y"
+#line 110 "../src/AnalizadorSemantico.y"
+    {
+                                      flagHayPyC = 1;
+                                    ;}
+    break;
+
+  case 46:
+
+/* Line 1455 of yacc.c  */
+#line 169 "../src/AnalizadorSemantico.y"
+    {
+                          tipoDatoExp = NULL;
+                          valorExp = limpiarUnion()
+                        ;}
+    break;
+
+  case 47:
+
+/* Line 1455 of yacc.c  */
+#line 176 "../src/AnalizadorSemantico.y"
+    {
+                                                                  if(flagHayPyC){ // [❗] Si hay punto y coma, realiza la accion asociada correspondiente.
+                                                                    Simbolo* aux = devolverSimbolo((yyvsp[(1) - (5)].string));
+                                                                    if(aux){
+                                                                      if(aux -> tipoID != TIPO_FUNC) // [❗] Pregunta si el identificador es una FUNCION
+                                                                        ingresarErrorSemantico("El ID utilizado no corresponde con una funcion");
+                                                                      else
+                                                                        verificarParametros(aux, listaDeParametrosTemporal, yyout); // [❗] Si es una funcion, verifica que la cantidad y el tipo de los argumentos sea correcta.
+                                                                    }
+                                                                    else
+                                                                      mostrarErrorDeVariable((yyvsp[(1) - (5)].string));
+                                                                      //ingresarErrorSemantico("La variable no fue declarada"); // [❗] Ingresa el mensaje indicado en la lista de errores SEMANTICOS. (No indicamos el nombre de la variable no decalarada) 
+                                                                  }
+
+                                                                  flagHayPyC = 1;
+
+                                                                  listaDeParametrosTemporal = NULL; // [❗] Libera la lista temporal.
+                                                                ;}
+    break;
+
+  case 49:
+
+/* Line 1455 of yacc.c  */
+#line 197 "../src/AnalizadorSemantico.y"
+    {
+                          flagHayPyC = 0; 
+                          insertarError(&erroresSintacticos, "Se esperaba ';' al final de la linea");
+                        ;}
+    break;
+
+  case 52:
+
+/* Line 1455 of yacc.c  */
+#line 208 "../src/AnalizadorSemantico.y"
     {
                                 insertarParametro(&listaDeParametrosTemporal, tipoDeDatoVar);
                                ;}
     break;
 
-  case 16:
+  case 55:
 
 /* Line 1455 of yacc.c  */
-#line 118 "../src/AnalizadorSemantico.y"
+#line 218 "../src/AnalizadorSemantico.y"
     {
-                                          Simbolo* aux = devolverSimbolo((yyvsp[(1) - (3)].string)); 
-                                          if(aux) { // [❗] Si existe...
-                                            if(aux -> tipoID != TIPO_VAR) // [❗] Pregunta si el identificador no es una funcion. 
-                                              ingresarErrorSemantico("El ID utilizado no corresponde con una variable");
-                                            else{
-                                              if(! strcmp(aux -> tipoDato, (yyvsp[(3) - (3)].tipo) . tipoDato)){ // [❗] Si no hay error de tipo, cambia el valor correctamente dependiendo del tipo de dato.
-                                                aux -> valor . valEnt    = (yyvsp[(3) - (3)].tipo) . valor . valEnt;
-                                                aux -> valor . valReal   = (yyvsp[(3) - (3)].tipo) . valor . valReal; 
-                                                aux -> valor . valChar   = (yyvsp[(3) - (3)].tipo) . valor . valChar;
-                                                aux -> valor . valString = (yyvsp[(3) - (3)].tipo) . valor . valString;
-                                                
-                                                /*if(! strcmp(aux -> tipoDato, "int"))
-                                                  aux -> valor . valEnt = $3 . valor . valEnt;
-                                                else if(! strcmp(aux -> tipoDato, "float"))
-                                                  aux -> valor . valReal = $3 . valor . valReal;
-                                                else if(! strcmp(aux -> tipoDato, "char"))
-                                                  aux -> valor . valChar = $3 . valor . valChar;
-                                                else if(! strcmp(aux -> tipoDato, "char*"))
-                                                  aux -> valor . valString = strdup($3 . valor . valString);*/
-                                              }
-                                                //cambiarValor(aux, valorTemporal);
-                                              else 
-                                                ingresarErrorSemantico("No coinciden los tipos de datos");
-                                            }
-                                          }
-                                          else
-                                            mostrarErrorDeVariable((yyvsp[(1) - (3)].string));
-                                            //ingresarErrorSemantico("La variable no fue declarada");
-                                        ;}
+                                                          if(flagHayPyC) {
+                                                            Simbolo* aux = devolverSimbolo((yyvsp[(1) - (4)].string)); 
+                                                            if(aux) { // [❗] Si existe...
+                                                              if(aux -> tipoID != TIPO_VAR) // [❗] Pregunta si el identificador es una funcion. 
+                                                                ingresarErrorSemantico("El ID utilizado no corresponde con una variable");
+                                                              else{
+                                                                if(! strcmp(aux -> tipoDato, tipoDatoExp)) // [❗] Si no hay error de tipo, cambia el valor correctamente dependiendo del tipo de dato.
+                                                                    cambiarValor(aux, valorExp);
+                                                                  else 
+                                                                    ingresarErrorSemantico("No coinciden los tipos de datos");
+                                                                }
+                                                              }
+                                                              else
+                                                                mostrarErrorDeVariable((yyvsp[(1) - (4)].string));
+                                                          }
+                                                              //ingresarErrorSemantico("La variable no fue declarada");
+                                                          flagHayPyC = 1;
+
+                                                          valorExp = limpiarUnion();
+                                                          tipoDatoExp = NULL;
+                                                        ;}
     break;
 
-  case 19:
+  case 58:
 
 /* Line 1455 of yacc.c  */
-#line 154 "../src/AnalizadorSemantico.y"
+#line 246 "../src/AnalizadorSemantico.y"
     {
                                   strcat(tipoDeDatoID, "*");    // [❗] Concatenación de string, para agregar * al tipo de dato.
                                 ;}
     break;
 
-  case 20:
+  case 59:
 
 /* Line 1455 of yacc.c  */
-#line 159 "../src/AnalizadorSemantico.y"
+#line 251 "../src/AnalizadorSemantico.y"
     { 
                                 tipoDeDatoID = strdup((yyvsp[(1) - (1)].string));
                               ;}
     break;
 
-  case 23:
+  case 60:
 
 /* Line 1455 of yacc.c  */
-#line 168 "../src/AnalizadorSemantico.y"
+#line 256 "../src/AnalizadorSemantico.y"
     {
-                                                                                               Simbolo* aux = devolverSimbolo((yyvsp[(3) - (6)].string));
-                                                                                               if(! aux){ // [❗] Pregunta si el identificador no fue utilizado antes.
-                                                                                                 aux = crearSimbolo(tipoDeDatoID, (yyvsp[(3) - (6)].string), TIPO_FUNC); // [❗] Crea un simbolo de tipo FUNCION
-                                                                                                 insertarSimbolo(aux);
-                                                                                                 aux -> valor . func = listaDeParametrosTemporal; // [❗] Asigna la lista de parametros de la funcion generada previamente.
-                                                                                               } 
-                                                                                               else { // [❗] Si el identifidor ya fue utilizado, lanza error semantico.
-                                                                                                 ingresarErrorSemantico("Doble declaración de la variable");
-                                                                                               };                                 
+                                                                        if(flagHayPyC){
+                                                                          Simbolo* aux = devolverSimbolo((yyvsp[(1) - (3)].string));
+                                                                          if(! aux){ // [❗] Pregunta si el valor no fue declarado anteriormente
+                                                                            // [❗] Crea un simbolo nuevo y lo inserta en la TS.
+                                                                            aux = crearSimbolo(tipoDeDatoID, (yyvsp[(1) - (3)].string), TIPO_VAR);
+                                                                            insertarSimbolo(aux);
 
-                                                                                               listaDeParametrosTemporal = NULL; // [❗] Limpia la lista temporal para su reutilizacion.
-                                                                                              ;}
+                                                                            if(tipoDatoExp){ // [❗] Pregunta si existe una inicializacion de la variable
+                                                                              // [❗] Si es asi, verifica que los tipos coincidan. Si se cumple, modifica, si no, lanza un error
+                                                                              if(! strcmp(tipoDeDatoID, tipoDatoExp)) // [❗] Si existe, verifica que el valor de asignacion coincidad con el tipo del identificador.
+                                                                                cambiarValor(aux, valorExp);
+                                                                              else
+                                                                                ingresarErrorSemantico("El valor asignado no coincide con el tipo de dato declarado");
+                                                                            }
+                                                                          }
+                                                                          else
+                                                                            ingresarErrorSemantico("Doble declaración de la variable");
+
+                                                                        }
+                                                                        
+                                                                        flagHayPyC = 1;
+                                                                        valorExp = limpiarUnion(); // [❗] Limpio la variable que guarda el valor a asignar para su posterior reutilizacion.
+                                                                     ;}
     break;
 
-  case 24:
+  case 62:
 
 /* Line 1455 of yacc.c  */
-#line 183 "../src/AnalizadorSemantico.y"
+#line 282 "../src/AnalizadorSemantico.y"
+    {
+                                                                                                              if(flagHayPyC){
+                                                                                                                Simbolo* aux = devolverSimbolo((yyvsp[(3) - (7)].string));
+                                                                                                                if(! aux){ // [❗] Pregunta si el identificador no fue utilizado antes.
+                                                                                                                  aux = crearSimbolo(tipoDeDatoID, (yyvsp[(3) - (7)].string), TIPO_FUNC); // [❗] Crea un simbolo de tipo FUNCION
+                                                                                                                  insertarSimbolo(aux);
+                                                                                                                  aux -> valor . func = listaDeParametrosTemporal; // [❗] Asigna la lista de parametros de la funcion generada previamente.
+                                                                                                                } 
+                                                                                                                else { // [❗] Si el identifidor ya fue utilizado, lanza error semantico.
+                                                                                                                  ingresarErrorSemantico("Doble declaración de la variable");
+                                                                                                                };  
+                                                                                                              }
+
+                                                                                                              flagHayPyC = 1;                               
+
+                                                                                                              listaDeParametrosTemporal = NULL; // [❗] Limpia la lista temporal para su reutilizacion.
+                                                                                                            ;}
+    break;
+
+  case 63:
+
+/* Line 1455 of yacc.c  */
+#line 301 "../src/AnalizadorSemantico.y"
     {
                                       Simbolo* aux = devolverSimbolo((yyvsp[(1) - (2)].string));
                                       if(! aux){ // [❗] Pregunta si el valor no fue declarado anteriormente
@@ -1560,68 +1718,68 @@ yyreduce:
                                           else
                                             ingresarErrorSemantico("El valor asignado no coincide con el tipo de dato declarado");
                                         }
-                                        
-                                        valorExp = limpiarUnion(); // [❗] Limpio la variable que guarda el valor a asignar para su posterior reutilizacion.
                                       }
                                       else
                                         ingresarErrorSemantico("Doble declaración de la variable");
+
+                                      valorExp = limpiarUnion(); // [❗] Limpio la variable que guarda el valor a asignar para su posterior reutilizacion.
                                    ;}
     break;
 
-  case 26:
+  case 65:
 
 /* Line 1455 of yacc.c  */
-#line 206 "../src/AnalizadorSemantico.y"
-    {  // [❗] Guardo el valor semantico y el tipo de dato de la expresion en variables temporales para realizar las resticciones semant. correspondientes. 
-                                      valorExp . valEnt     = (yyvsp[(2) - (2)].tipo) . valor . valEnt;
-                                      valorExp . valReal    = (yyvsp[(2) - (2)].tipo) . valor . valReal;
-                                      valorExp . valChar    = (yyvsp[(2) - (2)].tipo) . valor . valChar;
-                                      valorExp . valString  = (yyvsp[(2) - (2)].tipo) . valor . valString;
+#line 324 "../src/AnalizadorSemantico.y"
+    { /* // [❗] Guardo el valor semantico y el tipo de dato de la expresion en variables temporales para realizar las resticciones semant. correspondientes. 
+                                          valorExp . valEnt     = $2 . valor . valEnt;
+                                          valorExp . valReal    = $2 . valor . valReal;
+                                          valorExp . valChar    = $2 . valor . valChar;
+                                          valorExp . valString  = $2 . valor . valString;
 
-                                      tipoDatoExp = strdup((yyvsp[(2) - (2)].tipo) . tipoDato);
-                                   ;}
+                                          tipoDatoExp = strdup($2 . tipoDato); */
+                                        ;}
     break;
 
-  case 27:
+  case 66:
 
 /* Line 1455 of yacc.c  */
-#line 216 "../src/AnalizadorSemantico.y"
+#line 334 "../src/AnalizadorSemantico.y"
     {
                                                   insertarParametro(&listaDeParametrosTemporal, "void");
                                                 ;}
     break;
 
-  case 31:
+  case 70:
 
 /* Line 1455 of yacc.c  */
-#line 226 "../src/AnalizadorSemantico.y"
+#line 344 "../src/AnalizadorSemantico.y"
     {
                                                               insertarParametro(&listaDeParametrosTemporal, tipoDeDatoParam);
                                                             ;}
     break;
 
-  case 32:
+  case 71:
 
 /* Line 1455 of yacc.c  */
-#line 231 "../src/AnalizadorSemantico.y"
+#line 349 "../src/AnalizadorSemantico.y"
     { 
                                      tipoDeDatoParam = strdup((yyvsp[(1) - (1)].string));
                                    ;}
     break;
 
-  case 34:
+  case 73:
 
 /* Line 1455 of yacc.c  */
-#line 237 "../src/AnalizadorSemantico.y"
+#line 355 "../src/AnalizadorSemantico.y"
     {
                                       strcat(tipoDeDatoParam, "*"); // [❗] Concatenación de string, para agregar * al tipo de dato.
                                     ;}
     break;
 
-  case 37:
+  case 76:
 
 /* Line 1455 of yacc.c  */
-#line 246 "../src/AnalizadorSemantico.y"
+#line 364 "../src/AnalizadorSemantico.y"
     {
                         // [!] Asigna el tipo de dato del VALOR en la variable global para que posteriormente 
                         //     sea utilizado en la verificacion de tipos :)
@@ -1632,40 +1790,40 @@ yyreduce:
                        ;}
     break;
 
-  case 38:
+  case 77:
 
 /* Line 1455 of yacc.c  */
-#line 254 "../src/AnalizadorSemantico.y"
+#line 372 "../src/AnalizadorSemantico.y"
     {
                         tipoDeDatoVar = strdup(tipoDeDato((yyvsp[(1) - (1)].real)));
                         valorTemporal . valReal = (yyvsp[(1) - (1)].real);
                        ;}
     break;
 
-  case 39:
+  case 78:
 
 /* Line 1455 of yacc.c  */
-#line 258 "../src/AnalizadorSemantico.y"
+#line 376 "../src/AnalizadorSemantico.y"
     {
                         tipoDeDatoVar = strdup(tipoDeDato((yyvsp[(1) - (1)].caracter)));
                         valorTemporal . valChar = (yyvsp[(1) - (1)].caracter);
                        ;}
     break;
 
-  case 40:
+  case 79:
 
 /* Line 1455 of yacc.c  */
-#line 262 "../src/AnalizadorSemantico.y"
+#line 380 "../src/AnalizadorSemantico.y"
     {
                         tipoDeDatoVar = strdup(tipoDeDato((yyvsp[(1) - (1)].string)));
                         valorTemporal . valString = strdup((yyvsp[(1) - (1)].string));
                        ;}
     break;
 
-  case 41:
+  case 80:
 
 /* Line 1455 of yacc.c  */
-#line 266 "../src/AnalizadorSemantico.y"
+#line 384 "../src/AnalizadorSemantico.y"
     {
                         Simbolo* aux = devolverSimbolo((yyvsp[(1) - (1)].string));
 
@@ -1679,48 +1837,77 @@ yyreduce:
                        ;}
     break;
 
-  case 42:
+  case 81:
 
 /* Line 1455 of yacc.c  */
-#line 280 "../src/AnalizadorSemantico.y"
+#line 398 "../src/AnalizadorSemantico.y"
+    {
+                  if(flagErrorExp){ // [❗] Si la expresion no es valida, asignara a la variable valores DEFAULT.
+                    valorExp.valEnt = 0;
+                    valorExp.valReal = 0.0;
+                    valorExp.valChar = '\0';
+                    valorExp.valString = NULL;
+
+                    tipoDatoExp = NULL;
+
+                    flagErrorExp = 0;
+                  }
+                  else{ // [❗] Si es valida, asigna los valores correspondientes.
+                    valorExp.valEnt    = (yyvsp[(1) - (1)].tipo).valor.valEnt;
+                    valorExp.valReal   = (yyvsp[(1) - (1)].tipo).valor.valReal;
+                    valorExp.valChar   = (yyvsp[(1) - (1)].tipo).valor.valChar;
+                    valorExp.valString = (yyvsp[(1) - (1)].tipo).valor.valString;
+                    
+                    tipoDatoExp = strdup((yyvsp[(1) - (1)].tipo).tipoDato);
+                  }
+               ;}
+    break;
+
+  case 82:
+
+/* Line 1455 of yacc.c  */
+#line 420 "../src/AnalizadorSemantico.y"
     {
                       // [❗] Guarda el valor semantico y el tipo de dato dentro de la expresion sea cual sea. 
-                      (yyval.tipo) . valor . valEnt    = valorTemporal . valEnt;
-                      (yyval.tipo) . valor . valChar   = valorTemporal . valChar;
-                      (yyval.tipo) . valor . valReal   = valorTemporal . valReal;
-                      (yyval.tipo) . valor . valString = valorTemporal . valString;
-
-                      (yyval.tipo) . tipoDato = strdup(tipoDeDatoVar);
+                      (yyval.tipo) . tipoDato = tipoDeDatoVar;
+                      
+                      if(tipoDeDatoVar){
+                        (yyval.tipo) . valor . valEnt    = valorTemporal . valEnt;
+                        (yyval.tipo) . valor . valChar   = valorTemporal . valChar;
+                        (yyval.tipo) . valor . valReal   = valorTemporal . valReal;
+                        (yyval.tipo) . valor . valString = valorTemporal . valString;
+                      }
                    ;}
     break;
 
-  case 43:
+  case 83:
 
 /* Line 1455 of yacc.c  */
-#line 289 "../src/AnalizadorSemantico.y"
+#line 431 "../src/AnalizadorSemantico.y"
     {  
-                      if(! strcmp((yyvsp[(1) - (3)].tipo) . tipoDato, (yyvsp[(3) - (3)].tipo) . tipoDato) && strcmp((yyvsp[(1) - (3)].tipo) . tipoDato, "char*")){ // [❗] Verifica que se pueda realizar la suma, es decir, que los valores a sumar sean un mismo tipo y que ninguno sea de tipo char*
-                        // [❗] Guarda el valor semantico y el tipo de dato dentro de la expresion "madre" luego de realizar la sumatoria de los valores semanticos
-                        (yyval.tipo) . valor . valEnt  = (yyvsp[(1) - (3)].tipo) . valor . valEnt  + (yyvsp[(3) - (3)].tipo) . valor . valEnt;
-                        (yyval.tipo) . valor . valChar = (yyvsp[(1) - (3)].tipo) . valor . valChar + (yyvsp[(3) - (3)].tipo) . valor . valChar;
-                        (yyval.tipo) . valor . valReal = (yyvsp[(1) - (3)].tipo) . valor . valReal + (yyvsp[(3) - (3)].tipo) . valor . valReal;
+                      if((yyvsp[(1) - (3)].tipo).tipoDato && (yyvsp[(3) - (3)].tipo).tipoDato){
+                        if(! strcmp((yyvsp[(1) - (3)].tipo) . tipoDato, (yyvsp[(3) - (3)].tipo) . tipoDato) && strcmp((yyvsp[(1) - (3)].tipo) . tipoDato, "char*")){ // [❗] Verifica que se pueda realizar la suma, es decir, que los valores a sumar sean un mismo tipo y que ninguno sea de tipo char*
+                          // [❗] Guarda el valor semantico y el tipo de dato dentro de la expresion "madre" luego de realizar la sumatoria de los valores semanticos
+                          (yyval.tipo) . valor . valEnt  = (yyvsp[(1) - (3)].tipo) . valor . valEnt  + (yyvsp[(3) - (3)].tipo) . valor . valEnt;
+                          (yyval.tipo) . valor . valChar = (yyvsp[(1) - (3)].tipo) . valor . valChar + (yyvsp[(3) - (3)].tipo) . valor . valChar;
+                          (yyval.tipo) . valor . valReal = (yyvsp[(1) - (3)].tipo) . valor . valReal + (yyvsp[(3) - (3)].tipo) . valor . valReal;
 
-                        (yyval.tipo) . tipoDato = strdup((yyvsp[(1) - (3)].tipo) . tipoDato); 
+                          (yyval.tipo) . tipoDato = (yyvsp[(1) - (3)].tipo) . tipoDato; 
+                        }
+                        else{ // [❗] Lanza un error e iguala todos los campos de la union a valores DEFAULT,.  
+                          ingresarErrorSemantico("Los valores no son compatibles");
+                          flagErrorExp = 1; // [❗] Flag que permite saber si la expresion es valida
+                        }
                       }
-                      else{ // [❗] Lanza un error e iguala todos los campos de la union a valores DEFAULT,.  
-                        ingresarErrorSemantico("Los valores no son compatibles");
-                        (yyval.tipo) . valor . valEnt    = 0;  
-                        (yyval.tipo) . valor . valReal   = 0.0;  
-                        (yyval.tipo) . valor . valChar   = '\0';
-                        (yyval.tipo) . valor . valString = NULL; 
-                      }
+                      else
+                        flagErrorExp = 1;
                    ;}
     break;
 
 
 
 /* Line 1455 of yacc.c  */
-#line 1724 "AnalizadorSemantico.tab.c"
+#line 1911 "AnalizadorSemantico.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1932,12 +2119,13 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 308 "../src/AnalizadorSemantico.y"
+#line 451 "../src/AnalizadorSemantico.y"
 
 
 Simbolo* tablaSimbolos;
 
 Error* erroresSemanticos;
+Error* erroresSintacticos;
 
 unsigned cantidadDeLineas = 1;
 
@@ -1946,8 +2134,7 @@ void ingresarErrorSemantico(char* mensaje) {
 }
 
 int yyerror (char *mensaje) {  /* Función de error */
-  //[❗] COMENTADO para que no haga nada al momento de encontrar un 'syntax error' ya que nos vamos a ocupar de ese error de otra manera (mensaje personalizado).
-  //fprintf(yyout, "\nError en linea %d: %s.\n", cantidadDeLineas, mensaje); 
+  //[❗] COMENTADO para que no haga nada al momento de encontrar un 'syntax error' ya que nos vamos a ocupar de ese error de otra manera (mensaje personalizado). 
 }
 
 void mostrarErrorDeVariable(char* nombreVariable) {
@@ -1957,7 +2144,6 @@ void mostrarErrorDeVariable(char* nombreVariable) {
   
 
   ingresarErrorSemantico(mensaje);
-  mensaje = NULL;
   //fprintf(yyout, "\nError en linea %d: La variable \'%s\' no fue declarada\n", cantidadDeLineas, nombreVariable);
   
 }
@@ -1989,11 +2175,14 @@ void main() {
        ◼◾ (❗❗) GENERAR REPORTE (❗❗): 
           ❓  Lista variables declaradas con su tipo. (Casi: Modificar TS para adaptar a Reporte)
           ❓  Lista de funciones declaradas con su tipo (retorno), cantidad y tipo de parametros. (Casi: Modificar TS para adaptar a Reporte) 
-          ❌ Errores lexicos (FLEX), sintacticos(TOKEN ERROR) y semanticos (RUTINAS) encontrados. 
+          ❌ Errores lexicos (FLEX), sintacticos(TOKEN ERROR) y semanticos (RUTINAS) encontrados.
+
+
+      COSAS A MEJORAR:
+        ◾ Si faltase ';', en la declaración múltiple solo no va a declarar la ultima variable.
     */
 
     /*
-
     valorTemporal1;
     valorTemporal2;
 

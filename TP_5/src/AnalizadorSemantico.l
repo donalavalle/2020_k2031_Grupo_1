@@ -51,7 +51,7 @@ LITERAL_CADENA   \".+\"
 TIPO_DATO        "int"|"char"|"float"
 IDENTIFICADOR    ({LETRA}|_)({LETRA}|_|{DECIMAL})*
 ESPACIOS         " "|"\t"
-CARACTER_SIMPLE  "="|";"|","|"*"|"("|")"|"+"
+CARACTER_SIMPLE  "="|";"|","|"*"|"("|")"|"+"|"{"|"}"
 COM_SIMPLE       "//".*
 COM_BLOQUE       "/*"([^*]|\*+[^/])*\*+\/
 SALTO_LINEA      "\n" 
@@ -65,6 +65,14 @@ SALTO_LINEA      "\n"
 {CONST_CHAR}      { finalDeError(); yylval.caracter  = yytext[1]; return CHAR; /* [❗] Accedemos a la posicion 1 del yytext para obtener unicamente el caracter deseado y no las comillas simples */}
 {LITERAL_CADENA}  { finalDeError(); yylval.string    = strdup(yytext); return STRING; }
 {TIPO_DATO}       { finalDeError(); yylval.string    = strdup(yytext); return TIPO_DATO; }
+"if"              { finalDeError(); return IF; }
+"else"            { finalDeError(); return ELSE; }
+"do"              { finalDeError(); return DO; }
+"for"             { finalDeError(); return FOR; }
+"while"           { finalDeError(); return WHILE; }
+"continue"        { finalDeError(); return CONTINUE; }
+"break"           { finalDeError(); return BREAK; }
+"return"          { finalDeError(); return RETURN; }
 {IDENTIFICADOR}   { finalDeError(); yylval.string    = strdup(yytext); return IDENTIFICADOR; }
 {ESPACIOS}+       { finalDeError(); }
 {CARACTER_SIMPLE} { finalDeError(); return yytext[0]; }

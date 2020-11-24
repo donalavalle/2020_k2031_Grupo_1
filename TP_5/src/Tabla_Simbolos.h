@@ -55,7 +55,8 @@ void      generarReporte(FILE*);
 extern Simbolo* tablaSimbolos;        // [❗] Declaracion de la TS
 extern unsigned cantidadDeLineas;  
 extern Error* erroresLexicos;        // [❗] Declaracion de la lista de errores LEXICOS.
-extern Error* erroresSemanticos;     // [❗] Declaracion de la lista de errores SEMANTICOS.-
+extern Error* erroresSemanticos;     // [❗] Declaracion de la lista de errores SEMANTICOS.
+extern Error* erroresSintacticos;    // [❗] Declaracion de la lista de errores SINTACTICOS.
 
 
 #endif

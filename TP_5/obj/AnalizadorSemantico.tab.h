@@ -44,7 +44,15 @@
      CHAR = 260,
      STRING = 261,
      TIPO_DATO = 262,
-     IDENTIFICADOR = 263
+     IDENTIFICADOR = 263,
+     IF = 264,
+     ELSE = 265,
+     DO = 266,
+     FOR = 267,
+     WHILE = 268,
+     CONTINUE = 269,
+     BREAK = 270,
+     RETURN = 271
    };
 #endif
 
@@ -55,7 +63,7 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 48 "../src/AnalizadorSemantico.y"
+#line 59 "../src/AnalizadorSemantico.y"
 
     int   entero;
     float real;
@@ -76,7 +84,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 80 "AnalizadorSemantico.tab.h"
+#line 88 "AnalizadorSemantico.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

@@ -1,0 +1,20 @@
+
+ ╔═══════════════════╗ 
+ ║ Tabla de Simbolos ║ 
+ ╚═══════════════════╝ 
+
+• Lista de Variables: 
+ - Tipo de Dato: 'int'  - Nombre de Variable: a      - Valor: 180
+ - Tipo de Dato: 'int'  - Nombre de Variable: b      - Valor: 12
+ - Tipo de Dato: 'int'  - Nombre de Variable: c      - Valor: 0
+
+• Lista de Funciones: 
+ - Retorno : int - Nombre de Funcion: sumar - Parametro/s: (int, int)
+
+• Errores Lexicos: 
+
+• Errores Sintacticos: 
+ - Error en linea 10: Se esperaba ';' al final de la linea.
+ - Error en linea 10: Se esperaba ';' al final de la linea.
+
+• Errores Semanticos: 

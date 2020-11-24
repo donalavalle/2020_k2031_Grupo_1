@@ -1,6 +1,11 @@
-int sumar();
-int c = d;
-char sumar;
-//int hola = 210;
-int asd = hola; // REVISAR: por que hay segmentation fault despues de un segundo error de 'varialbe no declarada' 
-//char* hola;
+int a;
+int c;
+int sumar(int, int);
+
+if(12){
+    int b = 12;    
+}
+else{
+    a = 180;
+    int unaFuncion(char*);
+}

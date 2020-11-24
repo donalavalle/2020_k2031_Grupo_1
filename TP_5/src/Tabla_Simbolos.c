@@ -263,8 +263,12 @@ void generarReporte(FILE* reporteGeneral) {
     mostrarTabla(reporteGeneral);
     fprintf(reporteGeneral,"\n• Errores Lexicos: \n");
     mostrarError(erroresLexicos, reporteGeneral); // [❗] Muestro los errores LEXICOS
+    fprintf(reporteGeneral,"\n• Errores Sintacticos: \n");
+    mostrarError(erroresSintacticos, reporteGeneral); // [❗] Muestro los errores SINTACTICOS
     fprintf(reporteGeneral,"\n• Errores Semanticos: \n");
     mostrarError(erroresSemanticos, reporteGeneral); // [❗] Muestro los errores SEMÁNTICOS
+
+
 }
 
 Error* crearError(char* mensajeDeError) {
